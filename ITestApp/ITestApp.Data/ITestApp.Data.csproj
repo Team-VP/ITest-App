@@ -5,12 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Saver\" />
-    <Folder Include="Repository\" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <ProjectReference Include="..\ITestApp.Data.Models\ITestApp.Data.Models.csproj" />
   </ItemGroup>
 
 </Project>

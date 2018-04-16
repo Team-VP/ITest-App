@@ -20,4 +20,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ITestApp.Common\ITestApp.Common.csproj" />
+    <ProjectReference Include="..\ITestApp.Data\ITestApp.Data.csproj" />
+  </ItemGroup>
+
 </Project>
