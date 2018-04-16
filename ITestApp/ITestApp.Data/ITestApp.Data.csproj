@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Saver\" />
     <Folder Include="Repository\" />
   </ItemGroup>
 
