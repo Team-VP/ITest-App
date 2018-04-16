@@ -18,21 +18,9 @@ namespace ITestApp.Data.Repository
             this.context = context;
         }
 
-        public IQueryable<T> All
-        {
-            get
-            {
-                return this.context.Set<T>().Where(x => !x.IsDeleted);
-            }
-        }
+        public IQueryable<T> All => this.context.Set<T>().Where(x => !x.IsDeleted);
 
-        public IQueryable<T> AllAndDeleted
-        {
-            get
-            {
-                return this.context.Set<T>();
-            }
-        }
+        public IQueryable<T> AllAndDeleted => this.context.Set<T>();
 
         public void Add(T entity)
         {
@@ -60,6 +48,7 @@ namespace ITestApp.Data.Repository
         public void Update(T entity)
         {
             EntityEntry entry = this.context.Entry(entity);
+
             if (entry.State == EntityState.Detached)
             {
                 this.context.Set<T>().Attach(entity);
