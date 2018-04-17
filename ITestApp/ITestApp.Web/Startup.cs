@@ -4,6 +4,7 @@ using ITestApp.Data;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
+using ITestApp.Web.Models;
 using ITestApp.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace BlogSystem.Web
+namespace ITestApp.Web
 {
     public class Startup
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Data.Models", "ITestApp.Data.Models\ITestApp.Data.Models.csproj", "{8E19C188-6B03-4B41-876F-81DBC90A46DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Data.Models", "ITestApp.Data.Models\ITestApp.Data.Models.csproj", "{8E19C188-6B03-4B41-876F-81DBC90A46DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{763C7638-5DA2-461E-8118-F280C2AFDD7B}"
 EndProject
@@ -13,15 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D99D01F9-9AFF-4A08-AEF8-39FF6D73275B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.DTO", "ITestApp.DTO\ITestApp.DTO.csproj", "{A6401AA4-F31D-43E5-8EF3-885994097C3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.DTO", "ITestApp.DTO\ITestApp.DTO.csproj", "{A6401AA4-F31D-43E5-8EF3-885994097C3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Common", "ITestApp.Common\ITestApp.Common.csproj", "{24D37F1E-C29A-466C-95FF-5C27A874F3CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Common", "ITestApp.Common\ITestApp.Common.csproj", "{24D37F1E-C29A-466C-95FF-5C27A874F3CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Services", "ITestApp.Services\ITestApp.Services.csproj", "{124F3172-40BD-49A0-A8D3-61ED2C1DC1A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Services", "ITestApp.Services\ITestApp.Services.csproj", "{124F3172-40BD-49A0-A8D3-61ED2C1DC1A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Data", "ITestApp.Data\ITestApp.Data.csproj", "{F611250D-BFC7-4838-9AE6-F76874905AA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Data", "ITestApp.Data\ITestApp.Data.csproj", "{F611250D-BFC7-4838-9AE6-F76874905AA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Web", "ITestApp.Web\ITestApp.Web.csproj", "{E3AE7321-8ADB-4AF7-9EB1-042675302182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Web", "ITestApp.Web\ITestApp.Web.csproj", "{E3AE7321-8ADB-4AF7-9EB1-042675302182}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
