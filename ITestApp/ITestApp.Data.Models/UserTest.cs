@@ -7,7 +7,7 @@ namespace ITestApp.Data.Models
 {
     public class UserTest : BaseEntity
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
 
         public int TestId { get; set; }
@@ -16,7 +16,5 @@ namespace ITestApp.Data.Models
         public float Points { get; set; }
 
         public bool IsPassed { get; set; }
-
-        
     }
 }

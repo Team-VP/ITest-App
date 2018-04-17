@@ -10,10 +10,17 @@ namespace ITestApp.Data
     public class ITestAppDbContext : IdentityDbContext<User>
     {
         public ITestAppDbContext(DbContextOptions<ITestAppDbContext> options)
-            :base(options)
+            : base(options)
         {
 
         }
+
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<UserTest> UserTests { get; set; }
 
         public override int SaveChanges()
         {
@@ -23,7 +30,47 @@ namespace ITestApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-           // TODO
+            // Many to many
+            //User to Test
+            builder.Entity<UserTest>()
+                .HasKey(ut => new { ut.UserId, ut.TestId });
+
+            builder.Entity<UserTest>()
+                .HasOne(ut => ut.User)
+                .WithMany(u => u.UserTests)
+                .HasForeignKey(ut => ut.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserTest>()
+                .HasOne(ut => ut.Test)
+                .WithMany(t => t.UserTests)
+                .HasForeignKey(ut => ut.TestId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // One to many 
+            // Test to category
+            builder.Entity<Test>()
+                    .HasOne(c => c.Category)
+                    .WithMany(t => t.Tests)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            // Status to test
+            builder.Entity<Test>()
+                .HasOne(s => s.Status)
+                .WithMany(t => t.Tests)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Question to test
+            builder.Entity<Question>()
+                .HasOne(t => t.Test)
+                .WithMany(q => q.Questions)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Question to answer
+            builder.Entity<Answer>()
+                .HasOne(a => a.Question)
+                .WithMany(q => q.Answers)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

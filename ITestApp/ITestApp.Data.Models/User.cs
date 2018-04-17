@@ -11,7 +11,7 @@ namespace ITestApp.Data.Models
     {
         public User()
         {
-            Tests = new HashSet<Test>();
+            //Tests = new HashSet<Test>();
             UserTests = new HashSet<UserTest>();
         }
 
@@ -28,7 +28,7 @@ namespace ITestApp.Data.Models
 
         public bool IsAdmin { get; set; }
 
-        public ICollection<Test> Tests { get; set; }
+        //public ICollection<Test> Tests { get; set; }
 
         public ICollection<UserTest> UserTests { get; set; }
     }

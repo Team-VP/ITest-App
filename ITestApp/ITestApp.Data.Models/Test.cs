@@ -20,8 +20,8 @@ namespace ITestApp.Data.Models
 
         public int RequiredTime { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }
+        //public int AuthorId { get; set; }
+        //public User Author { get; set; }
 
         //[ForeignKey("Category")]
         public int CategoryId { get; set; }
