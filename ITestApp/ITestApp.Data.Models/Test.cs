@@ -22,8 +22,7 @@ namespace ITestApp.Data.Models
 
         //public int AuthorId { get; set; }
         //public User Author { get; set; }
-
-        //[ForeignKey("Category")]
+        
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
@@ -33,6 +32,5 @@ namespace ITestApp.Data.Models
         public ICollection<Question> Questions { get; set; }
 
         public ICollection<UserTest> UserTests { get; set; }
-
     }
 }
