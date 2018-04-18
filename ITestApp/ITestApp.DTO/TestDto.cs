@@ -10,8 +10,8 @@ namespace ITestApp.DTO
 
         public int RequiredTime { get; set; }
 
-        //public int AuthorId { get; set; }
-        //public User Author { get; set; }
+        public int AuthorId { get; set; }
+        public UserDto Author { get; set; }
 
         public int CategoryId { get; set; }
         public CategoryDto Category { get; set; }

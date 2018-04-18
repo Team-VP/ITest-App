@@ -18,11 +18,11 @@ namespace ITestApp.Data.Models
         [Required]
         public string Name { get; set; }
 
-        public int RequiredTime { get; set; }
+        public double RequiredTime { get; set; }
 
-        //public int AuthorId { get; set; }
-        //public User Author { get; set; }
-        
+        public string AuthorId { get; set; }
+        public User Author { get; set; }
+
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 

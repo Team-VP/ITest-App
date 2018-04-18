@@ -15,11 +15,11 @@ namespace ITestApp.Data
 
         }
 
-        public DbSet<Answer> Answers { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Status> Statuses { get; set; }
-        public DbSet<Test> Tests { get; set; }
+        public DbSet<Answer> Answer { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Question> Question { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<Test> Test { get; set; }
         public DbSet<UserTest> UserTests { get; set; }
 
         public override int SaveChanges()
@@ -47,7 +47,13 @@ namespace ITestApp.Data
                 .HasForeignKey(ut => ut.TestId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // One to many 
+            // One to many
+            // Author to test
+            builder.Entity<Test>()
+               .HasOne(t => t.Author)
+               .WithMany(a => a.Tests)
+               .OnDelete(DeleteBehavior.Restrict);
+
             // Test to category
             builder.Entity<Test>()
                     .HasOne(c => c.Category)

@@ -44,7 +44,7 @@ namespace ITestApp.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("ITestApp.Data.Models.Category", b =>
@@ -65,7 +65,7 @@ namespace ITestApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("ITestApp.Data.Models.Question", b =>
@@ -91,7 +91,7 @@ namespace ITestApp.Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("ITestApp.Data.Models.Status", b =>
@@ -112,13 +112,15 @@ namespace ITestApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Status");
                 });
 
             modelBuilder.Entity("ITestApp.Data.Models.Test", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorId");
 
                     b.Property<int>("CategoryId");
 
@@ -133,17 +135,19 @@ namespace ITestApp.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("RequiredTime");
+                    b.Property<double>("RequiredTime");
 
                     b.Property<int>("StatusId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("ITestApp.Data.Models.User", b =>
@@ -362,6 +366,11 @@ namespace ITestApp.Data.Migrations
 
             modelBuilder.Entity("ITestApp.Data.Models.Test", b =>
                 {
+                    b.HasOne("ITestApp.Data.Models.User", "Author")
+                        .WithMany("Tests")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ITestApp.Data.Models.Category", "Category")
                         .WithMany("Tests")
                         .HasForeignKey("CategoryId")

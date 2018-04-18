@@ -54,7 +54,7 @@ namespace ITestApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -67,11 +67,11 @@ namespace ITestApp.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Category", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Statuses",
+                name: "Status",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -84,7 +84,7 @@ namespace ITestApp.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Statuses", x => x.Id);
+                    table.PrimaryKey("PK_Status", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,39 +194,46 @@ namespace ITestApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tests",
+                name: "Test",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AuthorId = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    RequiredTime = table.Column<int>(nullable: false),
+                    RequiredTime = table.Column<double>(nullable: false),
                     StatusId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tests", x => x.Id);
+                    table.PrimaryKey("PK_Test", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tests_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        name: "FK_Test_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tests_Statuses_StatusId",
+                        name: "FK_Test_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_Status_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "Statuses",
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "Question",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -240,11 +247,11 @@ namespace ITestApp.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.PrimaryKey("PK_Question", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questions_Tests_TestId",
+                        name: "FK_Question_Test_TestId",
                         column: x => x.TestId,
-                        principalTable: "Tests",
+                        principalTable: "Test",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -268,9 +275,9 @@ namespace ITestApp.Data.Migrations
                     table.PrimaryKey("PK_UserTests", x => new { x.UserId, x.TestId });
                     table.UniqueConstraint("AK_UserTests_Id", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserTests_Tests_TestId",
+                        name: "FK_UserTests_Test_TestId",
                         column: x => x.TestId,
-                        principalTable: "Tests",
+                        principalTable: "Test",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -282,7 +289,7 @@ namespace ITestApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answers",
+                name: "Answer",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -297,18 +304,18 @@ namespace ITestApp.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answers", x => x.Id);
+                    table.PrimaryKey("PK_Answer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answers_Questions_QuestionId",
+                        name: "FK_Answer_Question_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "Questions",
+                        principalTable: "Question",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_QuestionId",
-                table: "Answers",
+                name: "IX_Answer_QuestionId",
+                table: "Answer",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
@@ -351,18 +358,23 @@ namespace ITestApp.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_TestId",
-                table: "Questions",
+                name: "IX_Question_TestId",
+                table: "Question",
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_CategoryId",
-                table: "Tests",
+                name: "IX_Test_AuthorId",
+                table: "Test",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Test_CategoryId",
+                table: "Test",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_StatusId",
-                table: "Tests",
+                name: "IX_Test_StatusId",
+                table: "Test",
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
@@ -374,7 +386,7 @@ namespace ITestApp.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Answers");
+                name: "Answer");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -395,22 +407,22 @@ namespace ITestApp.Data.Migrations
                 name: "UserTests");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Question");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Test");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
+                name: "Status");
         }
     }
 }
