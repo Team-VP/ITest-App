@@ -10,5 +10,7 @@ namespace ITestApp.Services.Contracts
         QuestionDto GetById(int id);
 
         IEnumerable<AnswerDto> GetAnswers(int questionId);
+
+        void Edit(QuestionDto question);
     }
 }

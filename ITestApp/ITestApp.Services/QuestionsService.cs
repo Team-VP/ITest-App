@@ -21,6 +21,11 @@ namespace ITestApp.Services
             this.questions = questions;
         }
 
+        public void Edit(QuestionDto question)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public IEnumerable<AnswerDto> GetAnswers(int questionId)
         {
             throw new System.NotImplementedException();

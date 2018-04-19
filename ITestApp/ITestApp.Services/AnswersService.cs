@@ -23,6 +23,11 @@ namespace ITestApp.Services
             this.answers = answers;
         }
 
+        public void Edit(AnswerDto answer)
+        {
+            throw new NotImplementedException();
+        }
+
         public AnswerDto GetById(int id)
         {
             throw new NotImplementedException();

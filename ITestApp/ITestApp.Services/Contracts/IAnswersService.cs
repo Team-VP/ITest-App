@@ -7,5 +7,7 @@ namespace ITestApp.Services.Contracts
     public interface IAnswersService
     {
         AnswerDto GetById(int id);
+
+        void Edit(AnswerDto answer);
     }
 }
