@@ -4,6 +4,8 @@ using ITestApp.Data;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
+using ITestApp.Services;
+using ITestApp.Services.Contracts;
 using ITestApp.Web.Models;
 using ITestApp.Web.Services;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +42,11 @@ namespace ITestApp.Web
         private void RegisterServices(IServiceCollection services)
         {
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IAnswersService, AnswersService>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
+            services.AddTransient<IQuestionsService, QuestionsService>();
+            services.AddTransient<IStatusesService, StatusesService>();
+            services.AddTransient<ITestsService, TestsService>();
         }
 
         private void RegisterInfrastructure(IServiceCollection services)
@@ -49,6 +56,7 @@ namespace ITestApp.Web
 
             services.AddScoped<IMappingProvider, MappingProvider>();
         }
+
         private void RegisterAuthentication(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>()

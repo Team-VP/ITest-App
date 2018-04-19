@@ -24,6 +24,7 @@
     <ProjectReference Include="..\ITestApp.Common\ITestApp.Common.csproj" />
     <ProjectReference Include="..\ITestApp.Data\ITestApp.Data.csproj" />
     <ProjectReference Include="..\ITestApp.DTO\ITestApp.DTO.csproj" />
+    <ProjectReference Include="..\ITestApp.Services\ITestApp.Services.csproj" />
   </ItemGroup>
 
 </Project>
