@@ -38,7 +38,8 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("QuestionId");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -135,7 +136,7 @@ namespace ITestApp.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<double>("RequiredTime");
+                    b.Property<int>("RequiredTime");
 
                     b.Property<int>("StatusId");
 
@@ -213,15 +214,14 @@ namespace ITestApp.Data.Migrations
 
             modelBuilder.Entity("ITestApp.Data.Models.UserTest", b =>
                 {
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("TestId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<int>("Id");
+                    b.Property<int>("ExecutionTime");
 
                     b.Property<bool>("IsDeleted");
 
@@ -231,11 +231,15 @@ namespace ITestApp.Data.Migrations
 
                     b.Property<float>("Points");
 
-                    b.HasKey("UserId", "TestId");
+                    b.Property<int>("TestId");
 
-                    b.HasAlternateKey("Id");
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserTests");
                 });

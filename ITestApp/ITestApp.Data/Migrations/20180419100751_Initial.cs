@@ -206,7 +206,7 @@ namespace ITestApp.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    RequiredTime = table.Column<double>(nullable: false),
+                    RequiredTime = table.Column<int>(nullable: false),
                     StatusId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -260,20 +260,21 @@ namespace ITestApp.Data.Migrations
                 name: "UserTests",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    TestId = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Id = table.Column<int>(nullable: false),
+                    ExecutionTime = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsPassed = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Points = table.Column<float>(nullable: false)
+                    Points = table.Column<float>(nullable: false),
+                    TestId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTests", x => new { x.UserId, x.TestId });
-                    table.UniqueConstraint("AK_UserTests_Id", x => x.Id);
+                    table.PrimaryKey("PK_UserTests", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserTests_Test_TestId",
                         column: x => x.TestId,
@@ -300,7 +301,7 @@ namespace ITestApp.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     QuestionId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(nullable: false)
+                    Text = table.Column<string>(maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -381,6 +382,11 @@ namespace ITestApp.Data.Migrations
                 name: "IX_UserTests_TestId",
                 table: "UserTests",
                 column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTests_UserId",
+                table: "UserTests",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

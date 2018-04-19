@@ -32,8 +32,8 @@ namespace ITestApp.Data
         {
             // Many to many
             //User to Test
-            builder.Entity<UserTest>()
-                .HasKey(ut => new { ut.UserId, ut.TestId });
+            //builder.Entity<UserTest>()
+            //    .HasKey(ut => new { ut.UserId, ut.TestId });
 
             builder.Entity<UserTest>()
                 .HasOne(ut => ut.User)

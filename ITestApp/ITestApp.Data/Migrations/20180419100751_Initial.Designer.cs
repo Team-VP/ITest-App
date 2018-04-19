@@ -11,7 +11,7 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    [Migration("20180418201047_Initial")]
+    [Migration("20180419100751_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,8 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("QuestionId");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -136,7 +137,7 @@ namespace ITestApp.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<double>("RequiredTime");
+                    b.Property<int>("RequiredTime");
 
                     b.Property<int>("StatusId");
 
@@ -214,15 +215,14 @@ namespace ITestApp.Data.Migrations
 
             modelBuilder.Entity("ITestApp.Data.Models.UserTest", b =>
                 {
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("TestId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<int>("Id");
+                    b.Property<int>("ExecutionTime");
 
                     b.Property<bool>("IsDeleted");
 
@@ -232,11 +232,15 @@ namespace ITestApp.Data.Migrations
 
                     b.Property<float>("Points");
 
-                    b.HasKey("UserId", "TestId");
+                    b.Property<int>("TestId");
 
-                    b.HasAlternateKey("Id");
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserTests");
                 });
