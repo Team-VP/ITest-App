@@ -2,6 +2,7 @@
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
+using ITestApp.DTO;
 using ITestApp.Services.Contracts;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace ITestApp.Services
             this.saver = saver;
             this.mapper = mapper;
             this.answers = answers;
+        }
+
+        public AnswerDto GetById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

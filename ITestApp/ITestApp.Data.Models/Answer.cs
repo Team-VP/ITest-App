@@ -9,6 +9,7 @@ namespace ITestApp.Data.Models
     public class Answer : BaseEntity
     {
         [Required]
+        [StringLength(maximumLength: 500)]
         public string Text { get; set; }
 
         public int QuestionId { get; set; }
