@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ITestApp.Services.Contracts
+﻿namespace ITestApp.Services.Contracts
 {
-    public interface ITestsService
+    public interface IAnswersService
     {
     }
 }
