@@ -24,9 +24,9 @@ namespace ITestApp.Services
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
-            this.tests = tests ?? throw new ArgumentNullException("Tests can not be null");
-            this.answers = answers;
-            this.questions = questions;
+            this.tests = tests ?? throw new ArgumentNullException("Tests repo can not be null");
+            this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
+            this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
         }
 
         public void DeleteTest(int id)

@@ -16,12 +16,14 @@ namespace ITestApp.Services
         private readonly ISaver saver;
         private readonly IMappingProvider mapper;
         private readonly IRepository<Question> questions;
+        private readonly IRepository<Answer> answers;
 
-        public QuestionsService(ISaver saver, IMappingProvider mapper, IRepository<Question> questions)
+        public QuestionsService(ISaver saver, IMappingProvider mapper, IRepository<Question> questions, IRepository<Answer> answers)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null.");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null.");
             this.questions = questions ?? throw new ArgumentNullException("Qestion repo can not be null.");
+            this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null.");
         }
 
         public void Edit(QuestionDto question)
@@ -66,11 +68,18 @@ namespace ITestApp.Services
 
         public void DeleteQuestion(int id)
         {
-            Question questionToDelete = questions.All
+            Question questionToDelete = questions.All.Include(a => a.Answers)
                 .FirstOrDefault(q => q.Id == id) 
                 ?? throw new ArgumentNullException("Question can not be null.");
 
             questions.Delete(questionToDelete);
+
+            foreach (var answer in questionToDelete.Answers)
+            {
+                this.answers.Delete(answer);
+            }
+
+            saver.SaveChanges();
         }
     }
 }
