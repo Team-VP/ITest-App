@@ -7,6 +7,7 @@ using ITestApp.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ITestApp.Services
 {
@@ -30,7 +31,8 @@ namespace ITestApp.Services
 
         public AnswerDto GetById(int id)
         {
-            throw new NotImplementedException();
+            var currentAnwer = answers.All.FirstOrDefault(answer => answer.Id == id);
+            return mapper.MapTo<AnswerDto>(currentAnwer);
         }
     }
 }

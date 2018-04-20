@@ -15,8 +15,14 @@ namespace ITestApp.Services.Contracts
 
         void Publish(TestDto test);
 
-        void Edit(TestDto test);
+        void EditTest(TestDto test);
 
-        void Delete(int id);
+        void DeleteTest(int id);
+
+        void CreateNewTest(TestDto newTest);
+
+        ICollection<TestDto> GetAllTests();
+
+        ICollection<TestDto> GetTestByAuthorId(string id);
     }
 }
