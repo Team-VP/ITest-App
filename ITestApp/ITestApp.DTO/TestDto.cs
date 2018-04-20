@@ -8,11 +8,11 @@ namespace ITestApp.DTO
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public int RequiredTime { get; set; }
 
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
         public UserDto Author { get; set; }
 
         public int CategoryId { get; set; }

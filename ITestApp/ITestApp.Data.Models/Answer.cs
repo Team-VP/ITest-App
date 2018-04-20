@@ -10,7 +10,7 @@ namespace ITestApp.Data.Models
     {
         [Required]
         [StringLength(maximumLength: 500)]
-        public string Text { get; set; }
+        public string Content { get; set; }
 
         public int QuestionId { get; set; }
         public Question Question { get; set; }

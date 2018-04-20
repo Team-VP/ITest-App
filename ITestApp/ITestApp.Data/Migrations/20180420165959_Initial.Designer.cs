@@ -11,7 +11,7 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    [Migration("20180419100751_Initial")]
+    [Migration("20180420165959_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,10 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
@@ -37,10 +41,6 @@ namespace ITestApp.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<int>("QuestionId");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -122,7 +122,8 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorId");
+                    b.Property<string>("AuthorId")
+                        .IsRequired();
 
                     b.Property<int>("CategoryId");
 
@@ -134,12 +135,12 @@ namespace ITestApp.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
-
                     b.Property<int>("RequiredTime");
 
                     b.Property<int>("StatusId");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

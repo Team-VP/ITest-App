@@ -20,9 +20,9 @@ namespace ITestApp.Services
 
         public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests)
         {
-            this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
-            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
-            this.tests = tests ?? throw new ArgumentNullException("Tests can not be null"); ;
+            this.saver = saver ?? throw new ArgumentNullException("Saver cannot be null");
+            this.mapper = mapper ?? throw new ArgumentNullException("Mapper cannot be null");
+            this.tests = tests ?? throw new ArgumentNullException("Tests cannot be null");
         }
 
         public void DeleteTest(int id)
@@ -31,7 +31,6 @@ namespace ITestApp.Services
                 .FirstOrDefault(t => t.Id == id) ?? throw new ArgumentNullException("Test can not be null");
 
             tests.Delete(testToDelete);
-
         }
 
         public void EditTest(TestDto test)
@@ -40,13 +39,12 @@ namespace ITestApp.Services
                 .Include(q => q.Questions)
                 .ThenInclude(a => a.Answers).FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null.");
 
-            testToEdit.Name = test.Name;
+            testToEdit.Title = test.Title;
             testToEdit.CategoryId = test.CategoryId;
             testToEdit.RequiredTime = test.RequiredTime;
 
             tests.Update(testToEdit);
             saver.SaveChanges();
-
         }
 
         public TestDto GetById(int id)
@@ -56,8 +54,6 @@ namespace ITestApp.Services
                 .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
 
             return mapper.MapTo<TestDto>(testWithId);
-
-
         }
 
         public IEnumerable<QuestionDto> GetQuestions(int testId)
@@ -71,7 +67,7 @@ namespace ITestApp.Services
             return result;
         }
 
-        public void Publish(TestDto test) //The test can be new and directry bublished or can be existing at DB and only changing status. 
+        public void Publish(TestDto test) //The test can be new and directry published or can be existing at DB and only changing status. 
         {
             var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id) ?? throw new ArgumentNullException("Test can not be null");
             if (testToFind == null)
@@ -88,6 +84,7 @@ namespace ITestApp.Services
                 testToFind.Status.Name = "Publish";
                 tests.Update(testToFind);
             }
+
             saver.SaveChanges();
         }
 

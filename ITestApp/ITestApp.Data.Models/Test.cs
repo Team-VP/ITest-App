@@ -16,17 +16,20 @@ namespace ITestApp.Data.Models
         }
 
         [Required]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public int RequiredTime { get; set; }
 
         public string AuthorId { get; set; }
+        [Required]
         public User Author { get; set; }
 
         public int CategoryId { get; set; }
+        [Required]
         public Category Category { get; set; }
 
         public int StatusId { get; set; }
+        [Required]
         public Status Status { get; set; }
 
         public ICollection<Question> Questions { get; set; }
