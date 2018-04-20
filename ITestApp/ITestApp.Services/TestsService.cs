@@ -17,21 +17,35 @@ namespace ITestApp.Services
         private readonly ISaver saver;
         private readonly IMappingProvider mapper;
         private readonly IRepository<Test> tests;
+        private readonly IRepository<Question> questions;
+        private readonly IRepository<Answer> answers;
 
-        public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests)
+        public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
-            this.tests = tests ?? throw new ArgumentNullException("Tests can not be null"); ;
+            this.tests = tests ?? throw new ArgumentNullException("Tests can not be null");
+            this.answers = answers;
+            this.questions = questions;
         }
 
         public void DeleteTest(int id)
         {
-            var testToDelete = tests.All
+            var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault(t => t.Id == id) ?? throw new ArgumentNullException("Test can not be null");
 
             tests.Delete(testToDelete);
 
+            foreach (var question in testToDelete.Questions)
+            {
+                this.questions.Delete(question);
+                foreach (var answer in question.Answers)
+                {
+                    this.answers.Delete(answer);
+                }
+            }
+
+            saver.SaveChanges();
         }
 
         public void EditTest(TestDto test)
