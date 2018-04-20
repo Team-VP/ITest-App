@@ -34,5 +34,13 @@ namespace ITestApp.Services
             var currentAnwer = answers.All.FirstOrDefault(answer => answer.Id == id);
             return mapper.MapTo<AnswerDto>(currentAnwer);
         }
+
+        public void DeleteAnswer(int id)
+        {
+            var answerToDelete = answers.All.FirstOrDefault(a => a.Id == id) ?? throw new ArgumentNullException("Answer can not be null.");
+
+            answers.Delete(answerToDelete);
+        }
+
     }
 }

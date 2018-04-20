@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
@@ -34,6 +36,14 @@ namespace ITestApp.Services
         public QuestionDto GetById(int id)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void DeleteQuestion(int id)
+        {
+            var questionToDelete = questions.All
+                .FirstOrDefault(q => q.Id == id) ?? throw new ArgumentNullException("Question can not be null.");
+
+            questions.Delete(questionToDelete);
         }
     }
 }
