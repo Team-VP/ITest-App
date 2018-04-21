@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITestApp.Data.Models;
 using ITestApp.DTO;
+using ITestApp.Web.Models.TestViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,13 @@ namespace ITestApp.Web.Properties
     {
         public MappingSettings()
         {
-            //this.CreateMap<PostDto, PostViewModel>()
-            //       .ForMember(x => x.Author, options => options.MapFrom(x => x.Author.Email));
+            this.CreateMap<TestDto, TestViewModel>()
+                   .ForMember(x => x.Author, options => options.MapFrom(x => x.Author.Email));
 
-            //this.CreateMap<CommentDto, CommentViewModel>()
-            //       .ForMember(x => x.Author, options => options.MapFrom(x => x.Author.Email));
+            this.CreateMap<TestViewModel, TestDto>(MemberList.Source);
+            this.CreateMap<QuestionViewModel, QuestionDto>(MemberList.Source);
+            this.CreateMap<AnswerViewModel, AnswerDto>(MemberList.Source);
 
-            //this.CreateMap<PostViewModel, PostDto>(MemberList.Source);
             this.CreateMap<AnswerDto, Answer>(MemberList.Source);
             this.CreateMap<CategoryDto, Category>(MemberList.Source);
             this.CreateMap<QuestionDto, Question>(MemberList.Source);

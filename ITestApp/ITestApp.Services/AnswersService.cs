@@ -19,9 +19,9 @@ namespace ITestApp.Services
 
         public AnswersService(ISaver saver, IMappingProvider mapper, IRepository<Answer> answers)
         {
-            this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
-            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
-            this.answers = answers ?? throw new ArgumentNullException("Answer repo can not be null");
+            this.saver = saver ?? throw new ArgumentNullException("Saver cannot be null");
+            this.mapper = mapper ?? throw new ArgumentNullException("Mapper cannot be null");
+            this.answers = answers ?? throw new ArgumentNullException("Answer repo cannot be null");
         }
 
         public void Edit(AnswerDto answer)
@@ -30,7 +30,7 @@ namespace ITestApp.Services
                 FirstOrDefault(a => a.Id == answer.Id) 
                 ?? throw new ArgumentNullException("Answer can not be null.");
 
-            answerToEdit.Text = answer.Text;
+            answerToEdit.Content = answer.Content;
             answerToEdit.QuestionId = answer.QuestionId;
             answerToEdit.IsCorrect = answer.IsCorrect;
 

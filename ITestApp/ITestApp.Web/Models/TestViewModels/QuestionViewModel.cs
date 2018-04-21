@@ -15,5 +15,7 @@ namespace ITestApp.Web.Models.TestViewModels
         [MaxLength(500)]
         [DataType(DataType.Text)]
         public string Content { get; set; }
+
+        IEnumerable<AnswerViewModel> Answers { get; set; }
     }
 }

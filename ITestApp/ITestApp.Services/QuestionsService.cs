@@ -32,7 +32,7 @@ namespace ITestApp.Services
                 .Where(q => q.Id == question.Id).Include(a => a.Answers)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Question can not be null.");
 
-            questionToEdit.Text = question.Text;
+            questionToEdit.Content = question.Content;
             questionToEdit.TestId = question.TestId;
             
 

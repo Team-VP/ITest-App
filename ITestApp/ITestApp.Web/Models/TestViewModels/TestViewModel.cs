@@ -26,5 +26,7 @@ namespace ITestApp.Web.Models.TestViewModels
 
         [DataType(DataType.Text)]
         public string Status { get; set; }
+
+        IEnumerable<QuestionViewModel> Questions { get; set; }
     }
 }

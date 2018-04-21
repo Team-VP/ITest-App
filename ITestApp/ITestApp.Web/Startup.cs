@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITestApp.Common.Providers;
 using ITestApp.Data;
+using ITestApp.Data.DataSeed;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
@@ -39,22 +40,16 @@ namespace ITestApp.Web
             this.RegisterInfrastructure(services);
         }
 
-        private void RegisterServices(IServiceCollection services)
+        private void RegisterData(IServiceCollection services)
         {
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<IAnswersService, AnswersService>();
-           
-            services.AddTransient<IQuestionsService, QuestionsService>();
-          
-            services.AddTransient<ITestsService, TestsService>();
-        }
+            services.AddDbContext<ITestAppDbContext>(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
+            });
 
-        private void RegisterInfrastructure(IServiceCollection services)
-        {
-            services.AddMvc();
-            services.AddAutoMapper();
-
-            services.AddScoped<IMappingProvider, MappingProvider>();
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<ISaver, EntitySaver>();
         }
 
         private void RegisterAuthentication(IServiceCollection services)
@@ -82,23 +77,28 @@ namespace ITestApp.Web
             }
         }
 
-        private void RegisterData(IServiceCollection services)
+        private void RegisterServices(IServiceCollection services)
         {
-            services.AddDbContext<ITestAppDbContext>(options =>
-            {
-                var connectionString = Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-            });
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IAnswersService, AnswersService>();
+            services.AddTransient<IQuestionsService, QuestionsService>();
+            services.AddTransient<ITestsService, TestsService>();
+        }
 
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<ISaver, EntitySaver>();
+        private void RegisterInfrastructure(IServiceCollection services)
+        {
+            services.AddMvc();
+            services.AddAutoMapper();
+
+            services.AddScoped<IMappingProvider, MappingProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             if (this.Environment.IsDevelopment())
             {
+                DataSeeder.SeedTests(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();

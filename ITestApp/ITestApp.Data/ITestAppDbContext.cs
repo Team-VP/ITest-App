@@ -1,4 +1,5 @@
-﻿using ITestApp.Data.Models;
+﻿using ITestApp.Data.DataSeed;
+using ITestApp.Data.Models;
 using ITestApp.Data.Models.Abstracts;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace ITestApp.Data
         public ITestAppDbContext(DbContextOptions<ITestAppDbContext> options)
             : base(options)
         {
-
+            //DataSeeder.SeedTests();
         }
 
         public DbSet<Answer> Answer { get; set; }
