@@ -11,6 +11,8 @@ namespace ITestApp.Services.Contracts
 
         IEnumerable<QuestionDto> GetQuestions(int testId);
 
+        void AddQuestionToTheTest(QuestionDto dto);
+
         void SaveAsDraft(TestDto test);
 
         void Publish(TestDto test);
