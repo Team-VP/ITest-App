@@ -133,5 +133,15 @@ namespace ITestApp.Services
             tests.Add(newTestEntity);
             saver.SaveChanges();
         }
+
+        public void AddQuestionToTheTest(QuestionDto dto)
+        {
+            var question = mapper.MapTo<Question>(dto)
+                ?? throw new ArgumentNullException("QuestionDto can not be null.");
+
+            questions.Add(question);
+
+            saver.SaveChanges();
+        }
     }
 }
