@@ -1,7 +1,11 @@
-﻿
+﻿@model ITestApp.Web.Models.DashboardViewModels.IndexViewModel
 @{
     ViewData["Title"] = "All";
 }
 
-<h2>All</h2>
+@foreach (var category in Model.Categories)
+{
+    <h2>@category.Name</h2>
+}
+
 

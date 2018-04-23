@@ -18,6 +18,7 @@ namespace ITestApp.Data.Models
         public string Content { get; set; }
 
         public int TestId { get; set; }
+        [Required]
         public Test Test { get; set; }
 
         public ICollection<Answer> Answers { get; set; }

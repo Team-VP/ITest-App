@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITestApp.Web.Models.TestViewModels
+namespace ITestApp.Web.Models.DashboardViewModels
 {
     public class TestViewModel
     {
@@ -21,8 +21,8 @@ namespace ITestApp.Web.Models.TestViewModels
         [DataType(DataType.Text)]
         public string Author { get; set; }
 
-        [DataType(DataType.Text)]
-        public string Category { get; set; }
+        //[DataType(DataType.Text)]
+        //public string Category { get; set; }
 
         [DataType(DataType.Text)]
         public string Status { get; set; }

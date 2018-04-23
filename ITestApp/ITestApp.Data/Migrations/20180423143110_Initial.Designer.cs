@@ -11,7 +11,7 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    [Migration("20180423091651_Initial")]
+    [Migration("20180423143110_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

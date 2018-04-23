@@ -24,5 +24,6 @@ namespace ITestApp.Services.Contracts
         IEnumerable<TestDto> GetAllTests();
 
         IEnumerable<TestDto> GetTestByAuthorId(string id);
+        IEnumerable<CategoryDto> GetAllCategories();
     }
 }

@@ -2,7 +2,6 @@
 using ITestApp.Data.Models;
 using ITestApp.Services.Contracts;
 using ITestApp.Web.Models.DashboardViewModels;
-using ITestApp.Web.Models.TestViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,10 +30,11 @@ namespace ITestApp.Web.Controllers
 
         public IActionResult All()
         {
-            var allTests = this.tests.GetAllTests();
+            var categories = this.tests.GetAllCategories();
+
             var model = new IndexViewModel()
             {
-                Tests = this.mapper.ProjectTo<TestViewModel>(allTests).ToList()
+                Categories = this.mapper.ProjectTo<CategoryViewModel>(categories).ToList()
             };
 
             return View(model);

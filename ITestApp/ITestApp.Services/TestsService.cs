@@ -19,14 +19,16 @@ namespace ITestApp.Services
         private readonly IRepository<Test> tests;
         private readonly IRepository<Question> questions;
         private readonly IRepository<Answer> answers;
+        private readonly IRepository<Category> categories;
 
-        public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers)
+        public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers, IRepository<Category> categories)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
             this.tests = tests ?? throw new ArgumentNullException("Tests repo can not be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
+            this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
         }
 
         public void DeleteTest(int id)
@@ -121,12 +123,21 @@ namespace ITestApp.Services
         }
         public IEnumerable<TestDto> GetAllTests()
         {
-            var currentTests = tests.All
-                .Where(t => t.IsDeleted == false)
-                .Include(q => q.Questions)
-                .ThenInclude(a => a.Answers);
+            var allTests = tests.All
+                .Include(t => t.Questions)
+                .ThenInclude(q => q.Answers);
 
-            return mapper.ProjectTo<TestDto>(currentTests);
+            return mapper.ProjectTo<TestDto>(allTests);
+        }
+
+        public IEnumerable<CategoryDto> GetAllCategories()
+        {
+            var allCategories = categories.All
+                .Include(c => c.Tests)
+                .ThenInclude(t => t.Questions)
+                .ThenInclude(q => q.Answers);
+
+            return mapper.ProjectTo<CategoryDto>(allCategories);
         }
 
         public void CreateNewTest(TestDto newTest)
