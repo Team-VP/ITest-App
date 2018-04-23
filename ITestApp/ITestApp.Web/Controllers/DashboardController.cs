@@ -29,7 +29,7 @@ namespace ITestApp.Web.Controllers
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
         }
 
-        public IActionResult Index()
+        public IActionResult All()
         {
             var allTests = this.tests.GetAllTests();
             var model = new IndexViewModel()
