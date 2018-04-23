@@ -11,7 +11,7 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    [Migration("20180420165959_Initial")]
+    [Migration("20180423091651_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,10 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
@@ -84,10 +88,6 @@ namespace ITestApp.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<int>("TestId");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 

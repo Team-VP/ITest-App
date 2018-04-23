@@ -16,6 +16,6 @@ namespace ITestApp.Web.Models.TestViewModels
         [DataType(DataType.Text)]
         public string Content { get; set; }
 
-        IEnumerable<AnswerViewModel> Answers { get; set; }
+        public ICollection<AnswerViewModel> Answers { get; set; }
     }
 }

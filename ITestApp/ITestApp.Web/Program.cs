@@ -17,17 +17,7 @@ namespace ITestApp.Web
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
-
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var serviceScope = scope.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            //    var context = serviceScope.ServiceProvider.GetService<ITestAppDbContext>();
-            //    context.Database.EnsureCreated();
-            //    DataSeeder.SeedTests(context);
-            //}
-
-            host.Run();
+            BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

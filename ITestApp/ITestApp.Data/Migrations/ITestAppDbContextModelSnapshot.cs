@@ -74,6 +74,10 @@ namespace ITestApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
@@ -83,10 +87,6 @@ namespace ITestApp.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<int>("TestId");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 

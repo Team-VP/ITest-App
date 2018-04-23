@@ -111,20 +111,22 @@ namespace ITestApp.Services
             
         }
 
-        public ICollection<TestDto> GetTestByAuthorId(string id)
+        public IEnumerable<TestDto> GetTestByAuthorId(string id)
         {
             var currentTests = tests.All.
                 Where(test => test.AuthorId == id)
                 .Include(q => q.Questions).ThenInclude(a => a.Answers);
 
-            return mapper.ProjectTo<TestDto>(currentTests).ToList();
+            return mapper.ProjectTo<TestDto>(currentTests);
         }
-        public ICollection<TestDto> GetAllTests()
+        public IEnumerable<TestDto> GetAllTests()
         {
             var currentTests = tests.All
-                .Include(q => q.Questions).ThenInclude(a => a.Answers);
+                .Where(t => t.IsDeleted == false)
+                .Include(q => q.Questions)
+                .ThenInclude(a => a.Answers);
 
-            return mapper.ProjectTo<TestDto>(currentTests).ToList();
+            return mapper.ProjectTo<TestDto>(currentTests);
         }
 
         public void CreateNewTest(TestDto newTest)

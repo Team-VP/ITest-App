@@ -14,7 +14,7 @@ namespace ITestApp.Web.Models.TestViewModels
         [MinLength(2)]
         [MaxLength(50)]
         [DataType(DataType.Text)]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public int RequiredTime { get; set; }
 
@@ -27,6 +27,6 @@ namespace ITestApp.Web.Models.TestViewModels
         [DataType(DataType.Text)]
         public string Status { get; set; }
 
-        IEnumerable<QuestionViewModel> Questions { get; set; }
+        public ICollection<QuestionViewModel> Questions { get; set; }
     }
 }

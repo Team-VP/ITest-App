@@ -21,8 +21,8 @@ namespace ITestApp.Services.Contracts
 
         void CreateNewTest(TestDto newTest);
 
-        ICollection<TestDto> GetAllTests();
+        IEnumerable<TestDto> GetAllTests();
 
-        ICollection<TestDto> GetTestByAuthorId(string id);
+        IEnumerable<TestDto> GetTestByAuthorId(string id);
     }
 }

@@ -238,12 +238,12 @@ namespace ITestApp.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(maxLength: 500, nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    TestId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(maxLength: 500, nullable: false)
+                    TestId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
