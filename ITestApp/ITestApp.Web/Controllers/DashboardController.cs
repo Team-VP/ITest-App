@@ -32,7 +32,7 @@ namespace ITestApp.Web.Controllers
         {
             var categories = this.tests.GetAllCategories();
 
-            var model = new IndexViewModel()
+            var model = new AllViewModel()
             {
                 Categories = this.mapper.ProjectTo<CategoryViewModel>(categories).ToList()
             };

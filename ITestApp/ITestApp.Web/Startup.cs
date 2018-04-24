@@ -98,7 +98,7 @@ namespace ITestApp.Web
         {
             if (this.Environment.IsDevelopment())
             {
-                DataSeeder.SeedTests(serviceProvider);
+                DataSeeder.Seed(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
