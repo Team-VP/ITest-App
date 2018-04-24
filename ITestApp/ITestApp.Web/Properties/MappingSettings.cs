@@ -33,7 +33,7 @@ namespace ITestApp.Web.Properties
             this.CreateMap<StatusDto, Status>(MemberList.Source);
             this.CreateMap<QuestionDto, Question>(MemberList.Source);
             this.CreateMap<AnswerDto, Answer>(MemberList.Source);
-
+            //
             this.CreateMap<PostTestViewModel, TestDto>(MemberList.Source)
                 .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }));
 

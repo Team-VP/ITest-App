@@ -50,7 +50,7 @@ namespace ITestApp.Web.Controllers
                 //this.tests.Publish(dto);
 
                 //TempData["Success-Message"] = "You published a new post!";
-                return this.RedirectToAction("Index", "Home");
+                return this.RedirectToAction("All", "Dashboard");
             }
 
             return View(model);
