@@ -39,5 +39,15 @@ namespace ITestApp.Web.Controllers
 
             return View(model);
         }
+
+        public  IActionResult BeginTest(int id)
+        {
+            var testTobegin = this.tests.GetById(id);
+
+            var model = mapper.MapTo<TestViewModel>(testTobegin);
+
+            return View(model);
+            
+        }
     }
 }
