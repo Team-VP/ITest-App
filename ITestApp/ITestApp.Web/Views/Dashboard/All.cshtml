@@ -1,11 +1,90 @@
 ﻿@model ITestApp.Web.Models.DashboardViewModels.AllViewModel
 @{
     ViewData["Title"] = "All";
+    var i = 0;
+    var j = 0;
 }
+<h1>Tests</h1>
+<div class="category-tabs">
+    <ul class="nav nav-tabs nav-justified">
+        @foreach (var category in Model.Categories)
+        {
+            if (i == 0)
+            {
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#@category.Id">@category.Name</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#@category.Id">@category.Name</a>
+                </li>
+            }
+            i++;
 
-@foreach (var category in Model.Categories)
-{
-    <h2>@category.Name</h2>
-}
+        }
+    </ul>
+
+    <div class="tab-content">
+        @foreach (var category in Model.Categories)
+        {
+            if (j == 0)
+            {
+                <div id="@category.Id" class="tab-pane fade in active">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Test Id</th>
+                                <th scope="col">Title</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var test in category.Tests)
+                            {
+                                <tr>
+                                    <th scope="row" id="@test.Id">@test.Id</th>
+                                    <td>@test.Title</td>
+                                    <td>
+                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="Dashboard" asp-action="BeginTest" asp-route-id="@test.Id">Begin Test</a></p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div id="@category.Id" class="tab-pane fade">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Test Id</th>
+                                <th scope="col">Title</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var test in category.Tests)
+                            {
+                                <tr>
+                                    <th scope="row" id="@test.Id">@test.Id</th>
+                                    <td>@test.Title</td>
+                                    <td>
+                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="Dashboard" asp-action="BeginTest" asp-route-id="@test.Id">Begin Test</a></p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            j++;
+
+        }
 
 
+    </div>
+</div>

@@ -67,9 +67,14 @@ namespace ITestApp.Services
         public TestDto GetById(int id)
         {
             Test testWithId = tests.All.Where(t => t.Id == id)
-                .Include(q => q.Questions)
+                .Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
+            //var testQuestions = this.questions.All.Where(q => q.TestId == testWithId.Id);
 
+            //foreach (var question in testQuestions)
+            //{
+
+            //}
             return mapper.MapTo<TestDto>(testWithId);
         }
 
