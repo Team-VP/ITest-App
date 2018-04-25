@@ -39,26 +39,27 @@ namespace ITestApp.Web.Properties
             this.CreateMap<CategoryDto, CategoryViewModel>()
                 .ForMember(vm => vm.Tests, opt => opt.MapFrom(src => src.Tests));
 
-            this.CreateMap<CategoryDto, CategoryViewModel>();
-            this.CreateMap<QuestionDto, QuestionViewModel>();
-            this.CreateMap<AnswerDto, AnswerViewModel>();
-            //
-            this.CreateMap<TestViewModel, TestDto>(MemberList.Source);
-            this.CreateMap<QuestionViewModel, QuestionDto>(MemberList.Source);
-            this.CreateMap<AnswerViewModel, AnswerDto>(MemberList.Source);
-            this.CreateMap<CategoryViewModel, CategoryDto>(MemberList.Source);
-            //
-            this.CreateMap<CategoryDto, Category>(MemberList.Source);
-            this.CreateMap<TestDto, Test>(MemberList.Source);
-            this.CreateMap<StatusDto, Status>(MemberList.Source);
-            this.CreateMap<QuestionDto, Question>(MemberList.Source);
-            this.CreateMap<AnswerDto, Answer>(MemberList.Source);
-            //
-            this.CreateMap<PostTestViewModel, TestDto>(MemberList.Source)
+            //this.CreateMap<CategoryDto, CategoryViewModel>();
+            //this.CreateMap<QuestionDto, QuestionViewModel>();
+            //this.CreateMap<AnswerDto, AnswerViewModel>();
+            ////
+            //this.CreateMap<TestViewModel, TestDto>(MemberList.Source);
+            //this.CreateMap<QuestionViewModel, QuestionDto>(MemberList.Source);
+            //this.CreateMap<AnswerViewModel, AnswerDto>(MemberList.Source);
+            //this.CreateMap<CategoryViewModel, CategoryDto>(MemberList.Source);
+            ////
+            //this.CreateMap<CategoryDto, Category>(MemberList.Source);
+            //this.CreateMap<TestDto, Test>(MemberList.Source);
+            //this.CreateMap<StatusDto, Status>(MemberList.Source);
+            //this.CreateMap<QuestionDto, Question>(MemberList.Source);
+            //this.CreateMap<AnswerDto, Answer>(MemberList.Source);
+            ////
+            this.CreateMap<PostTestViewModel, TestDto>()
                 .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }));
 
-            this.CreateMap<PostQuestionViewModel, QuestionDto>(MemberList.Source);
-            this.CreateMap<PostAnswerViewModel, AnswerDto>(MemberList.Source);
+            this.CreateMap<PostQuestionViewModel, QuestionDto>();
+            this.CreateMap<PostAnswerViewModel, AnswerDto>();
+            this.CreateMap<PostCategoryViewModel, CategoryDto>();
         }
     }
 }

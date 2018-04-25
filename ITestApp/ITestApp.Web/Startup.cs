@@ -83,6 +83,7 @@ namespace ITestApp.Web
             services.AddTransient<IAnswersService, AnswersService>();
             services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<ITestsService, TestsService>();
+            services.AddTransient<ICategoryService, CategoriesService>();
         }
 
         private void RegisterInfrastructure(IServiceCollection services)

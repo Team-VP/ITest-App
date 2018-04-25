@@ -24,7 +24,5 @@ namespace ITestApp.Web.Models.TestViewModels
 
         [DataType(DataType.Text)]
         public string Status { get; set; }
-
-        public ICollection<PostQuestionViewModel> Questions { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿@model ITestApp.Web.Models.TestViewModels.PostTestViewModel
+﻿@model ITestApp.Web.Models.TestViewModels.CreateTestViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Test";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -10,26 +10,39 @@
         <form asp-controller="Test" asp-action="Create" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Test.Title"></label>
+                <input asp-for="Test.Title" class="form-control" placeholder="Test name" />
+                <span asp-validation-for="Test.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RequiredTime"></label>
-                <input asp-for="RequiredTime" class="form-control" />
-                <span asp-validation-for="RequiredTime" class="text-danger"></span>
+                <label asp-for="Test.RequiredTime"></label>
+                <input asp-for="Test.RequiredTime" class="form-control" placeholder="Required time" />
+                <span asp-validation-for="Test.RequiredTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="Test.Category"></label>
+                    <select asp-for="Test.Category" class="form-control" id="categories-select">
+                        @foreach(var category in Model.Categories)
+                        {
+                            <option>@category.Name</option>
+
+                        }
+                    </select>
+                </div>
+                <span asp-validation-for="Test.Category" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
+            <br />
             <input type="button" name="Add" value="Add question" id="add-question-btn" />
+            <div id="question-container">
+
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/creating-test.js"></script>
 }

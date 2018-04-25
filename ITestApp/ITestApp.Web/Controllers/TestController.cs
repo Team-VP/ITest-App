@@ -18,33 +18,44 @@ namespace ITestApp.Web.Controllers
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
+        private readonly ICategoryService categories;
         private readonly IQuestionsService questions;
         private readonly IAnswersService answers;
         private readonly UserManager<User> userManager;
 
-        public TestController(IMappingProvider mapper, ITestsService tests, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public TestController(IMappingProvider mapper, ITestsService tests, ICategoryService categories, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
+            this.categories = categories ?? throw new ArgumentNullException("Categories service cannot be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
         }
 
+        [HttpGet]
         //[Authorize]
+        //[ValidateAntiForgeryToken]
         public IActionResult Create()
         {
-            return View();
+            var allCategories = categories.GetAllCategories();
+
+            var model = new CreateTestViewModel()
+            {
+                Categories = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList()
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         //[Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PostTestViewModel model)
+        public IActionResult Create(CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
             {
-                var dto = this.mapper.MapTo<TestDto>(model);
+                var dto = this.mapper.MapTo<TestDto>(model.Test);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
 
                 //this.tests.Publish(dto);
@@ -53,7 +64,22 @@ namespace ITestApp.Web.Controllers
                 return this.RedirectToAction("All", "Dashboard");
             }
 
-            return View(model);
+            var allCategories = categories.GetAllCategories();
+            var createModel = new CreateTestViewModel()
+            {
+                Categories = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList(),
+                Test = model.Test
+            };
+
+            return View(createModel);
+        }
+
+        [HttpGet]
+        //[Authorize]
+        //[ValidateAntiForgeryToken]
+        public IActionResult AddQuestion()
+        {
+            return PartialView("_QuestionPartialView");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ITestApp.Services
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver cannot be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper cannot be null");
-            this.answers = answers ?? throw new ArgumentNullException("Answer repo cannot be null");
+            this.answers = answers ?? throw new ArgumentNullException("Answer repository cannot be null");
         }
 
         public void Edit(AnswerDto answer)

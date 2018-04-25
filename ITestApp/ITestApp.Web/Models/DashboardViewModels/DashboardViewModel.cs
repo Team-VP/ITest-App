@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ITestApp.Web.Models.DashboardViewModels
 {
-    public class AllViewModel
+    public class DashboardViewModel
     {
         public IEnumerable<CategoryViewModel> Categories { get; set; }
     }
