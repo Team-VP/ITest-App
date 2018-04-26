@@ -24,6 +24,8 @@ namespace ITestApp.Web.Models.DashboardViewModels
         //[DataType(DataType.Text)]
         //public string Category { get; set; }
 
+        public string TestCategory { get; set; }
+
         [DataType(DataType.Text)]
         public string Status { get; set; }
 

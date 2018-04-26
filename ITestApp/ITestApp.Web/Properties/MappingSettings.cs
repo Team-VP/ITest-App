@@ -15,12 +15,13 @@ namespace ITestApp.Web.Properties
         {
             /////
             this.CreateMap<Test, TestDto>()
-                   .ForMember(dto => dto.Questions, options => options.MapFrom(source => source.Questions)).ReverseMap().MaxDepth(3);
+                   .ForMember(dto => dto.Questions, options => options.MapFrom(source => source.Questions))
+                   /*.ForMember(dto => dto.Category, opt => opt.MapFrom(src => src.Category)).ReverseMap().MaxDepth(3)*/;
 
             this.CreateMap<TestDto, TestViewModel>()
                    .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
-                   //.ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
-                   .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name)).MaxDepth(3).ReverseMap();
+                   //.ForMember(vm => vm.TestCategory, options => options.MapFrom(dto => dto.Category.Name))
+                   .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name))./*ReverseMap()*/MaxDepth(3);
 
             this.CreateMap<Question, QuestionDto>()
                    .ForMember(dto => dto.Answers, options => options.MapFrom(source => source.Answers)).ReverseMap().MaxDepth(3);

@@ -12,7 +12,7 @@
             if (i == 0)
             {
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#@category.Id">@category.Name</a>
+                    <a class="nav-link in active" data-toggle="tab" href="#@category.Id">@category.Name</a>
                 </li>
             }
             else
@@ -47,7 +47,7 @@
                                     <th scope="row" id="@test.Id">@test.Id</th>
                                     <td>@test.Title</td>
                                     <td>
-                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="Dashboard" asp-action="BeginTest" asp-route-id="@test.Id">Begin Test</a></p>
+                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
                                     </td>
                                 </tr>
                             }
@@ -73,7 +73,7 @@
                                     <th scope="row" id="@test.Id">@test.Id</th>
                                     <td>@test.Title</td>
                                     <td>
-                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="Dashboard" asp-action="BeginTest" asp-route-id="@test.Id">Begin Test</a></p>
+                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
                                     </td>
                                 </tr>
                             }
@@ -88,3 +88,4 @@
 
     </div>
 </div>
+<nav aria-label="..."><ul class="pagination pagination-lg">...</ul></nav>

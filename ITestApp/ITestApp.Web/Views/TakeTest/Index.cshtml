@@ -1,17 +1,18 @@
-﻿@model ITestApp.Web.Models.DashboardViewModels.TestViewModel
+﻿@model ITestApp.Web.Models.TakeTestViewModels.IndexViewModel
+
 @{
     ViewData["Title"] = "Model.Title";
     int questionCounter = 1;
 }
 
 
-<h2>@Model.Title</h2>
+<h2>@Model.TestName</h2>
 <hr />
 <div class="page-header">
-    <h3>Category: <small>@Model.TestCategory</small></h3>
+    <h3>Category: <small>@Model.CategoryName</small></h3>
 </div>
 
-     <hr />
+<hr />
 <div class="panel panel-default">
     @foreach (var item in Model.Questions)
     {
@@ -48,6 +49,7 @@
         questionCounter++;
     }
 </div>
+
 
 
 

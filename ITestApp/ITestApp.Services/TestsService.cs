@@ -66,7 +66,7 @@ namespace ITestApp.Services
 
         public TestDto GetById(int id)
         {
-            Test testWithId = tests.All.Where(t => t.Id == id)
+            Test testWithId = tests.All.Where(t => t.Id == id).Include(c => c.Category)
                 .Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
             //var testQuestions = this.questions.All.Where(q => q.TestId == testWithId.Id);
