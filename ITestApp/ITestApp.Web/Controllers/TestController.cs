@@ -39,23 +39,19 @@ namespace ITestApp.Web.Controllers
         public IActionResult Create()
         {
             var allCategories = categories.GetAllCategories();
+            TempData["Categories"] = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList();
 
-            var model = new CreateTestViewModel()
-            {
-                Categories = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList()
-            };
-
-            return View(model);
+            return View();
         }
 
         [HttpPost]
         //[Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateTestViewModel model)
+        public IActionResult Create(PostTestViewModel model)
         {
             if (this.ModelState.IsValid)
             {
-                var dto = this.mapper.MapTo<TestDto>(model.Test);
+                var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
 
                 //this.tests.Publish(dto);
@@ -64,14 +60,13 @@ namespace ITestApp.Web.Controllers
                 return this.RedirectToAction("All", "Dashboard");
             }
 
-            var allCategories = categories.GetAllCategories();
-            var createModel = new CreateTestViewModel()
+            if (TempData["Categories"] == null)
             {
-                Categories = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList(),
-                Test = model.Test
-            };
+                var allCategories = categories.GetAllCategories();
+                TempData["Categories"] = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList();
+            }
 
-            return View(createModel);
+            return View(model);
         }
 
         [HttpGet]
@@ -80,6 +75,12 @@ namespace ITestApp.Web.Controllers
         public IActionResult AddQuestion()
         {
             return PartialView("_QuestionPartialView");
+        }
+
+        [HttpGet]
+        public IActionResult AddAnswer()
+        {
+            return PartialView("_AnswerPartialView");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿$(function () {
-    $('#add-question-btn').on("click", () => {
+    $('#add-answer-btn').on("click", () => {
         $.ajax({
-            url: '/Test/AddQuestion/',
+            url: '/Test/АddAnswer/',
             type: 'GET',
             contentType: 'application/html',
             //data: JSON.stringify(model),
@@ -11,10 +11,9 @@
 
                 //questionContainer.append(text);
 
-                $('#question-container').html(content);
+                $('#answer-container').append(content);
             },
-            error: function (e)
-            {
+            error: function (e) {
                 console.log(e);
             }
         });
