@@ -2,6 +2,7 @@
 using ITestApp.Data.Models;
 using ITestApp.Services.Contracts;
 using ITestApp.Web.Models.DashboardViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace ITestApp.Web.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IMappingProvider mapper;

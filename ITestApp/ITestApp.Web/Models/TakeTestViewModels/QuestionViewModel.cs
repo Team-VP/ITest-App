@@ -17,5 +17,7 @@ namespace ITestApp.Web.Models.TakeTestViewModels
         public string Content { get; set; }
 
         public ICollection<AnswerViewModel> Answers { get; set; }
+
+        public string AndswerId { get; set; }
     }
 }

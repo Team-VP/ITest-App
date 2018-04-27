@@ -47,5 +47,14 @@ namespace ITestApp.Web.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public IActionResult Index (IndexViewModel model)
+        {
+            var c = model;
+
+            return Ok();
+        }
     }
+
 }

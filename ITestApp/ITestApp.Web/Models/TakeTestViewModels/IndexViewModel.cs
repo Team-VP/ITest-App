@@ -16,6 +16,7 @@ namespace ITestApp.Web.Models.TakeTestViewModels
 
         public TimeSpan Duration { get; set; }
 
+
         public string CategoryName { get; set; } // not from Test
 
         public IList<QuestionViewModel> Questions { get; set; }
