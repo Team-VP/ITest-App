@@ -1,7 +1,7 @@
 ﻿$(function () {
     $('#add-question-btn').on("click", () => {
         $.ajax({
-            url: '/Test/AddQuestion/',
+            url: '/CreateTest/AddQuestion/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
@@ -17,7 +17,7 @@
         let buttonClicked = $(e.target);
         let extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
         $.ajax({
-            url: '/Test/AddAnswer/',
+            url: '/CreateTest/AddAnswer/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {

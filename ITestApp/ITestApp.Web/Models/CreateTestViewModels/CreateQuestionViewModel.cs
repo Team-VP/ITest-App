@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITestApp.Web.Models.TestViewModels
+namespace ITestApp.Web.Models.CreateTestViewModels
 {
-    public class PostQuestionViewModel
+    public class CreateQuestionViewModel
     {
         public int Id { get; set; }
 

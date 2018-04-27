@@ -2,7 +2,7 @@
 using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Web.Models.DashboardViewModels;
-using ITestApp.Web.Models.TestViewModels;
+using ITestApp.Web.Models.CreateTestViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,17 +50,17 @@ namespace ITestApp.Web.Properties
 
             this.CreateMap<UserTest, UserTestDto>().ReverseMap().MaxDepth(3);
 
-            this.CreateMap<PostTestViewModel, TestDto>()
+            this.CreateMap<CreateTestViewModel, TestDto>()
                 .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }));
 
-            this.CreateMap<TestDto, PostTestViewModel>()
+            this.CreateMap<TestDto, CreateTestViewModel>()
                 .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
                 .ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
                 .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name));
 
-            this.CreateMap<PostQuestionViewModel, QuestionDto>();
-            this.CreateMap<PostAnswerViewModel, AnswerDto>();
-            this.CreateMap<PostCategoryViewModel, CategoryDto>();
+            this.CreateMap<CreateQuestionViewModel, QuestionDto>();
+            this.CreateMap<CreateAnswerViewModel, AnswerDto>();
+            this.CreateMap<CreateCategoryViewModel, CategoryDto>();
         }
     }
 }

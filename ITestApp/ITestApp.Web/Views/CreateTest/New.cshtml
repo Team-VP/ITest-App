@@ -1,8 +1,8 @@
-﻿@using ITestApp.Web.Models.TestViewModels
-@model ITestApp.Web.Models.TestViewModels.PostTestViewModel
+﻿@using ITestApp.Web.Models.CreateTestViewModels
+@model ITestApp.Web.Models.CreateTestViewModels.CreateTestViewModel
 @{
     ViewData["Title"] = "New Test";
-    var categories = (List<PostCategoryViewModel>)TempData["Categories"];
+    var categories = (List<CreateCategoryViewModel>)TempData["Categories"];
 }
 
 <h2>@ViewData["Title"]</h2>

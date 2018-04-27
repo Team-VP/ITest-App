@@ -3,7 +3,7 @@ using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
 using ITestApp.Web.Models.DashboardViewModels;
-using ITestApp.Web.Models.TestViewModels;
+using ITestApp.Web.Models.CreateTestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ITestApp.Web.Controllers
 {
-    public class TestController : Controller
+    public class CreateTestController : Controller
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
@@ -23,7 +23,7 @@ namespace ITestApp.Web.Controllers
         private readonly IAnswersService answers;
         private readonly UserManager<User> userManager;
 
-        public TestController(IMappingProvider mapper, ITestsService tests, ICategoryService categories, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public CreateTestController(IMappingProvider mapper, ITestsService tests, ICategoryService categories, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
@@ -36,10 +36,10 @@ namespace ITestApp.Web.Controllers
         [HttpGet]
         //[Authorize]
         //[ValidateAntiForgeryToken]
-        public IActionResult Create()
+        public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
-            TempData["Categories"] = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList();
+            TempData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
 
             var test = new TestDto()
             {
@@ -52,7 +52,7 @@ namespace ITestApp.Web.Controllers
 
             //var testDto = tests.CreateNewTestTest(test);
             var testDto = tests.GetById(7);
-            var testView = mapper.MapTo<PostTestViewModel>(testDto);
+            var testView = mapper.MapTo<CreateTestViewModel>(testDto);
             
             return View(testView);
         }
@@ -60,7 +60,7 @@ namespace ITestApp.Web.Controllers
         [HttpPost]
         //[Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PostTestViewModel model)
+        public IActionResult New(CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace ITestApp.Web.Controllers
             if (TempData["Categories"] == null)
             {
                 var allCategories = categories.GetAllCategories();
-                TempData["Categories"] = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList();
+                TempData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
             }
 
             return View(model);
@@ -87,13 +87,13 @@ namespace ITestApp.Web.Controllers
         //[ValidateAntiForgeryToken]
         public IActionResult AddQuestion()
         {
-            return PartialView("_QuestionPartialView");
+            return PartialView("_CreateQuestionPartialView");
         }
 
         [HttpGet]
         public IActionResult AddAnswer()
         {
-            return PartialView("_AnswerPartialView");
+            return PartialView("_CreateAnswerPartialView");
         }
     }
 }
