@@ -21,35 +21,32 @@ namespace ITestApp.Web.Properties
                    .ForMember(dto => dto.Category, options => options.MapFrom(source => source.Category))
                    .ReverseMap().MaxDepth(3);
 
-            //this.CreateMap<TestDto, Test>()
-            //        .ForMember(e => e.Category, opt => opt.MapFrom(dto => dto.Category))
-            //        .ReverseMap()
-            //        .MaxDepth(3);
-
             this.CreateMap<TestDto, TestViewModel>()
                    .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
-                   .ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
-                   .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name));
+                   //.ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
+                   .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name))
+                   .ReverseMap().MaxDepth(3);
 
             this.CreateMap<Question, QuestionDto>()
-                   .ForMember(dto => dto.Answers, options => options.MapFrom(source => source.Answers)).ReverseMap().MaxDepth(3);
+                   .ForMember(dto => dto.Answers, options => options.MapFrom(source => source.Answers))
+                   .ReverseMap().MaxDepth(3);
 
             this.CreateMap<QuestionDto, QuestionViewModel>()
-                .ForMember(dto => dto.Answers, opt => opt.MapFrom(src => src.Answers)).ReverseMap().MaxDepth(3);
+                .ForMember(dto => dto.Answers, opt => opt.MapFrom(src => src.Answers))
+                .ReverseMap().MaxDepth(3);
 
-            this.CreateMap<Answer, AnswerDto>().ReverseMap().MaxDepth(3);
+            this.CreateMap<Answer, AnswerDto>()
+                .ReverseMap().MaxDepth(3);
 
-            this.CreateMap<AnswerDto, AnswerViewModel>().ReverseMap().MaxDepth(3);
+            this.CreateMap<AnswerDto, AnswerViewModel>()
+                .ReverseMap().MaxDepth(3);
 
             this.CreateMap<Category, CategoryDto>()
-                .ForMember(dto => dto.Tests, opt => opt.MapFrom(src => src.Tests)).ReverseMap().MaxDepth(3);
+                .ForMember(dto => dto.Tests, opt => opt.MapFrom(src => src.Tests))
+                .ReverseMap().MaxDepth(3);
 
             this.CreateMap<CategoryDto, CategoryViewModel>()
                 .ForMember(vm => vm.Tests, opt => opt.MapFrom(src => src.Tests));
-
-            //this.CreateMap<StatusDto, Status>(MemberList.Source);
-
-            //this.CreateMap<UserDto, User>(MemberList.Source);
 
             this.CreateMap<PostTestViewModel, TestDto>()
                 .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }));
