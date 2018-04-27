@@ -8,5 +8,7 @@ namespace ITestApp.Services.Contracts
     public interface ICategoryService
     {
         IEnumerable<CategoryDto> GetAllCategories();
+
+        IEnumerable<CategoryDto> GetAll();
     }
 }

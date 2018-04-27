@@ -4,6 +4,7 @@ using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,17 @@ namespace ITestApp.Services
                 ?? throw new ArgumentNullException("Collection of categories cannot be null.");
 
             return categoriesDto;
+        }
+
+        public IEnumerable<CategoryDto> GetAll()
+        {
+            var allCategories = categories.All
+                .Include(c => c.Tests).ThenInclude(t => t.Status)
+                .Include(c => c.Tests).ThenInclude(t => t.Category)
+                .Include(c => c.Tests).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers);
+
+
+            return mapper.ProjectTo<CategoryDto>(allCategories);
         }
     }
 }

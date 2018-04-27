@@ -38,6 +38,15 @@ namespace ITestApp.Services
             saver.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var answerToDelete = answers.All
+                .FirstOrDefault(a => a.Id == id)
+                ?? throw new ArgumentNullException("Answer can not be null.");
+
+            answers.Delete(answerToDelete);
+        }
+
         public AnswerDto GetById(int id)
         {
             var currentAnwer = answers.All
@@ -46,15 +55,5 @@ namespace ITestApp.Services
 
             return mapper.MapTo<AnswerDto>(currentAnwer);
         }
-
-        public void DeleteAnswer(int id)
-        {
-            var answerToDelete = answers.All
-                .FirstOrDefault(a => a.Id == id) 
-                ?? throw new ArgumentNullException("Answer can not be null.");
-
-            answers.Delete(answerToDelete);
-        }
-
     }
 }
