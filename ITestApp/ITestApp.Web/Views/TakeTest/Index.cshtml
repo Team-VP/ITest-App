@@ -23,6 +23,7 @@
     <input asp-for="@Model.Duration" type="hidden" value="@Model.Duration">
     <input asp-for="@Model.StartedOn" type="hidden" value="@Model.StartedOn">
     <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
+    
     <div class="panel panel-default" id="questions">
         @foreach (var question in Model.Questions)
         {
@@ -42,6 +43,7 @@
                                 <label class="input-group">
                                     <span class="input-group-addon">
                                         <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
+                                        
                                     </span>
                                     <div class="form-control form-control-static">
                                         @ans.Content

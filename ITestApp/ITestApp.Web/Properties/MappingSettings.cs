@@ -15,7 +15,7 @@ namespace ITestApp.Web.Properties
         {
             /////
             this.CreateMap<Test, TestDto>()
-                   .ForMember(dto => dto.Questions, options => options.MapFrom(source => source.Questions))
+                   .ForMember(dto => dto.Questions, options => options.MapFrom(source => source.Questions)).ReverseMap().MaxDepth(3);
                    /*.ForMember(dto => dto.Category, opt => opt.MapFrom(src => src.Category)).ReverseMap().MaxDepth(3)*/;
 
             this.CreateMap<TestDto, TestViewModel>()
@@ -39,6 +39,7 @@ namespace ITestApp.Web.Properties
             this.CreateMap<CategoryDto, CategoryViewModel>()
                 .ForMember(vm => vm.Tests, opt => opt.MapFrom(src => src.Tests));
 
+            this.CreateMap<UserTest, UserTestDto>().ReverseMap().MaxDepth(3);
             ///
         }
     }

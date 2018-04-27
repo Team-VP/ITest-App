@@ -23,5 +23,7 @@ namespace ITestApp.Web.Models.TakeTestViewModels
 
         public DateTime StartedOn { get; set; }
 
+        public DateTime SubmitedOn { get; set; }
+
     }
 }

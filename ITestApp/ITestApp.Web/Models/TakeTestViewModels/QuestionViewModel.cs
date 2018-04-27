@@ -8,7 +8,7 @@ namespace ITestApp.Web.Models.TakeTestViewModels
 {
     public class QuestionViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MinLength(1)]
@@ -16,7 +16,7 @@ namespace ITestApp.Web.Models.TakeTestViewModels
         [DataType(DataType.Text)]
         public string Content { get; set; }
 
-        public ICollection<AnswerViewModel> Answers { get; set; }
+        public IList<AnswerViewModel> Answers { get; set; }
 
         public string AndswerId { get; set; }
     }

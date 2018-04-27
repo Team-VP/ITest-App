@@ -46,9 +46,20 @@
                                 <tr>
                                     <th scope="row" id="@test.Id">@test.Id</th>
                                     <td>@test.Title</td>
-                                    <td>
-                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
-                                    </td>
+                                    @if (Model.UserTests.Any(t => t.TestId == test.Id))
+                                    {
+                                        <td>
+                                            <p><a class="btn btn-primary btn-sm" role="button" disabled="disabled" style="float: right">Submitted</a></p>
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         </tbody>
@@ -72,9 +83,21 @@
                                 <tr>
                                     <th scope="row" id="@test.Id">@test.Id</th>
                                     <td>@test.Title</td>
+                                    @if (Model.UserTests.Any(t => t.TestId == test.Id))
+                                    {
                                     <td>
-                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
+                                        <p><a class="btn btn-primary btn-sm" role="button" disabled="disabled" style="float: right">Submitted</a></p>
+                                        
+
                                     </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         </tbody>
