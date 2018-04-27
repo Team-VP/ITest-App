@@ -21,8 +21,8 @@ namespace ITestApp.Web.Models.DashboardViewModels
         [DataType(DataType.Text)]
         public string Author { get; set; }
 
-        //[DataType(DataType.Text)]
-        //public string Category { get; set; }
+        [DataType(DataType.Text)]
+        public string Category { get; set; }
 
         [DataType(DataType.Text)]
         public string Status { get; set; }

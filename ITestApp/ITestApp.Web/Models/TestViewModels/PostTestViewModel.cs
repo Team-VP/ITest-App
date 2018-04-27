@@ -8,6 +8,8 @@ namespace ITestApp.Web.Models.TestViewModels
 {
     public class PostTestViewModel
     {
+        public int Id { get; set; }
+
         [Required]
         [MinLength(2)]
         [MaxLength(50)]

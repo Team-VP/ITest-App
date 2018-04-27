@@ -57,25 +57,11 @@ namespace ITestApp.Services
                 .ThenInclude(a => a.Answers).FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null.");
 
             testToEdit.Title = test.Title;
-            testToEdit.CategoryId = test.CategoryId;
+            //testToEdit.CategoryId = test.CategoryId;
             testToEdit.RequiredTime = test.RequiredTime;
 
             tests.Update(testToEdit);
             saver.SaveChanges();
-        }
-
-        public TestDto GetById(int id)
-        {
-            Test testWithId = tests.All.Where(t => t.Id == id)
-                .Include(q => q.Questions).ThenInclude(a => a.Answers)
-                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
-            //var testQuestions = this.questions.All.Where(q => q.TestId == testWithId.Id);
-
-            //foreach (var question in testQuestions)
-            //{
-
-            //}
-            return mapper.MapTo<TestDto>(testWithId);
         }
 
         public IEnumerable<QuestionDto> GetQuestions(int testId)
@@ -138,9 +124,10 @@ namespace ITestApp.Services
         public IEnumerable<CategoryDto> GetAllCategories()
         {
             var allCategories = categories.All
-                .Include(c => c.Tests)
-                .ThenInclude(t => t.Questions)
-                .ThenInclude(q => q.Answers);
+                .Include(c => c.Tests).ThenInclude(t => t.Status)
+                .Include(c => c.Tests).ThenInclude(t => t.Category)
+                .Include(c => c.Tests).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers);
+                
 
             return mapper.ProjectTo<CategoryDto>(allCategories);
         }
@@ -150,6 +137,33 @@ namespace ITestApp.Services
             var newTestEntity = mapper.MapTo<Test>(newTest) ?? throw new ArgumentNullException("Test Can Not Be Null");
             tests.Add(newTestEntity);
             saver.SaveChanges();
+        }
+
+        public TestDto GetById(int id)
+        {
+            Test testWithId = tests.All.Where(t => t.Id == id)
+                .Include(t => t.Status)
+                .Include(t => t.Category)
+                .Include(t => t.Author)
+                .Include(q => q.Questions)
+                    .ThenInclude(a => a.Answers)
+                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
+            //var testQuestions = this.questions.All.Where(q => q.TestId == testWithId.Id);
+
+            //foreach (var question in testQuestions)
+            //{
+            
+            //}
+            return mapper.MapTo<TestDto>(testWithId);
+        }
+
+        public TestDto CreateNewTestTest(TestDto newTest)
+        {
+            var newTestEntity = mapper.MapTo<Test>(newTest) ?? throw new ArgumentNullException("Test Can Not Be Null");
+            tests.Add(newTestEntity);
+            saver.SaveChanges();
+
+            return GetById(newTestEntity.Id);
         }
     }
 }

@@ -41,7 +41,20 @@ namespace ITestApp.Web.Controllers
             var allCategories = categories.GetAllCategories();
             TempData["Categories"] = mapper.ProjectTo<PostCategoryViewModel>(allCategories).ToList();
 
-            return View();
+            var test = new TestDto()
+            {
+                Title = "New test",
+                RequiredTime = 0,
+                AuthorId = this.userManager.GetUserId(this.HttpContext.User),
+                CategoryId = 1,
+                StatusId = 2
+            };
+
+            //var testDto = tests.CreateNewTestTest(test);
+            var testDto = tests.GetById(7);
+            var testView = mapper.MapTo<PostTestViewModel>(testDto);
+            
+            return View(testView);
         }
 
         [HttpPost]

@@ -20,6 +20,7 @@ namespace ITestApp.Services.Contracts
         void DeleteTest(int id);
 
         void CreateNewTest(TestDto newTest);
+        TestDto CreateNewTestTest(TestDto newTest);
 
         IEnumerable<TestDto> GetAllTests();
 

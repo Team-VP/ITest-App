@@ -7,8 +7,8 @@
             success: function (html) {
                 $('#question-container').append(html);
             },
-            error: function (e) {
-                console.log(e);
+            error: function (err) {
+                $('#question-container').append("<p>Something went wrong... Status: " + err.status + "</p>");
             }
         });
     });
@@ -23,8 +23,8 @@
             success: function (html) {
                 extraAnswersContainer.append(html);
             },
-            error: function (e) {
-                console.log(e);
+            error: function (err) {
+                extraAnswersContainer.append("<p>Something went wrong... Status: " + err.status + "</p>");
             }
         });
     });
