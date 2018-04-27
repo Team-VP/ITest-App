@@ -8,5 +8,7 @@ namespace ITestApp.Web.Models.DashboardViewModels
     public class DashboardViewModel
     {
         public IEnumerable<CategoryViewModel> Categories { get; set; }
+
+        public IEnumerable<UserTestViewModel> UserTests { get; set; }
     }
 }

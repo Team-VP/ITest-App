@@ -1,0 +1,106 @@
+﻿@model ITestApp.Web.Models.TakeTestViewModels.IndexViewModel
+
+@{
+    ViewData["Title"] = "Model.Title";
+    int questionCounter = 0;
+    int answerCounter = 0;
+}
+<h2>@Model.TestName</h2>
+
+<hr />
+<div class="page-header">
+    <h3>Category: <small>@Model.CategoryName</small></h3>
+</div>
+<div>
+    <h3 id="time">Time: <small>@Model.Duration.Minutes min</smal></h3>
+    <p id="demo"></p>
+</div>
+<form asp-controller="TakeTest" asp-action="Index" method="post">
+
+    <input asp-for="@Model.CategoryName" type="hidden" value="@Model.CategoryName">
+    <input asp-for="@Model.TestName" type="hidden" value="@Model.TestName">
+    <input asp-for="@Model.TestId" type="hidden" value="@Model.TestId">
+    <input asp-for="@Model.Duration" type="hidden" value="@Model.Duration">
+    <input asp-for="@Model.StartedOn" type="hidden" value="@Model.StartedOn">
+    <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
+    
+    <div class="panel panel-default" id="questions">
+        @foreach (var question in Model.Questions)
+        {
+            <!-- Default panel contents -->
+            <input asp-for="@Model.Questions[questionCounter].Id" type="hidden" value="@question.Id">
+            <div class="panel-heading"><h4><b>@(questionCounter + 1) . Question</b></h4></div>
+            <div class="panel-body">
+
+                <p>@question.Content</p>
+                <div class="row-xs-8">
+
+                    <div class="answers">
+                        @foreach (var ans in question.Answers)
+                        {
+
+                            <div class="form-group has-feedback">
+                                <label class="input-group">
+                                    <span class="input-group-addon">
+                                        <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
+                                        
+                                    </span>
+                                    <div class="form-control form-control-static">
+                                        @ans.Content
+                                    </div>
+                                    <span class="glyphicon form-control-feedback "></span>
+                                </label>
+                            </div>
+                            answerCounter++;
+                        }
+                    </div>
+                </div>
+            </div>
+            questionCounter++;
+        }
+
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+
+@section Scripts {
+    <script>
+        var t = @Model.Duration.Minutes;
+        console.log(t);
+        var d = new Date();
+        var v = new Date();
+        v.setMinutes(d.getMinutes() + t);
+        // Set the date we're counting down to
+
+        var countDownDate = v;
+
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+
+            // Get todays date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now an the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the element with id="demo"
+            document.getElementById("demo").innerHTML = minutes + ":" + seconds;
+
+            // If the count down is finished, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+}
+
+
+
+
