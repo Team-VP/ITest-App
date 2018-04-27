@@ -30,10 +30,7 @@ namespace ITestApp.Services
             var allCategories = categories.All
                 ?? throw new ArgumentNullException("Collection of answers can not be Null.");
 
-            IQueryable<CategoryDto> categoriesDto = mapper.ProjectTo<CategoryDto>(allCategories)
-                ?? throw new ArgumentNullException("Collection of categories cannot be null.");
-
-            return categoriesDto;
+            return mapper.ProjectTo<CategoryDto>(allCategories);
         }
 
         public IEnumerable<CategoryDto> GetAll()
@@ -45,6 +42,15 @@ namespace ITestApp.Services
 
 
             return mapper.ProjectTo<CategoryDto>(allCategories);
+        }
+
+        public IEnumerable<TestDto> GetCategoryTests(int categoryId)
+        {
+            var testsInCategory = categories.All
+                .Where(c => c.Id == categoryId)
+                .Include(c => c.Tests) ?? throw new ArgumentNullException("Collection of tests in category is null");
+
+            return mapper.ProjectTo<TestDto>(testsInCategory);
         }
     }
 }

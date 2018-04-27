@@ -10,5 +10,7 @@ namespace ITestApp.Services.Contracts
         IEnumerable<CategoryDto> GetAllCategories();
 
         IEnumerable<CategoryDto> GetAll();
+
+        IEnumerable<TestDto> GetCategoryTests(int categoryId);
     }
 }
