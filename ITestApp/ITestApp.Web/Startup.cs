@@ -84,6 +84,7 @@ namespace ITestApp.Web
             services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<ITestsService, TestsService>();
             services.AddTransient<ICategoryService, CategoriesService>();
+            services.AddTransient<IStatusesService, StatusesService>();
             services.AddTransient<IResultService, ResultService>();
         }
 

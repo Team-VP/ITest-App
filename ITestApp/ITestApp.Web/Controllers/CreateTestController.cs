@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 
 namespace ITestApp.Web.Controllers
 {
@@ -19,17 +20,19 @@ namespace ITestApp.Web.Controllers
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
         private readonly ICategoryService categories;
-        private readonly IQuestionsService questions;
-        private readonly IAnswersService answers;
+        private readonly IStatusesService statuses;
         private readonly UserManager<User> userManager;
 
-        public CreateTestController(IMappingProvider mapper, ITestsService tests, ICategoryService categories, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public CreateTestController(IMappingProvider mapper,
+            ITestsService tests,
+            ICategoryService categories,
+            IStatusesService statuses,
+            UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories service cannot be null");
-            this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
-            this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
+            this.statuses = statuses ?? throw new ArgumentNullException("Statuses service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
         }
 
@@ -53,10 +56,11 @@ namespace ITestApp.Web.Controllers
                 var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
+                dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
                 this.tests.Publish(dto);
                 
-                return this.RedirectToAction("All", "Dashboard");
+                return Json(Url.Action("All", "Dashboard"));
             }
 
             var allCategories = categories.GetAllCategories();
@@ -77,16 +81,6 @@ namespace ITestApp.Web.Controllers
         public IActionResult AddAnswer(CreateAnswerViewModel model)
         {
             return PartialView("_CreateAnswerPartialView", model);
-        }
-        
-        [HttpPost]
-        public JsonResult PostJson([FromBody] CreateTestViewModel model)
-        {
-            return Json(new
-            {
-                state = 0,
-                msg = string.Empty
-            });
         }
     }
 }

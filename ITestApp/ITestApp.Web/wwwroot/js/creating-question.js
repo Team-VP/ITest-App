@@ -36,7 +36,7 @@
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: (response) => {
-                    console.log(response)
+                    window.location.href = response;
                 },
                 error: function (err) {
                     console.log(err)
