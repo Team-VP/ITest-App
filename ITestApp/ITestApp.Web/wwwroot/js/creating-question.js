@@ -1,4 +1,50 @@
 ﻿$(function () {
+    $("#publish-btn").on("click", () => {
+        if ($("#test-form").valid()) {
+            let data = {};
+
+            data.Title = $("#test-name").val();
+            data.RequiredTime = $("#test-time").val();
+            data.Category = $("#test-category").val();
+            data.Status = "Published";
+            data.Questions = [];
+
+            let allQuestionHolders = $(".question-holder");
+
+            $.each(allQuestionHolders, (i, q) => {
+                let question = {};
+
+                let qContent = $(q).find(".question-content textarea").val();
+
+                question.Content = qContent;
+                question.Answers = [];
+
+                let qAnswers = $(q).find(".answer-holder .answer-content");
+
+                $.each(qAnswers, (i, a) => {
+                    let answer = {};
+                    answer.Content = $(a).find("textarea").val();
+                    question.Answers.push(answer);
+                });
+
+                data.Questions.push(question);
+            });
+
+            $.ajax({
+                url: "/CreateTest/New",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: (response) => {
+                    console.log(response)
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        }
+    });
+
     $('#add-question-btn').on("click", () => {
         $.ajax({
             url: '/CreateTest/AddQuestion/',
@@ -31,7 +77,7 @@
 
     $('#question-container').on("click", '.delete-answer-btn', (e) => {
         let buttonClicked = $(e.target);
-        let answerHolder = buttonClicked.closest(".answer-holder");
+        let answerHolder = buttonClicked.closest(".answer-content");
         answerHolder.remove();
     });
 

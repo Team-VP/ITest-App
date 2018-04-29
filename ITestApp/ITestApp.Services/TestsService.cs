@@ -75,18 +75,24 @@ namespace ITestApp.Services
             return result;
         }
 
-        public void Publish(TestDto test) //The test can be new and directry published or can be existing at DB and only changing status. 
+        public void Publish(TestDto test) 
         {
-            var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id) ?? throw new ArgumentNullException("Test can not be null");
-            if (testToFind == null)
+            if (test == null)
             {
-                test.StatusId = 1; //Publish
+                throw new ArgumentNullException("Test cannot be null!");
+            }
+
+            var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id);
+
+            if (testToFind == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
+            {
+                //test.StatusId = 1; //Publish
                 var newPublishedTest = mapper.MapTo<Test>(test);
                 tests.Add(newPublishedTest);
             }
             else
             {
-                testToFind.StatusId = 2;
+                testToFind.StatusId = 2; //Draft
                 tests.Update(testToFind);
             }
 

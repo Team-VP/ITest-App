@@ -52,5 +52,12 @@ namespace ITestApp.Services
 
             return mapper.ProjectTo<TestDto>(testsInCategory);
         }
+
+        public CategoryDto GetCategoryByName(string name)
+        {
+            var category = categories.All.Where(c => c.Name == name).FirstOrDefault() ?? throw new ArgumentNullException("Category not found!");
+
+            return mapper.MapTo<CategoryDto>(category);
+        }
     }
 }

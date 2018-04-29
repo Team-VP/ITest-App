@@ -91,7 +91,7 @@ namespace ITestApp.Web
         {
             services.AddMvc();
             services.AddAutoMapper();
-
+            services.AddSession();
             services.AddScoped<IMappingProvider, MappingProvider>();
         }
 
@@ -113,7 +113,7 @@ namespace ITestApp.Web
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

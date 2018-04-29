@@ -14,7 +14,6 @@ namespace ITestApp.Web.Properties
     {
         public MappingSettings()
         {
-            /////
             this.CreateMap<Test, TestDto>()
                    .ForMember(dto => dto.Questions, options => options.MapFrom(source => source.Questions))
                    .ForMember(dto => dto.Status, options => options.MapFrom(source => source.Status))
@@ -23,7 +22,6 @@ namespace ITestApp.Web.Properties
 
             this.CreateMap<TestDto, TestViewModel>()
                    .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
-                   //.ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
                    .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name))
                    .ReverseMap().MaxDepth(3);
 
@@ -50,8 +48,11 @@ namespace ITestApp.Web.Properties
 
             this.CreateMap<UserTest, UserTestDto>().ReverseMap().MaxDepth(3);
 
+            this.CreateMap<Status, StatusDto>().ReverseMap();
+
             this.CreateMap<CreateTestViewModel, TestDto>()
-                .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }));
+                .ForMember(dto => dto.Category, options => options.MapFrom(vm => new CategoryDto() { Name = vm.Category }))
+                .ForMember(dto => dto.Status, options => options.MapFrom(vm => new StatusDto() { Name = vm.Status }));
 
             this.CreateMap<TestDto, CreateTestViewModel>()
                 .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))

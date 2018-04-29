@@ -39,45 +39,28 @@ namespace ITestApp.Web.Controllers
         public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
-            TempData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
-
-            var test = new TestDto()
-            {
-                Title = "New test",
-                RequiredTime = 0,
-                AuthorId = this.userManager.GetUserId(this.HttpContext.User),
-                CategoryId = 1,
-                StatusId = 2
-            };
-
-            //var testDto = tests.CreateNewTestTest(test);
-            var testDto = tests.GetById(7);
-            var testView = mapper.MapTo<CreateTestViewModel>(testDto);
-            
-            return View(testView);
+            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            return View();
         }
 
         [HttpPost]
         //[Authorize]
-        [ValidateAntiForgeryToken]
-        public IActionResult New(CreateTestViewModel model)
+        //[ValidateAntiForgeryToken]
+        public IActionResult New([FromBody] CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
             {
                 var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
+                dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
 
-                //this.tests.Publish(dto);
-
-                //TempData["Success-Message"] = "You published a new post!";
+                this.tests.Publish(dto);
+                
                 return this.RedirectToAction("All", "Dashboard");
             }
 
-            if (TempData["Categories"] == null)
-            {
-                var allCategories = categories.GetAllCategories();
-                TempData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
-            }
+            var allCategories = categories.GetAllCategories();
+            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
 
             return View(model);
         }
@@ -85,15 +68,25 @@ namespace ITestApp.Web.Controllers
         [HttpGet]
         //[Authorize]
         //[ValidateAntiForgeryToken]
-        public IActionResult AddQuestion()
+        public IActionResult AddQuestion(CreateQuestionViewModel model)
         {
-            return PartialView("_CreateQuestionPartialView");
+            return PartialView("_CreateQuestionPartialView", model);
         }
 
         [HttpGet]
-        public IActionResult AddAnswer()
+        public IActionResult AddAnswer(CreateAnswerViewModel model)
         {
-            return PartialView("_CreateAnswerPartialView");
+            return PartialView("_CreateAnswerPartialView", model);
+        }
+        
+        [HttpPost]
+        public JsonResult PostJson([FromBody] CreateTestViewModel model)
+        {
+            return Json(new
+            {
+                state = 0,
+                msg = string.Empty
+            });
         }
     }
 }

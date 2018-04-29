@@ -1,10 +1,11 @@
-﻿
+﻿@model ITestApp.Web.Models.CreateTestViewModels.CreateQuestionViewModel
+
 @{
     ViewData["Title"] = "_CreateQuestionPartialView";
-    ViewData["AnswerCount"] = 3;
 }
+
 <div class="question-holder">
-    <div>
+    <div class="question-content">
         <p>Question:</p>
         <textarea></textarea>
         <div>
@@ -14,8 +15,8 @@
         </div>
         <hr />
     </div>
-    <div>
-        <div class="answer-holder">
+    <div class="answer-holder">
+        <div class="answer-content">
             <p>Answer:</p>
             <textarea></textarea>
             <div>
@@ -25,7 +26,7 @@
             </div>
             <hr />
         </div>
-        <div class="answer-holder">
+        <div class="answer-content">
             <p>Answer:</p>
             <textarea></textarea>
             <div>
@@ -35,7 +36,7 @@
             </div>
             <hr />
         </div>
-        <div class="answer-holder">
+        <div class="answer-content">
             <p>Answer:</p>
             <textarea></textarea>
             <div>
