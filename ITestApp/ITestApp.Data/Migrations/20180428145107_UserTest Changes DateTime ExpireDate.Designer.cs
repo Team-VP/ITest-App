@@ -11,9 +11,10 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    partial class ITestAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180428145107_UserTest Changes DateTime ExpireDate")]
+    partial class UserTestChangesDateTimeExpireDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +223,7 @@ namespace ITestApp.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<TimeSpan>("ExecutionTime");
+                    b.Property<int>("ExecutionTime");
 
                     b.Property<bool>("IsDeleted");
 

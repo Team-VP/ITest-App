@@ -69,12 +69,7 @@ namespace ITestApp.Services
             Test testWithId = tests.All.Where(t => t.Id == id).Include(c => c.Category)
                 .Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
-            //var testQuestions = this.questions.All.Where(q => q.TestId == testWithId.Id);
-
-            //foreach (var question in testQuestions)
-            //{
-
-            //}
+           
             return mapper.MapTo<TestDto>(testWithId);
         }
 
@@ -150,6 +145,13 @@ namespace ITestApp.Services
             var newTestEntity = mapper.MapTo<Test>(newTest) ?? throw new ArgumentNullException("Test Can Not Be Null");
             tests.Add(newTestEntity);
             saver.SaveChanges();
+        }
+
+        public int GetTestDuratonSeconds(int id)
+        { 
+            int seconds = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime * 60;
+
+            return seconds;
         }
     }
 }

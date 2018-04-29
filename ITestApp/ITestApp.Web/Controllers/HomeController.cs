@@ -12,7 +12,15 @@ namespace ITestApp.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("All", "Dashboard");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //return View();
         }
 
         public IActionResult About()

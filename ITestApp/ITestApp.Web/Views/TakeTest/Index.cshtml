@@ -8,12 +8,21 @@
 <h2>@Model.TestName</h2>
 
 <hr />
-<div class="page-header">
-    <h3>Category: <small>@Model.CategoryName</small></h3>
-</div>
-<div>
-    <h3 id="time">Time: <small>@Model.Duration.Minutes min</smal></h3>
-    <p id="demo"></p>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>Category: <small>@Model.CategoryName</small></h3>
+        </div>
+        <div class="col-lg-5 text-right">
+            <h3>
+                Time: 
+                    <div id="countdownExample" class="text-right">
+                        <div class="values"></div>
+                    </div>
+            </h3>
+        </div>
+    </div>
+
 </div>
 <form asp-controller="TakeTest" asp-action="Index" method="post">
 
@@ -23,7 +32,7 @@
     <input asp-for="@Model.Duration" type="hidden" value="@Model.Duration">
     <input asp-for="@Model.StartedOn" type="hidden" value="@Model.StartedOn">
     <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
-    
+
     <div class="panel panel-default" id="questions">
         @foreach (var question in Model.Questions)
         {
@@ -43,7 +52,7 @@
                                 <label class="input-group">
                                     <span class="input-group-addon">
                                         <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
-                                        
+
                                     </span>
                                     <div class="form-control form-control-static">
                                         @ans.Content
@@ -62,42 +71,22 @@
     </div>
     <button type="submit" class="btn btn-primary btn-lg">Submit</button>
 </form>
+@{
 
+}
 @section Scripts {
+    <script src="~/js/easytimer.min.js"></script>
     <script>
-        var t = @Model.Duration.Minutes;
-        console.log(t);
-        var d = new Date();
-        var v = new Date();
-        v.setMinutes(d.getMinutes() + t);
-        // Set the date we're counting down to
-
-        var countDownDate = v;
-
-        // Update the count down every 1 second
-        var x = setInterval(function () {
-
-            // Get todays date and time
-            var now = new Date().getTime();
-
-            // Find the distance between now an the count down date
-            var distance = countDownDate - now;
-
-            // Time calculations for days, hours, minutes and seconds
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Display the result in the element with id="demo"
-            document.getElementById("demo").innerHTML = minutes + ":" + seconds;
-
-            // If the count down is finished, write some text
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("demo").innerHTML = "EXPIRED";
-            }
-        }, 1000);
+        var timer = new Timer();
+        console.log(@Model.TimeLeft.TotalSeconds);
+        timer.start({ countdown: true, startValues: { seconds: @Model.TimeLeft.TotalSeconds } });
+        $('#countdownExample .values').html(timer.getTimeValues().toString());
+        timer.addEventListener('secondsUpdated', function (e) {
+            $('#countdownExample .values').html(timer.getTimeValues().toString());
+        });
+        timer.addEventListener('targetAchieved', function (e) {
+            $('#countdownExample .values').html('Time Expired');
+        });
     </script>
 }
 

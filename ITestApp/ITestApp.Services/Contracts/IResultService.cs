@@ -7,12 +7,12 @@ namespace ITestApp.Services.Contracts
 {
     public interface IResultService
     {
-        IEnumerable<UserTestDto> GetSubmitedTestByUser(string id);
+        IEnumerable<UserTestDto> GetSubmitedTestsByUser(string id);
 
         void Submit(UserTestDto dto);
 
         void Add(UserTestDto dto);
 
-        UserTestDto GetStartedTest(int id);
+        UserTestDto GetStartedTest(string userId, int testId);
     }
 }

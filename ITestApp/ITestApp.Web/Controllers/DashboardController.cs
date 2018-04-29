@@ -34,7 +34,7 @@ namespace ITestApp.Web.Controllers
 
         public IActionResult All()
         {
-            var userResults = results.GetSubmitedTestByUser(this.userManager.GetUserId(HttpContext.User));
+            var userResults = results.GetSubmitedTestsByUser(this.userManager.GetUserId(HttpContext.User));
 
             var categories = this.tests.GetAllCategories();
 
@@ -47,16 +47,16 @@ namespace ITestApp.Web.Controllers
             return View(model);
         }
 
-        public  IActionResult BeginTest(int id)
-        {
-            var testTobegin = this.tests.GetById(id);
+        //public  IActionResult BeginTest(int id)
+        //{
+        //    var testTobegin = this.tests.GetById(id);
 
-            var model = mapper.MapTo<TestViewModel>(testTobegin);
+        //    var model = mapper.MapTo<TestViewModel>(testTobegin);
 
-            //model.TestCategory = testTobegin.Category.Name;
+        //    //model.TestCategory = testTobegin.Category.Name;
 
-            return View(model);
+        //    return View(model);
             
-        }
+        //}
     }
 }

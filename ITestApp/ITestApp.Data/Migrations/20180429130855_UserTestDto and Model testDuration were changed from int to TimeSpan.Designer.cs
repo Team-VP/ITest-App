@@ -11,9 +11,10 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    partial class ITestAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180429130855_UserTestDto and Model testDuration were changed from int to TimeSpan")]
+    partial class UserTestDtoandModeltestDurationwerechangedfrominttoTimeSpan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
