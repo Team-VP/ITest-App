@@ -1,10 +1,4 @@
-﻿@model ITestApp.Web.Models.CreateTestViewModels.CreateQuestionViewModel
-
-@{
-    ViewData["Title"] = "_CreateQuestionPartialView";
-}
-
-<h3>Question</h3>
+﻿<h3>Question</h3>
 <div class="question-holder">
     <div class="question-content">
         <p>Question:</p>
@@ -18,7 +12,14 @@
     </div>
     <div class="answer-holder">
         <div class="answer-content">
-            <p>Answer:</p>
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    Answer:
+                </div>
+                <div class="col-xs-6 col-md-9 text-right">
+                    <input type="checkbox" class="correct-answer-cb" value="option1"> Correct answer?
+                </div>
+            </div>
             <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
@@ -28,7 +29,14 @@
             <hr />
         </div>
         <div class="answer-content">
-            <p>Answer:</p>
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    Answer:
+                </div>
+                <div class="col-xs-6 col-md-9 text-right">
+                    <input type="checkbox" class="correct-answer-cb" value="option1"> Correct answer?
+                </div>
+            </div>
             <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
@@ -38,7 +46,14 @@
             <hr />
         </div>
         <div class="answer-content">
-            <p>Answer:</p>
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    Answer:
+                </div>
+                <div class="col-xs-6 col-md-9 text-right">
+                    <input type="checkbox" class="correct-answer-cb" value="option1"> Correct answer?
+                </div>
+            </div>
             <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
@@ -51,7 +66,4 @@
         <button type="button" class="btn btn-success add-answer-btn">Add answer</button>
     </div>
 </div>
-
-@section Scripts {
-}
 
