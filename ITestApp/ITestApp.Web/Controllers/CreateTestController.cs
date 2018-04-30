@@ -49,7 +49,7 @@ namespace ITestApp.Web.Controllers
         [HttpPost]
         //[Authorize]
         //[ValidateAntiForgeryToken]
-        public IActionResult New([FromBody] CreateTestViewModel model)
+        public IActionResult New([FromBody]CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace ITestApp.Web.Controllers
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
-                this.tests.Publish(dto);
+                //this.tests.Publish(dto);
                 
                 return Json(Url.Action("All", "Dashboard"));
             }

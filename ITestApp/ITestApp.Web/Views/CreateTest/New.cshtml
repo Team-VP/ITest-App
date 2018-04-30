@@ -9,42 +9,40 @@
 <h2>@ViewData["Title"]</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form id="test-form">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            @*<div class="form-group">
-                    <label asp-for="TestId"></label>
-                    <input asp-for="TestId" type="hidden" class="form-control" value="@Model.TestId" />
-                    <span asp-validation-for="TestId" class="text-danger"></span>
-                </div>*@
+    <form id="test-form">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @*<div class="form-group">
+                <label asp-for="TestId"></label>
+                <input asp-for="TestId" type="hidden" class="form-control" value="@Model.TestId" />
+                <span asp-validation-for="TestId" class="text-danger"></span>
+            </div>*@
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" placeholder="Test name" id="test-name" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="RequiredTime"></label>
+            <input asp-for="RequiredTime" class="form-control" placeholder="Required time" id="test-time" />
+            <span asp-validation-for="RequiredTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <div class="form-group">
-                <label asp-for="Title"></label>
-                <input asp-for="Title" class="form-control" placeholder="Test name" id="test-name" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Category"></label>
+                <select asp-for="Category" class="form-control" id="test-category">
+                    @foreach (var category in categories)
+                    {
+                        <option>@category.Name</option>
+                    }
+                </select>
             </div>
-            <div class="form-group">
-                <label asp-for="RequiredTime"></label>
-                <input asp-for="RequiredTime" class="form-control" placeholder="Required time" id="test-time" />
-                <span asp-validation-for="RequiredTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="form-group">
-                    <label asp-for="Category"></label>
-                    <select asp-for="Category" class="form-control" id="test-category">
-                        @foreach (var category in categories)
-                        {
-                            <option>@category.Name</option>
-                        }
-                    </select>
-                </div>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <input type="button" name="Add" value="Add question" id="add-question-btn" />
-            <div id="question-container"></div>
-            <hr />
-            <input type="button" name="Publish" value="Publish" id="publish-btn" />
-        </form>
-    </div>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+        <input type="button" name="Add" value="Add question" id="add-question-btn" />
+        <div id="question-container"></div>
+        <hr />
+        <input type="button" name="Publish" value="Publish" id="publish-btn" />
+    </form>
 </div>
 
 @section Scripts {

@@ -4,10 +4,11 @@
     ViewData["Title"] = "_CreateQuestionPartialView";
 }
 
+<h3>Question</h3>
 <div class="question-holder">
     <div class="question-content">
         <p>Question:</p>
-        <textarea></textarea>
+        <div class="summernote"></div>
         <div>
             <button type="button" class="btn btn-default btn-sm btn-danger delete-question-btn">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -18,7 +19,7 @@
     <div class="answer-holder">
         <div class="answer-content">
             <p>Answer:</p>
-            <textarea></textarea>
+            <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -28,7 +29,7 @@
         </div>
         <div class="answer-content">
             <p>Answer:</p>
-            <textarea></textarea>
+            <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -38,7 +39,7 @@
         </div>
         <div class="answer-content">
             <p>Answer:</p>
-            <textarea></textarea>
+            <div class="summernote"></div>
             <div>
                 <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -50,4 +51,7 @@
         <button type="button" class="btn btn-success add-answer-btn">Add answer</button>
     </div>
 </div>
+
+@section Scripts {
+}
 

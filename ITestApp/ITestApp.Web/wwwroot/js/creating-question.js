@@ -38,7 +38,7 @@
                 success: (response) => {
                     window.location.href = response;
                 },
-                error: function (err) {
+                error: (err) => {
                     console.log(err)
                 }
             })
@@ -51,7 +51,16 @@
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
-                $('#question-container').append(html);
+                //var active = $("#question-container").accordion("option", "active");
+                
+                let $accordion = $("#question-container");
+                $accordion.append(html);
+                $accordion.accordion("refresh")
+                $accordion.accordion("option", "active", ($accordion.children("div").length - 1))
+                $(".summernote").summernote({
+                    height: 100,
+                    disableResizeEditor: true
+                });
             },
             error: function (err) {
                 $('#question-container').append("<p>Something went wrong... Status: " + err.status + "</p>");
@@ -68,6 +77,10 @@
             contentType: 'application/html',
             success: function (html) {
                 extraAnswersContainer.append(html);
+                $(".summernote").summernote({
+                    height: 100,
+                    disableResizeEditor: true
+                });
             },
             error: function (err) {
                 extraAnswersContainer.append("<p>Something went wrong... Status: " + err.status + "</p>");
@@ -77,13 +90,20 @@
 
     $('#question-container').on("click", '.delete-answer-btn', (e) => {
         let buttonClicked = $(e.target);
-        let answerHolder = buttonClicked.closest(".answer-content");
-        answerHolder.remove();
+        let answerContent = buttonClicked.closest(".answer-content");
+        answerContent.remove();
     });
 
-    $('#question-container').on("click", '.delete-question-btn', (e) => {
+    $('#question-container').on("click", '.delete-question-btn', (e) => {        
         let buttonClicked = $(e.target);
         let questionHolder = buttonClicked.closest(".question-holder");
+        let questionHolderTitleTab = questionHolder.prev();
         questionHolder.remove();
+        questionHolderTitleTab.remove();
+    });
+
+    $("#question-container").accordion({
+        heightStyle: "content",
+        collapsible: true
     });
 });
