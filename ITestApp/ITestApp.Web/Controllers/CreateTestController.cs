@@ -39,6 +39,7 @@ namespace ITestApp.Web.Controllers
         [HttpGet]
         //[Authorize]
         //[ValidateAntiForgeryToken]
+        [Route("/create/new")]
         public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
@@ -49,6 +50,7 @@ namespace ITestApp.Web.Controllers
         [HttpPost]
         //[Authorize]
         //[ValidateAntiForgeryToken]
+        [Route("/create/new")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)

@@ -45,22 +45,18 @@
         }
     });
 
+    let $accordion = $("#question-container");
+
     $('#add-question-btn').on("click", () => {
         $.ajax({
             url: '/CreateTest/AddQuestion/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
-                //var active = $("#question-container").accordion("option", "active");
-                
-                let $accordion = $("#question-container");
                 $accordion.append(html);
                 $accordion.accordion("refresh")
                 $accordion.accordion("option", "active", ($accordion.children("div").length - 1))
-                $(".summernote").summernote({
-                    height: 100,
-                    disableResizeEditor: true
-                });
+                summernoteInit();
             },
             error: function (err) {
                 $('#question-container').append("<p>Something went wrong... Status: " + err.status + "</p>");
@@ -77,10 +73,7 @@
             contentType: 'application/html',
             success: function (html) {
                 extraAnswersContainer.append(html);
-                $(".summernote").summernote({
-                    height: 100,
-                    disableResizeEditor: true
-                });
+                summernoteInit();
             },
             error: function (err) {
                 extraAnswersContainer.append("<p>Something went wrong... Status: " + err.status + "</p>");
@@ -94,7 +87,7 @@
         answerContent.remove();
     });
 
-    $('#question-container').on("click", '.delete-question-btn', (e) => {        
+    $('#question-container').on("click", '.delete-question-btn', (e) => {
         let buttonClicked = $(e.target);
         let questionHolder = buttonClicked.closest(".question-holder");
         let questionHolderTitleTab = questionHolder.prev();
@@ -107,3 +100,18 @@
         collapsible: true
     });
 });
+
+function summernoteInit() {
+    $(".summernote").summernote({
+        height: 150,
+        disableResizeEditor: true,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontname', 'fontsize']],
+            ['color', ['color']],
+            ['font', ['strikethrough', 'superscript', 'subscript', 'height']],
+            ['para', ['ul', 'ol', 'paragraph', 'table']],
+            ['misc', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+}

@@ -33,3 +33,7 @@
         display: none;
     }
 }
+
+.create-btns-container, .add-question-btn-container {
+    padding-right: 50px;
+}
