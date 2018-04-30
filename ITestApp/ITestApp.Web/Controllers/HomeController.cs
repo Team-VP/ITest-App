@@ -12,8 +12,14 @@ namespace ITestApp.Web.Controllers
     {
         public IActionResult Index()
         {
+            
             if (User.Identity.IsAuthenticated)
             {
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "Administration/Dashboard");
+
+                }
                 return RedirectToAction("All", "Dashboard");
             }
             else

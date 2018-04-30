@@ -1,4 +1,6 @@
 ﻿using ITestApp.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,6 +19,7 @@ namespace ITestApp.Data.DataSeed
                 var context = serviceScope.ServiceProvider.GetService<ITestAppDbContext>();
                 context.Database.EnsureCreated();
 
+               
                 if (!context.Test.Any())
                 {
                     var user = new User
@@ -24,7 +27,8 @@ namespace ITestApp.Data.DataSeed
                         IsDeleted = false,
                         IsAdmin = false,
                         Email = "someName@someDomain.test",
-                        UserName = "Test"
+                        UserName = "Test",
+                        
                     };
 
                     var statusPublished = new Status { IsDeleted = false, Name = "Published" };
