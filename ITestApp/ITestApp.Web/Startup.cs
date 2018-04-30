@@ -117,14 +117,14 @@ namespace ITestApp.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            
+
             if (this.Environment.IsDevelopment())
             {
                 DataSeeder.SeedTests(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                
+
             }
             else
             {
@@ -132,7 +132,7 @@ namespace ITestApp.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -141,11 +141,8 @@ namespace ITestApp.Web
             {
                 routes.MapRoute(
                    name: "adminArea",
-                   template: "{area}/{controller=Home}/{action=Index}/{id?}");
-            });
+                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-            app.UseMvc(routes =>
-            {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

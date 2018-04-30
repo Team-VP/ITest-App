@@ -17,7 +17,7 @@ namespace ITestApp.Web.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Index", "Administration/Dashboard");
+                    return RedirectToAction("Index", "Dashboard", new { area = "Administration" });
 
                 }
                 return RedirectToAction("All", "Dashboard");
