@@ -12,18 +12,24 @@
             let allQuestionHolders = $(".question-holder");
 
             $.each(allQuestionHolders, (i, q) => {
+                let $q = $(q);
                 let question = {};
 
-                let qContent = $(q).find(".question-content textarea").val();
+                let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
                 question.Content = qContent;
                 question.Answers = [];
 
-                let qAnswers = $(q).find(".answer-holder .answer-content");
+                let qAnswers = $q.find(".answer-holder .answer-content");
 
                 $.each(qAnswers, (i, a) => {
+                    let $a = $(a);
                     let answer = {};
-                    answer.Content = $(a).find("textarea").val();
+                    answer.Content = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
+                    if ($a.find(".correct-answer-cb").is(":checked")) {
+                        answer.IsCorrect = true;
+                    }
+
                     question.Answers.push(answer);
                 });
 
@@ -31,7 +37,7 @@
             });
 
             $.ajax({
-                url: "/CreateTest/New",
+                url: "/Create/New",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(data),

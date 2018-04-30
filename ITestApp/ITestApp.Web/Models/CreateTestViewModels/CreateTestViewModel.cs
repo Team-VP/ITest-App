@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ITestApp.Web.Models.CreateTestViewModels
 {
-    [Serializable]
     public class CreateTestViewModel
     {
         public int Id { get; set; }
@@ -19,6 +18,7 @@ namespace ITestApp.Web.Models.CreateTestViewModels
         [DataType(DataType.Text)]
         public string Title { get; set; }
 
+        [Range(1, 1000, ErrorMessage = "Time must be positive value, between 1 and 1000 minutes")]
         public int RequiredTime { get; set; }
 
         [DataType(DataType.Text)]
