@@ -60,7 +60,7 @@ namespace ITestApp.Services
         {
             var test = userTests.All
                 .Where(t => t.UserId == userId && t.TestId == testId)
-                .FirstOrDefault() ?? throw new ArgumentNullException("UserTest Entity can not be null and should exist at database.");
+                .FirstOrDefault();
 
             var dto = mapper.MapTo<UserTestDto>(test);
 

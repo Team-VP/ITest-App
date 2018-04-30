@@ -10,21 +10,23 @@
 <hr />
 <div class="container">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <h3>Category: <small>@Model.CategoryName</small></h3>
         </div>
-        <div class="col-lg-5 text-right">
+        <div class="col-lg-4 text-right">
             <h3>
-                Time: 
-                    <div id="countdownExample" class="text-right">
+                Time:
+                <small>
+                    <div id="countdownExample">
                         <div class="values"></div>
                     </div>
+                </small>
             </h3>
         </div>
     </div>
 
 </div>
-<form asp-controller="TakeTest" asp-action="Index" method="post">
+<form asp-controller="TakeTest" asp-action="Index" method="post" id="test-form">
 
     <input asp-for="@Model.CategoryName" type="hidden" value="@Model.CategoryName">
     <input asp-for="@Model.TestName" type="hidden" value="@Model.TestName">
@@ -43,16 +45,13 @@
 
                 <p>@question.Content</p>
                 <div class="row-xs-8">
-
                     <div class="answers">
                         @foreach (var ans in question.Answers)
                         {
-
                             <div class="form-group has-feedback">
                                 <label class="input-group">
                                     <span class="input-group-addon">
                                         <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
-
                                     </span>
                                     <div class="form-control form-control-static">
                                         @ans.Content
@@ -67,25 +66,63 @@
             </div>
             questionCounter++;
         }
-
     </div>
-    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    <button id="submit-test-button" class="btn btn-primary btn-lg">Submit</button>
 </form>
-@{
 
-}
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
     <script src="~/js/easytimer.min.js"></script>
     <script>
         var timer = new Timer();
         console.log(@Model.TimeLeft.TotalSeconds);
-        timer.start({ countdown: true, startValues: { seconds: @Model.TimeLeft.TotalSeconds } });
+        timer.start({ countdown: true, startValues: { seconds: @Model.TimeLeft.TotalSeconds} });
         $('#countdownExample .values').html(timer.getTimeValues().toString());
         timer.addEventListener('secondsUpdated', function (e) {
             $('#countdownExample .values').html(timer.getTimeValues().toString());
         });
         timer.addEventListener('targetAchieved', function (e) {
             $('#countdownExample .values').html('Time Expired');
+            e.preventDefault();
+            $('#test-form')
+                .ajaxSubmit({
+                    url: '/TakeTest/Index/',
+                    type: 'POST',
+                    success: function (response) {
+                        $.confirm({
+                            title: 'Time is over. :-(',
+                            content: 'Your test submitted!',
+                            buttons: {
+                                Ok: function () {
+                                    window.location.href = response;
+                                },
+                            }
+                        });
+                    }
+                });
+        });
+    </script>
+    <script>
+        $('#test-form').on('submit', function (e) {
+            e.preventDefault();
+            var url = this.action;
+            var data = $(this).serialize();
+            $.confirm({
+                title: 'Confirm!',
+                content: 'Your test is about to be submitted!',
+                buttons: {
+                    confirm: function () {
+                        $.post(url, data, function (r) {
+                            console.log(r);
+                            window.location.href = r;
+                        });
+                    },
+                    cancel: function () {
+                    },
+                }
+            });
         });
     </script>
 }

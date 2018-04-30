@@ -62,7 +62,7 @@ namespace ITestApp.Web.Controllers
                     UserId = userId,
                     TestId = test.Id,
                     StartOn = DateTime.Now,
-                    TimeExpire = DateTime.Now.AddMinutes(test.RequiredTime)
+                    TimeExpire = DateTime.Now.AddMinutes(test.RequiredTime).AddSeconds(5)
 
                 };
                 resultService.Add(takenTest);
@@ -93,7 +93,7 @@ namespace ITestApp.Web.Controllers
 
             var testRequiredTimeSeconds = tests.GetTestDuratonSeconds(model.TestId);
 
-            if (testRequiredTimeSeconds < testDuration.TotalSeconds)
+            if (testRequiredTimeSeconds < testDuration.TotalSeconds - 5)
             {
                 return Ok("You are cheater. Test failed");
             }
@@ -126,7 +126,8 @@ namespace ITestApp.Web.Controllers
 
             resultService.Submit(currentTestEntity);
 
-            return this.RedirectToAction("All", "Dashboard");
+            //return this.RedirectToAction("All", "Dashboard");
+            return Json(Url.Action("All", "Dashboard"));
         }
     }
 
