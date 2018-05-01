@@ -53,7 +53,7 @@ namespace ITestApp.Services
             return result;
         }
 
-        public QuestionDto GetQuestionById(int id)
+        public QuestionDto GetById(int id)
         {
             Question question = questions.All
                 .Where(q => q.Id == id)
@@ -66,7 +66,7 @@ namespace ITestApp.Services
             return result;
         }
 
-        public void DeleteQuestion(int id)
+        public void Delete(int id)
         {
             Question questionToDelete = questions.All.Include(a => a.Answers)
                 .FirstOrDefault(q => q.Id == id) 

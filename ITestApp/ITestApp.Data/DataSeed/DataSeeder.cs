@@ -12,12 +12,12 @@ namespace ITestApp.Data.DataSeed
 {
     public class DataSeeder
     {
-        public static void SeedTests(IServiceProvider serviceProvider)
+        public static void Seed(IServiceProvider serviceProvider)
         {
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<ITestAppDbContext>();
-                context.Database.EnsureCreated();
+                //context.Database.EnsureCreated();
 
                
                 if (!context.Test.Any())

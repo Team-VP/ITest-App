@@ -31,7 +31,7 @@ namespace ITestApp.Services
             this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
         }
 
-        public void DeleteTest(int id)
+        public void Delete(int id)
         {
             var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault(t => t.Id == id) ?? throw new ArgumentNullException("Test can not be null");
@@ -50,55 +50,49 @@ namespace ITestApp.Services
             saver.SaveChanges();
         }
 
-        public void EditTest(TestDto test)
+        public void Edit(TestDto test)
         {
             Test testToEdit = tests.All.Where(t => t.Id == test.Id)
                 .Include(q => q.Questions)
                 .ThenInclude(a => a.Answers).FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null.");
 
             testToEdit.Title = test.Title;
-            testToEdit.CategoryId = test.CategoryId;
+            //testToEdit.CategoryId = test.CategoryId;
             testToEdit.RequiredTime = test.RequiredTime;
 
             tests.Update(testToEdit);
             saver.SaveChanges();
         }
 
-        public TestDto GetById(int id)
-        {
-            Test testWithId = tests.All.Where(t => t.Id == id).Include(c => c.Category)
-                .Include(q => q.Questions).ThenInclude(a => a.Answers)
-                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
-           
-            return mapper.MapTo<TestDto>(testWithId);
-        }
-
         public IEnumerable<QuestionDto> GetQuestions(int testId)
         {
-            var curTest = tests.All
+            var currTests = tests.All
                 .Where(t => t.Id == testId)
                 .Select(q => q.Questions) ?? throw new ArgumentNullException("Collection of Questions can not be null");
 
-            var result = mapper.ProjectTo<QuestionDto>(curTest);
+            var result = mapper.ProjectTo<QuestionDto>(currTests);
 
             return result;
         }
 
-        public void Publish(TestDto test) //The test can be new and directry published or can be existing at DB and only changing status. 
+        public void Publish(TestDto test) 
         {
-            var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id) ?? throw new ArgumentNullException("Test can not be null");
-            if (testToFind == null)
+            if (test == null)
             {
-                test.StatusId = 2; //Publish
+                throw new ArgumentNullException("Test cannot be null!");
+            }
 
-                test.Status.Name = "Publish";
+            var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id);
+
+            if (testToFind == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
+            {
+                //test.StatusId = 1; //Publish
                 var newPublishedTest = mapper.MapTo<Test>(test);
                 tests.Add(newPublishedTest);
             }
             else
             {
-                testToFind.StatusId = 2;
-                testToFind.Status.Name = "Publish";
+                testToFind.StatusId = 2; //Draft
                 tests.Update(testToFind);
             }
 
@@ -107,13 +101,25 @@ namespace ITestApp.Services
 
         public void SaveAsDraft(TestDto test)
         {
-            test.StatusId = 1; //Draft
+            test.StatusId = 2; //Draft
             tests.Add(mapper.MapTo<Test>(test));
             saver.SaveChanges();
             
         }
 
-        public IEnumerable<TestDto> GetTestByAuthorId(string id)
+        public TestDto GetById(int id)
+        {
+            Test testWithId = tests.All.Where(t => t.Id == id)
+                .Include(t => t.Status)
+                .Include(t => t.Category)
+                .Include(t => t.Author)
+                .Include(q => q.Questions)
+                    .ThenInclude(a => a.Answers)
+                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
+            return mapper.MapTo<TestDto>(testWithId);
+        }
+
+        public IEnumerable<TestDto> GetByAuthorId(string id)
         {
             var currentTests = tests.All.
                 Where(test => test.AuthorId == id)
@@ -121,6 +127,7 @@ namespace ITestApp.Services
 
             return mapper.ProjectTo<TestDto>(currentTests);
         }
+
         public IEnumerable<TestDto> GetAllTests()
         {
             var allTests = tests.All
@@ -130,21 +137,29 @@ namespace ITestApp.Services
             return mapper.ProjectTo<TestDto>(allTests);
         }
 
-        public IEnumerable<CategoryDto> GetAllCategories()
+        /// <summary>
+        /// Saves a newly created test to the database.
+        /// </summary>
+        /// <param name="test">DTO test to be saved.</param>
+        public void SaveToDb(TestDto test)
         {
-            var allCategories = categories.All
-                .Include(c => c.Tests)
-                .ThenInclude(t => t.Questions)
-                .ThenInclude(q => q.Answers);
-
-            return mapper.ProjectTo<CategoryDto>(allCategories);
-        }
-
-        public void CreateNewTest(TestDto newTest)
-        {
-            var newTestEntity = mapper.MapTo<Test>(newTest) ?? throw new ArgumentNullException("Test Can Not Be Null");
+            var newTestEntity = mapper.MapTo<Test>(test) ?? throw new ArgumentNullException("Test Can Not Be Null");
             tests.Add(newTestEntity);
             saver.SaveChanges();
+        }
+
+        /// <summary>
+        /// Gets a new test, converts it to DB entity, saves it to the database and returns the newly created entity test as DTO.
+        /// </summary>
+        /// <param name="test">DTO test to be saved.</param>
+        /// <returns>DTO test with id from the database.</returns>
+        public TestDto CreateNew(TestDto test)
+        {
+            var newTestEntity = mapper.MapTo<Test>(test) ?? throw new ArgumentNullException("Test Can Not Be Null");
+            tests.Add(newTestEntity);
+            saver.SaveChanges();
+
+            return GetById(newTestEntity.Id);
         }
 
         public int GetTestDuratonSeconds(int id)

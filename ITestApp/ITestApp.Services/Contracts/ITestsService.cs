@@ -17,15 +17,16 @@ namespace ITestApp.Services.Contracts
 
         void Publish(TestDto test);
 
-        void EditTest(TestDto test);
+        void Edit(TestDto test);
 
-        void DeleteTest(int id);
+        void Delete(int id);
 
-        void CreateNewTest(TestDto newTest);
+        void SaveToDb(TestDto test);
+
+        TestDto CreateNew(TestDto test);
 
         IEnumerable<TestDto> GetAllTests();
 
-        IEnumerable<TestDto> GetTestByAuthorId(string id);
-        IEnumerable<CategoryDto> GetAllCategories();
+        IEnumerable<TestDto> GetByAuthorId(string id);
     }
 }

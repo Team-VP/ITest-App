@@ -7,12 +7,12 @@ namespace ITestApp.Services.Contracts
 {
     public interface IQuestionsService
     {
-        QuestionDto GetQuestionById(int id);
+        QuestionDto GetById(int id);
 
         IEnumerable<AnswerDto> GetAnswers(int questionId);
 
         void Edit(QuestionDto question);
 
-        void DeleteQuestion(int id);
+        void Delete(int id);
     }
 }

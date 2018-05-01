@@ -19,15 +19,23 @@ namespace ITestApp.Web.Controllers
         private readonly ITestsService tests;
         private readonly IQuestionsService questions;
         private readonly IAnswersService answers;
+        private readonly ICategoryService categories;
         private readonly IResultService results;
         private readonly UserManager<User> userManager;
 
-        public DashboardController(IResultService results, IMappingProvider mapper, ITestsService tests, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public DashboardController(IResultService results, 
+            IMappingProvider mapper, 
+            ITestsService tests, 
+            IQuestionsService questions, 
+            IAnswersService answers, 
+            ICategoryService categories, 
+            UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
+            this.categories = categories ?? throw new ArgumentNullException("Categories service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
             this.results = results;
         }
@@ -36,9 +44,9 @@ namespace ITestApp.Web.Controllers
         {
             var userResults = results.GetSubmitedTestsByUser(this.userManager.GetUserId(HttpContext.User));
 
-            var categories = this.tests.GetAllCategories();
+            var categories = this.categories.GetAll();
 
-            var model = new IndexViewModel()
+            var model = new DashboardViewModel()
             {
                 Categories = this.mapper.ProjectTo<CategoryViewModel>(categories).ToList(),
                 UserTests = this.mapper.ProjectTo<UserTestViewModel>(userResults).ToList()

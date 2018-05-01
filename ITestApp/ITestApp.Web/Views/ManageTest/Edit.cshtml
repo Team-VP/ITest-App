@@ -1,0 +1,70 @@
+﻿@using ITestApp.Web.Models.CreateTestViewModels
+@model ITestApp.Web.Models.CreateTestViewModels.CreateTestViewModel
+
+@{
+    ViewData["Title"] = "Edit Test";
+    int counter = 1;
+var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<div class="row">
+    <form id="test-form">
+        <div class="row">
+            <div class="form-group col-xs-4 col-md-4">
+                <p><strong>Id: @Model.Id</strong></p>
+            </div>
+        </div>
+        <div class="row">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group col-xs-4 col-md-4">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" placeholder="Test name" id="test-name" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group col-xs-4 col-md-4">
+                <label asp-for="RequiredTime">Required time</label>
+                <input asp-for="RequiredTime" class="form-control" placeholder="In minutes" id="test-time" />
+                <span asp-validation-for="RequiredTime" class="text-danger"></span>
+            </div>
+            <div class="form-group col-xs-4 col-md-4">
+                <label asp-for="Category"></label>
+                <select asp-for="Category" class="form-control" id="test-category">
+                    @foreach (var category in categories)
+                    {
+                        <option>@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <p><strong>Add questions to your test</strong></p>
+            </div>
+            <div class="col-xs-6 col-md-9 text-right add-question-btn-container">
+                <input type="button" name="Add" value="Add question" id="add-question-btn" class="btn btn-info" />
+            </div>
+        </div>
+        <hr />
+        <div id="question-container">
+            @foreach (var question in Model.Questions)
+            {
+                ViewData["QuestionNumber"] = counter;
+                @await Html.PartialAsync("_EditTestQuestionPartialView", question);
+                counter++;
+}
+        </div>
+        <hr />
+        <div class="row text-right create-btns-container">
+            <input type="button" name="Publish" value="Save as draft" id="draft-btn" class="btn btn-default" />
+            <input type="button" name="Publish" value="Publish" id="publish-btn" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/creating-question.js"></script>
+}

@@ -21,7 +21,7 @@ namespace ITestApp.Services
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver cannot be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper cannot be null");
-            this.answers = answers ?? throw new ArgumentNullException("Answer repo cannot be null");
+            this.answers = answers ?? throw new ArgumentNullException("Answer repository cannot be null");
         }
 
         public void Edit(AnswerDto answer)
@@ -38,6 +38,15 @@ namespace ITestApp.Services
             saver.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var answerToDelete = answers.All
+                .FirstOrDefault(a => a.Id == id)
+                ?? throw new ArgumentNullException("Answer can not be null.");
+
+            answers.Delete(answerToDelete);
+        }
+
         public AnswerDto GetById(int id)
         {
             var currentAnwer = answers.All
@@ -46,15 +55,5 @@ namespace ITestApp.Services
 
             return mapper.MapTo<AnswerDto>(currentAnwer);
         }
-
-        public void DeleteAnswer(int id)
-        {
-            var answerToDelete = answers.All
-                .FirstOrDefault(a => a.Id == id) 
-                ?? throw new ArgumentNullException("Answer can not be null.");
-
-            answers.Delete(answerToDelete);
-        }
-
     }
 }

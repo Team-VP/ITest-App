@@ -84,6 +84,8 @@ namespace ITestApp.Web
             services.AddTransient<IAnswersService, AnswersService>();
             services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<ITestsService, TestsService>();
+            services.AddTransient<ICategoryService, CategoriesService>();
+            services.AddTransient<IStatusesService, StatusesService>();
             services.AddTransient<IResultService, ResultService>();
         }
 
@@ -91,7 +93,7 @@ namespace ITestApp.Web
         {
             services.AddMvc();
             services.AddAutoMapper();
-
+            services.AddSession();
             services.AddScoped<IMappingProvider, MappingProvider>();
         }
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
@@ -119,7 +121,7 @@ namespace ITestApp.Web
         {
             if (this.Environment.IsDevelopment())
             {
-                DataSeeder.SeedTests(serviceProvider);
+                DataSeeder.Seed(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
@@ -133,7 +135,7 @@ namespace ITestApp.Web
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
