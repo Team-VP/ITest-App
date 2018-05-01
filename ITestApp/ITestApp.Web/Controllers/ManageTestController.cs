@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ITestApp.Web.Controllers
 {
-    public class CreateTestController : Controller
+    public class ManageTestController : Controller
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
@@ -23,7 +23,7 @@ namespace ITestApp.Web.Controllers
         private readonly IStatusesService statuses;
         private readonly UserManager<User> userManager;
 
-        public CreateTestController(IMappingProvider mapper,
+        public ManageTestController(IMappingProvider mapper,
             ITestsService tests,
             ICategoryService categories,
             IStatusesService statuses,
@@ -83,6 +83,27 @@ namespace ITestApp.Web.Controllers
         public IActionResult AddAnswer(CreateAnswerViewModel model)
         {
             return PartialView("_CreateAnswerPartialView", model);
+        }
+
+        [HttpGet("/edit/{id}")]
+        public IActionResult Edit(int id)
+        {
+            TestDto testToEdit;
+
+            try
+            {
+                testToEdit = this.tests.GetById(id);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+
+            var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);
+            var allCategories = categories.GetAllCategories();
+            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+
+            return View(testVm);
         }
     }
 }

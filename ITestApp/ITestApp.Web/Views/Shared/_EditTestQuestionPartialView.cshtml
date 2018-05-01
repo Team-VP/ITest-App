@@ -1,0 +1,48 @@
+﻿@model ITestApp.Web.Models.CreateTestViewModels.CreateQuestionViewModel
+
+<h3>Question</h3>
+<div class="question-holder">
+    <div class="question-content">
+        <p>Question:</p>
+        <div class="summernote">@Model.Content</div>
+        <div>
+            <button type="button" class="btn btn-default btn-sm btn-danger delete-question-btn">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+        </div>
+        <hr />
+    </div>
+    <div class="answer-holder">
+        @foreach (var answer in Model.Answers)
+        {
+            <div class="answer-content">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        Answer:
+                    </div>
+                    <div class="col-xs-6 col-md-9 text-right">
+                        @if (answer.IsCorrect)
+                        {
+                            <input type="checkbox" class="correct-answer-cb" value="option1" checked>
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="correct-answer-cb" value="option1">
+                        }
+                        Correct answer?
+                    </div>
+                </div>
+                <div class="summernote">@answer.Content</div>
+                <div>
+                    <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <hr />
+            </div>
+        }
+        <div class="extra-answer-container"></div>
+        <button type="button" class="btn btn-success add-answer-btn">Add answer</button>
+    </div>
+</div>
+

@@ -55,7 +55,7 @@
 
     $('#add-question-btn').on("click", () => {
         $.ajax({
-            url: '/CreateTest/AddQuestion/',
+            url: '/ManageTest/AddQuestion/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
@@ -74,7 +74,7 @@
         let buttonClicked = $(e.target);
         let extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
         $.ajax({
-            url: '/CreateTest/AddAnswer/',
+            url: '/ManageTest/AddAnswer/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
@@ -121,3 +121,5 @@ function summernoteInit() {
         ]
     });
 }
+
+summernoteInit();

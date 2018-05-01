@@ -2,7 +2,7 @@
 @model ITestApp.Web.Models.CreateTestViewModels.CreateTestViewModel
 
 @{
-    ViewData["Title"] = "New Test";
+    ViewData["Title"] = "Edit Test";
     var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
 }
 
@@ -11,12 +11,12 @@
 <div class="row">
     <form id="test-form">
         <div class="row">
+            <div class="form-group col-xs-4 col-md-4">
+                <p><strong>Id: @Model.Id</strong></p>
+            </div>
+        </div>
+        <div class="row">
             <div asp-validation-summary="All" class="text-danger"></div>
-            @*<div class="form-group">
-                    <label asp-for="TestId"></label>
-                    <input asp-for="TestId" type="hidden" class="form-control" value="@Model.TestId" />
-                    <span asp-validation-for="TestId" class="text-danger"></span>
-                </div>*@
             <div class="form-group col-xs-4 col-md-4">
                 <label asp-for="Title"></label>
                 <input asp-for="Title" class="form-control" placeholder="Test name" id="test-name" />
@@ -47,7 +47,12 @@
             </div>
         </div>
         <hr />
-        <div id="question-container"></div>
+        <div id="question-container">
+            @foreach (var question in Model.Questions)
+            {
+                @await Html.PartialAsync("_EditTestQuestionPartialView", question);
+            }
+        </div>
         <hr />
         <div class="row text-right create-btns-container">
             <input type="button" name="Publish" value="Save as draft" id="draft-btn" class="btn btn-default" />
