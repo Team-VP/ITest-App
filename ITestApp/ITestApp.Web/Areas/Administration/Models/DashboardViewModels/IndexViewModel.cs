@@ -8,8 +8,10 @@ namespace ITestApp.Web.Areas.Administration.Models.DashboardViewModels
 {
     public class IndexViewModel
     {
-        public IList <Test> Tests { get; set; }
+        public string AdminName { get; set; }
 
-        public IList<UserTest> UserResults { get; set; }
+        public IList<TestViewModel> Tests { get; set; }
+
+        public IList<UserTestViewModel> UserResults { get; set; }
     }
 }
