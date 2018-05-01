@@ -117,7 +117,6 @@ namespace ITestApp.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-
             if (this.Environment.IsDevelopment())
             {
                 DataSeeder.SeedTests(serviceProvider);
@@ -131,8 +130,6 @@ namespace ITestApp.Web
 
                 app.UseExceptionHandler("/Home/Error");
             }
-
-
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -147,7 +144,6 @@ namespace ITestApp.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
 
 
             CreateUserRoles(serviceProvider).Wait();
