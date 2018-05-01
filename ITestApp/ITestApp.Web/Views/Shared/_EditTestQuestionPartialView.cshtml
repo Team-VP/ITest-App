@@ -1,9 +1,11 @@
 ﻿@model ITestApp.Web.Models.CreateTestViewModels.CreateQuestionViewModel
-
-<h3>Question</h3>
+@{ 
+    int counter = 1;
+}
+<h3>Question <span class="question-number">@ViewData["QuestionNumber"]</span></h3>
 <div class="question-holder">
     <div class="question-content">
-        <p>Question:</p>
+        <h4><strong>Question</strong><span class="question-number"></span>:</h4>
         <div class="summernote">@Model.Content</div>
         <div>
             <button type="button" class="btn btn-default btn-sm btn-danger delete-question-btn">
@@ -18,7 +20,7 @@
             <div class="answer-content">
                 <div class="row">
                     <div class="col-xs-6 col-md-3">
-                        Answer:
+                        <strong>Answer <span class="answer-number">@(counter++)</span>:</strong>
                     </div>
                     <div class="col-xs-6 col-md-9 text-right">
                         @if (answer.IsCorrect)

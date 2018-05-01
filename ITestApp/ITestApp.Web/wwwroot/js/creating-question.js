@@ -51,6 +51,7 @@
         }
     });
 
+    // Add and delete questions
     let $accordion = $("#question-container");
 
     $('#add-question-btn').on("click", () => {
@@ -60,6 +61,8 @@
             contentType: 'application/html',
             success: function (html) {
                 $accordion.append(html);
+                IncrementAnswers();
+                IncrementQuestions();
                 $accordion.accordion("refresh")
                 $accordion.accordion("option", "active", ($accordion.children("div").length - 1))
                 summernoteInit();
@@ -70,6 +73,16 @@
         });
     });
 
+    $('#question-container').on("click", '.delete-question-btn', (e) => {
+        let buttonClicked = $(e.target);
+        let questionHolder = buttonClicked.closest(".question-holder");
+        let questionHolderTitleTab = questionHolder.prev();
+        questionHolder.remove();
+        questionHolderTitleTab.remove();
+        IncrementQuestions();
+    });
+
+    // Add and delete answers
     $('#question-container').on("click", '.add-answer-btn', (e) => {
         let buttonClicked = $(e.target);
         let extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
@@ -79,6 +92,7 @@
             contentType: 'application/html',
             success: function (html) {
                 extraAnswersContainer.append(html);
+                IncrementAnswers();
                 summernoteInit();
             },
             error: function (err) {
@@ -91,22 +105,17 @@
         let buttonClicked = $(e.target);
         let answerContent = buttonClicked.closest(".answer-content");
         answerContent.remove();
+        IncrementAnswers();
     });
 
-    $('#question-container').on("click", '.delete-question-btn', (e) => {
-        let buttonClicked = $(e.target);
-        let questionHolder = buttonClicked.closest(".question-holder");
-        let questionHolderTitleTab = questionHolder.prev();
-        questionHolder.remove();
-        questionHolderTitleTab.remove();
-    });
-
+    // Accordion init
     $("#question-container").accordion({
         heightStyle: "content",
         collapsible: true
     });
 });
 
+// Summernote.js init
 function summernoteInit() {
     $(".summernote").summernote({
         height: 150,
@@ -123,3 +132,28 @@ function summernoteInit() {
 }
 
 summernoteInit();
+
+// Answers and questions number incrementation
+function IncrementAnswers() {
+    
+    let $answerHolders = $(".answer-holder")
+
+    $.each($answerHolders, (i, el) => {
+        let $answers = $(el).find(".answer-number");
+
+        $.each($answers, (i, el) => {
+            $(el).html(i + 1);
+        });
+    });
+}
+
+function IncrementQuestions() {
+
+    let $questionHolders = $(".question-holder")
+
+    $.each($questionHolders, (i, el) => {
+        let $el = $(el);
+        $el.prev("h3").find(".question-number").html(i + 1);
+        //$el.find(".question-number").html(i + 1);
+    });
+}

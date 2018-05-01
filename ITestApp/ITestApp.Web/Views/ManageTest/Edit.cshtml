@@ -3,7 +3,8 @@
 
 @{
     ViewData["Title"] = "Edit Test";
-    var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
+    int counter = 1;
+var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -50,8 +51,10 @@
         <div id="question-container">
             @foreach (var question in Model.Questions)
             {
+                ViewData["QuestionNumber"] = counter;
                 @await Html.PartialAsync("_EditTestQuestionPartialView", question);
-            }
+                counter++;
+}
         </div>
         <hr />
         <div class="row text-right create-btns-container">
