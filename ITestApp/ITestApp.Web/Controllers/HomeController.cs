@@ -12,7 +12,21 @@ namespace ITestApp.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Administration" });
+
+                }
+                return RedirectToAction("All", "Dashboard");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //return View();
         }
 
         public IActionResult About()

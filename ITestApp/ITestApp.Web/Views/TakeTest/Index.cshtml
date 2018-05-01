@@ -8,14 +8,25 @@
 <h2>@Model.TestName</h2>
 
 <hr />
-<div class="page-header">
-    <h3>Category: <small>@Model.CategoryName</small></h3>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-7">
+            <h3>Category: <small>@Model.CategoryName</small></h3>
+        </div>
+        <div class="col-lg-4 text-right">
+            <h3>
+                Time:
+                <small>
+                    <div id="countdownExample">
+                        <div class="values"></div>
+                    </div>
+                </small>
+            </h3>
+        </div>
+    </div>
+
 </div>
-<div>
-    <h3 id="time">Time: <small>@Model.Duration.Minutes min</smal></h3>
-    <p id="demo"></p>
-</div>
-<form asp-controller="TakeTest" asp-action="Index" method="post">
+<form asp-controller="TakeTest" asp-action="Index" method="post" id="test-form">
 
     <input asp-for="@Model.CategoryName" type="hidden" value="@Model.CategoryName">
     <input asp-for="@Model.TestName" type="hidden" value="@Model.TestName">
@@ -23,7 +34,7 @@
     <input asp-for="@Model.Duration" type="hidden" value="@Model.Duration">
     <input asp-for="@Model.StartedOn" type="hidden" value="@Model.StartedOn">
     <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
-    
+
     <div class="panel panel-default" id="questions">
         @foreach (var question in Model.Questions)
         {
@@ -34,16 +45,13 @@
 
                 <p>@question.Content</p>
                 <div class="row-xs-8">
-
                     <div class="answers">
                         @foreach (var ans in question.Answers)
                         {
-
                             <div class="form-group has-feedback">
                                 <label class="input-group">
                                     <span class="input-group-addon">
                                         <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
-                                        
                                     </span>
                                     <div class="form-control form-control-static">
                                         @ans.Content
@@ -58,46 +66,64 @@
             </div>
             questionCounter++;
         }
-
     </div>
-    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    <button id="submit-test-button" class="btn btn-primary btn-lg">Submit</button>
 </form>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
+    <script src="~/js/easytimer.min.js"></script>
     <script>
-        var t = @Model.Duration.Minutes;
-        console.log(t);
-        var d = new Date();
-        var v = new Date();
-        v.setMinutes(d.getMinutes() + t);
-        // Set the date we're counting down to
-
-        var countDownDate = v;
-
-        // Update the count down every 1 second
-        var x = setInterval(function () {
-
-            // Get todays date and time
-            var now = new Date().getTime();
-
-            // Find the distance between now an the count down date
-            var distance = countDownDate - now;
-
-            // Time calculations for days, hours, minutes and seconds
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Display the result in the element with id="demo"
-            document.getElementById("demo").innerHTML = minutes + ":" + seconds;
-
-            // If the count down is finished, write some text
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("demo").innerHTML = "EXPIRED";
-            }
-        }, 1000);
+        var timer = new Timer();
+        console.log(@Model.TimeLeft.TotalSeconds);
+        timer.start({ countdown: true, startValues: { seconds: @Model.TimeLeft.TotalSeconds} });
+        $('#countdownExample .values').html(timer.getTimeValues().toString());
+        timer.addEventListener('secondsUpdated', function (e) {
+            $('#countdownExample .values').html(timer.getTimeValues().toString());
+        });
+        timer.addEventListener('targetAchieved', function (e) {
+            $('#countdownExample .values').html('Time Expired');
+            e.preventDefault();
+            $('#test-form')
+                .ajaxSubmit({
+                    url: '/TakeTest/Index/',
+                    type: 'POST',
+                    success: function (response) {
+                        $.confirm({
+                            title: 'Time is over. :-(',
+                            content: 'Your test submitted!',
+                            buttons: {
+                                Ok: function () {
+                                    window.location.href = response;
+                                },
+                            }
+                        });
+                    }
+                });
+        });
+    </script>
+    <script>
+        $('#test-form').on('submit', function (e) {
+            e.preventDefault();
+            var url = this.action;
+            var data = $(this).serialize();
+            $.confirm({
+                title: 'Confirm!',
+                content: 'Your test is about to be submitted!',
+                buttons: {
+                    confirm: function () {
+                        $.post(url, data, function (r) {
+                            console.log(r);
+                            window.location.href = r;
+                        });
+                    },
+                    cancel: function () {
+                    },
+                }
+            });
+        });
     </script>
 }
 

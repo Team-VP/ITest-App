@@ -28,4 +28,9 @@
     <ProjectReference Include="..\ITestApp.Services\ITestApp.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Areas\Administration\Views\" />
+  </ItemGroup>
+
 </Project>

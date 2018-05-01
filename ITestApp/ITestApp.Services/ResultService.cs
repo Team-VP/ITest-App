@@ -24,7 +24,7 @@ namespace ITestApp.Services
             this.userTests = userTests ?? throw new ArgumentNullException("Tests repo can not be null");
         }
 
-        public IEnumerable<UserTestDto> GetSubmitedTestByUser (string id)
+        public IEnumerable<UserTestDto> GetSubmitedTestsByUser (string id)
         {
             var tests = userTests.All.Where(t => t.UserId == id);
 
@@ -35,35 +35,38 @@ namespace ITestApp.Services
 
         public void Submit(UserTestDto dto)
         {
-            var testToUpdate = userTests.All.Where(ut => ut.UserId == dto.UserId && ut.TestId == dto.TestId).FirstOrDefault();
+            var testToUpdate = userTests.All
+                .Where(ut => ut.UserId == dto.UserId && ut.TestId == dto.TestId)
+                .FirstOrDefault() ?? throw new ArgumentNullException("UserTest Entity can not be null.");
 
             testToUpdate.IsPassed = dto.IsPassed;
             testToUpdate.Points = dto.Points;
             testToUpdate.ExecutionTime = dto.ExecutionTime;
+            testToUpdate.SubmittedOn = dto.SubmittedOn;
 
             userTests.Update(testToUpdate);
             saver.SaveChanges();
-
-
-            
         }
 
         public void Add(UserTestDto dto)
         {
-
             var test = mapper.MapTo<UserTest>(dto);
             userTests.Add(test);
 
             saver.SaveChanges();
         }
 
-        public UserTestDto GetStartedTest(int id)
+        public UserTestDto GetStartedTest(string userId, int testId)
         {
-            var test = userTests.All.Where(t => t.TestId == id).FirstOrDefault();
+            var test = userTests.All
+                .Where(t => t.UserId == userId && t.TestId == testId)
+                .FirstOrDefault();
 
             var dto = mapper.MapTo<UserTestDto>(test);
 
             return dto;
         }
+
+        
     }
 }

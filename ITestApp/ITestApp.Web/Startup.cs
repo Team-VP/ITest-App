@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace ITestApp.Web
 {
@@ -95,21 +96,44 @@ namespace ITestApp.Web
             services.AddSession();
             services.AddScoped<IMappingProvider, MappingProvider>();
         }
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
+
+            IdentityResult roleResult;
+            //Adding Addmin Role  
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                //create the roles and seed them to the database  
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            //Assign Admin role to the main User here we have given our newly loregistered login id for Admin management  
+            User user = await UserManager.FindByEmailAsync("w@w.com");
+            var User = new User();
+            await UserManager.AddToRoleAsync(user, "Admin");
+
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
+
             if (this.Environment.IsDevelopment())
             {
                 DataSeeder.Seed(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
             }
             else
             {
+
                 app.UseExceptionHandler("/Home/Error");
             }
+
 
             app.UseStaticFiles();
 
@@ -118,9 +142,17 @@ namespace ITestApp.Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                   name: "adminArea",
+                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
+
+            CreateUserRoles(serviceProvider).Wait();
         }
     }
 }

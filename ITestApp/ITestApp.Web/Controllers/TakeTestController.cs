@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITestApp.Common.Providers;
@@ -33,7 +32,7 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        
+        [Authorize]
         public async Task<IActionResult> Index(int id)
         {
             var test = this.tests.GetById(id);
@@ -41,33 +40,43 @@ namespace ITestApp.Web.Controllers
             var user = await this.userManager.GetUserAsync(HttpContext.User);
             var userId = user.Id;
 
-            
-            var takenTests = resultService.GetSubmitedTestByUser(userId);
+            var takenTest = resultService.GetStartedTest(userId, id);
 
-            if (takenTests.Any(t => t.TestId == id && t.ExecutionTime < test.RequiredTime))
+            if (takenTest != null)
             {
-                return this.RedirectToAction("All", "Dashboard");
+                if (takenTest.SubmittedOn != null)
+                {
+                    return this.RedirectToAction("All", "Dashboard");
+                }
+                if (takenTest.TimeExpire < DateTime.Now)
+                {
+                    return this.RedirectToAction("All", "Dashboard");
+                }
+
             }
-
-            var currentTest = new UserTestDto()
+            else if (takenTest == null)
             {
-                UserId = userId,
-                TestId = test.Id
-            };
+                takenTest = new UserTestDto()
+                {
+                    UserId = userId,
+                    TestId = test.Id,
+                    StartOn = DateTime.Now,
+                    TimeExpire = DateTime.Now.AddMinutes(test.RequiredTime).AddSeconds(5)
 
-            resultService.Add(currentTest);
-
-            
+                };
+                resultService.Add(takenTest);
+            }
 
             var model = new IndexViewModel()
             {
-                StartedOn = DateTime.Now,
+                StartedOn = takenTest.StartOn,
                 UserId = user.Id,
                 TestId = test.Id,
                 TestName = test.Title,
                 Duration = TimeSpan.FromMinutes(test.RequiredTime),
                 CategoryName = test.Category.Name,
-                Questions = mapper.ProjectTo<QuestionViewModel>(test.Questions.AsQueryable()).ToList()
+                TimeLeft = TimeSpan.FromMinutes(test.RequiredTime) - (DateTime.Now.Subtract(takenTest.StartOn)),
+                Questions = mapper.ProjectTo<QuestionViewModel>(test.Questions.AsQueryable()).ToList(),
             };
 
             return View(model);
@@ -81,42 +90,43 @@ namespace ITestApp.Web.Controllers
             model.SubmitedOn = DateTime.Now;
             var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
 
-            if (testDuration.Seconds > model.Duration.Minutes * 60)
+            var testRequiredTimeSeconds = tests.GetTestDuratonSeconds(model.TestId);
+
+            if (testRequiredTimeSeconds < testDuration.TotalSeconds - 5)
             {
                 return Ok("You are cheater. Test failed");
             }
 
-            var testIfo = tests.GetById(model.TestId);
-
-
-            var currentTest = resultService.GetStartedTest(model.TestId);
-           
+            var currentTestEntity = resultService.GetStartedTest(model.UserId, model.TestId);
+            currentTestEntity.SubmittedOn = model.SubmitedOn;
+            currentTestEntity.ExecutionTime = testDuration;
 
             int correctAnswers = 0;
             int totalQuestions = model.Questions.Count();
 
-
             foreach (var q in model.Questions)
             {
-                int aId = int.Parse(q.AndswerId);
-
-                var answer = answers.GetById(int.Parse(q.AndswerId));
-                if (answer.IsCorrect)
+                if (q.AndswerId != null)
                 {
-                    correctAnswers++;
+                    var answer = answers.GetById(int.Parse(q.AndswerId));
+                    if (answer.IsCorrect)
+                    {
+                        correctAnswers++;
+                    }
                 }
             }
 
-            currentTest.Points = (float)((100.0 * correctAnswers) / totalQuestions);
-            if (currentTest.Points > 80)
-            {
-                currentTest.IsPassed = true;
-            }
-            currentTest.ExecutionTime = testDuration.Minutes;
+            currentTestEntity.Points = (float)((100.0 * correctAnswers) / totalQuestions);
 
-            resultService.Submit(currentTest);
-            
-            return this.RedirectToAction("All", "Dashboard");
+            if (currentTestEntity.Points > 80)
+            {
+                currentTestEntity.IsPassed = true;
+            }
+
+            resultService.Submit(currentTestEntity);
+
+            //return this.RedirectToAction("All", "Dashboard");
+            return Json(Url.Action("All", "Dashboard"));
         }
     }
 

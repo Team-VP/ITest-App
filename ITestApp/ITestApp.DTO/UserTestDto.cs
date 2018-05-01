@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ITestApp.Data.Models;
 
 namespace ITestApp.DTO
@@ -11,7 +9,7 @@ namespace ITestApp.DTO
 
         public float Points { get; set; }
 
-        public int ExecutionTime { get; set; }
+        public TimeSpan ExecutionTime { get; set; }
 
         public bool IsPassed { get; set; }
 
@@ -20,5 +18,12 @@ namespace ITestApp.DTO
 
         public int TestId { get; set; }
         public Test Test { get; set; }
+
+        public DateTime StartOn { get; set; }
+
+        public DateTime? SubmittedOn { get; set; }
+
+        public DateTime? TimeExpire { get; set; }
+
     }
 }
