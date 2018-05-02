@@ -162,7 +162,7 @@ namespace ITestApp.Services
             return GetById(newTestEntity.Id);
         }
 
-        public int GetTestDuratonSeconds(int id)
+        public int GetTestDurationSeconds(int id)
         { 
             int seconds = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime * 60;
 

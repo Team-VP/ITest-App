@@ -7,8 +7,6 @@ namespace ITestApp.Services.Contracts
 {
     public interface ITestsService
     {
-        int GetTestDuratonSeconds(int id);
-
         TestDto GetById(int id);
 
         IEnumerable<QuestionDto> GetQuestions(int testId);
@@ -28,5 +26,7 @@ namespace ITestApp.Services.Contracts
         IEnumerable<TestDto> GetAllTests();
 
         IEnumerable<TestDto> GetByAuthorId(string id);
+
+        int GetTestDurationSeconds(int id);
     }
 }

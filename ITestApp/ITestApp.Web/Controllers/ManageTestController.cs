@@ -37,8 +37,7 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
+        [Authorize]
         [Route("/create/new")]
         public IActionResult New()
         {
@@ -48,8 +47,8 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         [Route("/create/new")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
@@ -61,7 +60,7 @@ namespace ITestApp.Web.Controllers
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
                 //this.tests.Publish(dto);
-                
+
                 return Json(Url.Action("All", "Dashboard"));
             }
 
@@ -72,20 +71,21 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult AddQuestion(CreateQuestionViewModel model)
         {
             return PartialView("_CreateQuestionPartialView", model);
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddAnswer(CreateAnswerViewModel model)
         {
             return PartialView("_CreateAnswerPartialView", model);
         }
 
         [HttpGet("/edit/{id}")]
+        [Authorize]
         public IActionResult Edit(int id)
         {
             TestDto testToEdit;

@@ -90,7 +90,7 @@ namespace ITestApp.Web.Controllers
             model.SubmitedOn = DateTime.Now;
             var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
 
-            var testRequiredTimeSeconds = tests.GetTestDuratonSeconds(model.TestId);
+            var testRequiredTimeSeconds = tests.GetTestDurationSeconds(model.TestId);
 
             if (testRequiredTimeSeconds < testDuration.TotalSeconds - 5)
             {

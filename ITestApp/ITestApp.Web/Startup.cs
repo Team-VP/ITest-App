@@ -96,6 +96,7 @@ namespace ITestApp.Web
             services.AddSession();
             services.AddScoped<IMappingProvider, MappingProvider>();
         }
+
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -116,6 +117,7 @@ namespace ITestApp.Web
             await UserManager.AddToRoleAsync(user, "Admin");
 
         }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
@@ -130,7 +132,6 @@ namespace ITestApp.Web
             }
             else
             {
-
                 app.UseExceptionHandler("/Home/Error");
             }
 
@@ -149,10 +150,8 @@ namespace ITestApp.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
-
-            CreateUserRoles(serviceProvider).Wait();
+            
+            //CreateUserRoles(serviceProvider).Wait();
         }
     }
 }
