@@ -1,4 +1,5 @@
-﻿@model ITestApp.Web.Areas.Administration.Models.DashboardViewModels.IndexViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ITestApp.Web.Areas.Administration.Models.DashboardViewModels.IndexViewModel
 
 @{
 
@@ -15,12 +16,16 @@
     <div class="category-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link in active" data-toggle="tab" href="#your-tests">Your Test List</a>
+                <a class="nav-link in active" data-toggle="tab" href="#your-tests">Your Tests List</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tests-results">Test Result</a>
+                <a class="nav-link" data-toggle="tab" href="#tests-results">Tests Results</a>
+            </li>
+            <li style="float:right; margin-right: 15px">
+                <a class="btn btn-primary btn-xs" asp-action="New" asp-controller="ManageTest" asp-area="Administration" style="border-radius: 4px !important">Create New Test</a>
             </li>
         </ul>
+
     </div>
     <div class="tab-content">
         <div id="your-tests" class="tab-pane fade in active">
@@ -54,7 +59,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>

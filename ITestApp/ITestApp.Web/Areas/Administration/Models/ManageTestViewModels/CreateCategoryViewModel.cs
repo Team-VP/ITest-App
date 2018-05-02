@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITestApp.Web.Models.CreateTestViewModels
+namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
 {
     public class CreateCategoryViewModel
     {
