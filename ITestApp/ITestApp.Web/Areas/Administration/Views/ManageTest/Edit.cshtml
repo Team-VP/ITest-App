@@ -17,7 +17,7 @@ var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
             </div>
         </div>
         <div class="row">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger error-panel"></div>
             <div class="form-group col-xs-4 col-md-4">
                 <label asp-for="Title"></label>
                 <input asp-for="Title" class="form-control" placeholder="Test name" id="test-name" />

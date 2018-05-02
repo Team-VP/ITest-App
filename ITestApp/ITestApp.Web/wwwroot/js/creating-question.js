@@ -1,8 +1,10 @@
 ﻿$(function () {
     $("#publish-btn").on("click", () => {
         let errorPanel = $(".error-panel ul");
+        console.log(errorPanel);
         errorPanel.children().remove();
         $("#question-container").accordion({ header: "h3", active: false });
+        let shouldPost = true;
 
         if ($("#test-form").valid()) {
             let data = {};
@@ -22,6 +24,10 @@
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
                 valid = ValidateElements("Question", errorPanel, qContent, $q, $q);
+
+                if (!valid) {
+                    shouldPost = false;
+                }
                 
                 question.Content = qContent;
                 question.Answers = [];
@@ -34,6 +40,10 @@
                     let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
 
                     valid = ValidateElements("Answer", errorPanel, aContent, $a, $q);
+
+                    if (!valid) {
+                        shouldPost = false;
+                    }
                     
                     answer.Content = aContent;
 
@@ -44,10 +54,14 @@
                     question.Answers.push(answer);
                 });
 
+                if (!valid) {
+                    shouldPost = false;
+                }
+
                 data.Questions.push(question);
             });
 
-            if (!valid) {
+            if (!shouldPost) {
                 return;
             }
 
@@ -177,16 +191,16 @@ function IncrementQuestions() {
 }
 
 function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $question) {
-    if (!content) {
-        let msg;
-        let questionNumber = $question.prev().find(".question-number").html();
+    let msg;
+    let questionNumber = $question.prev().find(".question-number").html();
 
+    if (!content) {
         if (answerOrQuestionStr === "Question") {
-            msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty, please fill!</li>`;
+            msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty!</li>`;
         }
         else {
             let answerNumber = $element.find(".answer-number").html();
-            msg = `<li>${answerOrQuestionStr} ${answerNumber} for Question ${questionNumber} text is empty, please fill!</li>`;
+            msg = `<li>${answerOrQuestionStr} ${answerNumber} text for Question ${questionNumber} is empty!</li>`;
         }
 
         let liEl = $(msg);
@@ -194,8 +208,15 @@ function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $
         return false;
     }
     else if (content.length > 500) {
-        let elNum = $element.prev().find(".question-number").html();
-        let liEl = $(`<li>${answerOrQuestionStr} ${elNum} text length is invalid! Must be between 1 and 500!</li>`);
+        if (answerOrQuestionStr === "Question") {
+            msg = `<li>${answerOrQuestionStr} ${questionNumber} text length is invalid! It must be max 500 characters!</li>`;
+        }
+        else {
+            let answerNumber = $element.find(".answer-number").html();
+            msg = `<li>${answerOrQuestionStr} ${answerNumber} text length for Question ${questionNumber} is invalid! It must be max 500 characters!</li>`;
+        }
+
+        let liEl = $(msg);
         $errorPanel.append(liEl);
         return false;
     }
