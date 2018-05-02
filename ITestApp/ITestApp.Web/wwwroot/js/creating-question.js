@@ -1,8 +1,12 @@
 ﻿$(function () {
     $("#publish-btn").on("click", () => {
+        let errorPanel = $(".error-panel ul");
+        errorPanel.children().remove();
+        $("#question-container").accordion({ header: "h3", active: false });
+
         if ($("#test-form").valid()) {
             let data = {};
-
+            let valid = true;
             data.Title = $("#test-name").val();
             data.RequiredTime = $("#test-time").val();
             data.Category = $("#test-category").val();
@@ -17,15 +21,8 @@
 
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
-                //$(qContent).rules("add", {
-                //    required: true,
-                //    minlength: 1,
-                //    messages: {
-                //        required: "Required input",
-                //        minlength: jQuery.validator.format("Please, at least {0} characters are necessary")
-                //    }
-                //});
-
+                valid = ValidateElements("Question", errorPanel, qContent, $q, $q);
+                
                 question.Content = qContent;
                 question.Answers = [];
 
@@ -34,7 +31,12 @@
                 $.each(qAnswers, (i, a) => {
                     let $a = $(a);
                     let answer = {};
-                    answer.Content = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
+                    let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
+
+                    valid = ValidateElements("Answer", errorPanel, aContent, $a, $q);
+                    
+                    answer.Content = aContent;
+
                     if ($a.find(".correct-answer-cb").is(":checked")) {
                         answer.IsCorrect = true;
                     }
@@ -45,18 +47,18 @@
                 data.Questions.push(question);
             });
 
-            let tokenHeader = $("input[name=__RequestVerificationToken]").val();
-            data["__RequestVerificationToken"] = tokenHeader;
+            if (!valid) {
+                return;
+            }
 
-            console.log(data);
+            let tokenHeader = $("input[name=__RequestVerificationToken]").val();
+            
             $.ajax({
                 url: "/administration/create/new",
                 type: "POST",
                 contentType: "application/json",
                 headers: { "__RequestVerificationToken": tokenHeader},
                 data: JSON.stringify(data),
-                dataType: "json",
-                context: document.body,
                 success: (response) => {
                     window.location.href = response;
                 },
@@ -172,4 +174,31 @@ function IncrementQuestions() {
         $el.prev("h3").find(".question-number").html(i + 1);
         //$el.find(".question-number").html(i + 1);
     });
+}
+
+function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $question) {
+    if (!content) {
+        let msg;
+        let questionNumber = $question.prev().find(".question-number").html();
+
+        if (answerOrQuestionStr === "Question") {
+            msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty, please fill!</li>`;
+        }
+        else {
+            let answerNumber = $element.find(".answer-number").html();
+            msg = `<li>${answerOrQuestionStr} ${answerNumber} for Question ${questionNumber} text is empty, please fill!</li>`;
+        }
+
+        let liEl = $(msg);
+        $errorPanel.append(liEl);
+        return false;
+    }
+    else if (content.length > 500) {
+        let elNum = $element.prev().find(".question-number").html();
+        let liEl = $(`<li>${answerOrQuestionStr} ${elNum} text length is invalid! Must be between 1 and 500!</li>`);
+        $errorPanel.append(liEl);
+        return false;
+    }
+
+    return true;
 }
