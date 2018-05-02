@@ -17,6 +17,15 @@
 
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
+                //$(qContent).rules("add", {
+                //    required: true,
+                //    minlength: 1,
+                //    messages: {
+                //        required: "Required input",
+                //        minlength: jQuery.validator.format("Please, at least {0} characters are necessary")
+                //    }
+                //});
+
                 question.Content = qContent;
                 question.Answers = [];
 
@@ -36,11 +45,18 @@
                 data.Questions.push(question);
             });
 
+            let tokenHeader = $("input[name=__RequestVerificationToken]").val();
+            data["__RequestVerificationToken"] = tokenHeader;
+
+            console.log(data);
             $.ajax({
-                url: "/Administration/ManageTest/New",
+                url: "/administration/create/new",
                 type: "POST",
                 contentType: "application/json",
+                headers: { "__RequestVerificationToken": tokenHeader},
                 data: JSON.stringify(data),
+                dataType: "json",
+                context: document.body,
                 success: (response) => {
                     window.location.href = response;
                 },

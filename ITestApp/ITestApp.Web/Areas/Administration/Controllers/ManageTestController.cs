@@ -38,9 +38,9 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
-        //[Route("/create/new")]
+        [Authorize]
+        [Route("administration/create/new")]
+        [Route("administration/create")]
         public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
@@ -49,9 +49,10 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
-        //[Route("/create/new")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [Route("administration/create/new")]
+        [Route("administration/create")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
@@ -61,7 +62,7 @@ namespace ITestApp.Web.Controllers
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
-                this.tests.Publish(dto);
+                //this.tests.Publish(dto);
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
@@ -86,7 +87,8 @@ namespace ITestApp.Web.Controllers
             return PartialView("_CreateAnswerPartialView", model);
         }
 
-        [HttpGet("/edit/{id}")]
+        [HttpGet("administration/edit/{id}")]
+        //[HttpGet]
         [Authorize]
         public IActionResult Edit(int id)
         {

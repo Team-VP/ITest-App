@@ -96,27 +96,7 @@ namespace ITestApp.Web
             services.AddAutoMapper();
             services.AddSession();
             services.AddScoped<IMappingProvider, MappingProvider>();
-        }
-
-        private async Task CreateUserRoles(IServiceProvider serviceProvider)
-        {
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<User>>();
-
-
-            IdentityResult roleResult;
-            //Adding Addmin Role  
-            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-            if (!roleCheck)
-            {
-                //create the roles and seed them to the database  
-                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
-            }
-            //Assign Admin role to the main User here we have given our newly loregistered login id for Admin management  
-            User user = await UserManager.FindByEmailAsync("w@w.com");
-            var User = new User();
-            await UserManager.AddToRoleAsync(user, "Admin");
-
+            services.AddAntiforgery(options => options.HeaderName = "__RequestVerificationToken");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -149,7 +129,30 @@ namespace ITestApp.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             
-            //CreateUserRoles(serviceProvider).Wait();
+            CreateUserRoles(serviceProvider).Wait();
+        }
+
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+
+            IdentityResult roleResult;
+            //Adding Addmin Role  
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+
+            if (!roleCheck)
+            {
+                //create the roles and seed them to the database  
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            //Assign Admin role to the main User here we have given our newly loregistered login id for Admin management  
+            User user = await UserManager.FindByEmailAsync("aaa@aa.aa");
+            var User = new User();
+            await UserManager.AddToRoleAsync(user, "Admin");
+
         }
     }
 }
