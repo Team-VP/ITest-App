@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITestApp.Web.Models.CreateTestViewModels
+namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
 {
-    public class CreateQuestionViewModel
+    public class CreateAnswerViewModel
     {
         public int Id { get; set; }
 
@@ -16,6 +16,6 @@ namespace ITestApp.Web.Models.CreateTestViewModels
         [DataType(DataType.Text)]
         public string Content { get; set; }
 
-        public ICollection<CreateAnswerViewModel> Answers { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

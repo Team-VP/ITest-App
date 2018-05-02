@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ITestApp.Web.Areas.Administration.Models.DashboardViewModels.IndexViewModel
+
+@{
+
+    ViewData["Title"] = "Index";
+}
+
+<div id="page" class="container">
+    <h2>Dashboard</h2>
+    <hr />
+    <div>
+        <p><b>Welcome @Model.AdminName </b></p>
+    </div>
+
+    <div class="category-tabs">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link in active" data-toggle="tab" href="#your-tests">Your Tests List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tests-results">Tests Results</a>
+            </li>
+            <li style="float:right; margin-right: 15px">
+                <a class="btn btn-primary btn-xs" asp-action="New" asp-controller="ManageTest" asp-area="Administration" style="border-radius: 4px !important">Create New Test</a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="tab-content">
+        <div id="your-tests" class="tab-pane fade in active">
+            <p>Hello from 1 ta</p>
+        </div>
+        <div id="tests-results" class="tab-pane fade">
+            <div class="container" style="width:100%; margin-top: 30px">
+                <table id="results-tabse" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>User Name</th>
+                            <th>Categories</th>
+                            <th>Requested Time</th>
+                            <th>Execution Time</th>
+                            <th>Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var test in Model.UserResults)
+                        {
+                            <tr>
+                                <td>@test.TestName</td>
+                                <td>@test.UserName</td>
+                                <td>@test.Category</td>
+                                <td>@test.RequestedTime min</td>
+                                <td>@test.ExecutionTime min</td>
+                                <td>@test.Result</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+    <script>
+        $(document).ready(function () {
+            $('#results-tabse').DataTable();
+        });
+    </script>
+}

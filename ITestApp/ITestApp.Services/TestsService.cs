@@ -168,5 +168,21 @@ namespace ITestApp.Services
 
             return seconds;
         }
+
+        public string GetCategoryNameByTestId(int id)
+        {
+            var name = tests.All.
+                Where(t => t.Id == id).Include(c => c.Category).
+                FirstOrDefault().Category.Name;
+            
+            return name;
+        }
+
+        public int GetTestRequestedTime(int id)
+        {
+            int time = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime;
+
+            return time;
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace ITestApp.Web.Controllers
             this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
-            this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null"); ;
+            this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null"); 
         }
 
         [HttpGet]

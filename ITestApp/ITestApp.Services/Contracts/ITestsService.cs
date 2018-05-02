@@ -27,6 +27,10 @@ namespace ITestApp.Services.Contracts
 
         IEnumerable<TestDto> GetByAuthorId(string id);
 
+        string GetCategoryNameByTestId(int id);
+
+        int GetTestRequestedTime(int id);
+
         int GetTestDurationSeconds(int id);
     }
 }

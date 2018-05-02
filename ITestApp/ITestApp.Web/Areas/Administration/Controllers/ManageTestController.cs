@@ -2,8 +2,6 @@
 using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
-using ITestApp.Web.Models.DashboardViewModels;
-using ITestApp.Web.Models.CreateTestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
 
 namespace ITestApp.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
+    [Area("Administration")]
     public class ManageTestController : Controller
     {
         private readonly IMappingProvider mapper;
@@ -37,8 +38,9 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        [Route("/create/new")]
+        //[Authorize]
+        //[ValidateAntiForgeryToken]
+        //[Route("/create/new")]
         public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
@@ -47,9 +49,9 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        [Route("/create/new")]
+        //[Authorize]
+        //[ValidateAntiForgeryToken]
+        //[Route("/create/new")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
@@ -59,9 +61,9 @@ namespace ITestApp.Web.Controllers
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
-                //this.tests.Publish(dto);
+                this.tests.Publish(dto);
 
-                return Json(Url.Action("All", "Dashboard"));
+                return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
             var allCategories = categories.GetAllCategories();

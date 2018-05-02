@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using ITestApp.Data.Models;
 using ITestApp.DTO;
+using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
 using ITestApp.Web.Models.DashboardViewModels;
-using ITestApp.Web.Models.CreateTestViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ITestApp.Web.Properties
 {

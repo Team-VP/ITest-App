@@ -37,7 +37,7 @@
             });
 
             $.ajax({
-                url: "/Create/New",
+                url: "/Administration/ManageTest/New",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -56,7 +56,7 @@
 
     $('#add-question-btn').on("click", () => {
         $.ajax({
-            url: '/ManageTest/AddQuestion/',
+            url: '/Administration/ManageTest/AddQuestion/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {
@@ -87,7 +87,7 @@
         let buttonClicked = $(e.target);
         let extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
         $.ajax({
-            url: '/ManageTest/AddAnswer/',
+            url: '/Administration/ManageTest/AddAnswer/',
             type: 'GET',
             contentType: 'application/html',
             success: function (html) {

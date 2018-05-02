@@ -40,8 +40,14 @@ namespace ITestApp.Web.Controllers
             this.results = results;
         }
 
+        [HttpGet]
+        [Authorize]
         public IActionResult All()
         {
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { Area = "Administration"});
+            }
             var userResults = results.GetSubmitedTestsByUser(this.userManager.GetUserId(HttpContext.User));
 
             var categories = this.categories.GetAll();

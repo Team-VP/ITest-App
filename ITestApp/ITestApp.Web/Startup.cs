@@ -87,6 +87,7 @@ namespace ITestApp.Web
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IStatusesService, StatusesService>();
             services.AddTransient<IResultService, ResultService>();
+            services.AddTransient<IAdminService, AdminService>();
         }
 
         private void RegisterInfrastructure(IServiceCollection services)
@@ -121,7 +122,6 @@ namespace ITestApp.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-
             if (this.Environment.IsDevelopment())
             {
                 DataSeeder.Seed(serviceProvider);
@@ -134,8 +134,6 @@ namespace ITestApp.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-
             app.UseStaticFiles();
 
             app.UseAuthentication();
