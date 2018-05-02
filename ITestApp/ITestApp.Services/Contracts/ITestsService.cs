@@ -7,11 +7,9 @@ namespace ITestApp.Services.Contracts
 {
     public interface ITestsService
     {
-        int GetTestDuratonSeconds(int id);
+        void DisableTest(int id);
 
-        TestDto GetById(int id);
-
-        IEnumerable<QuestionDto> GetQuestions(int testId);
+        void PublishExistingTest(int id);
 
         void SaveAsDraft(TestDto test);
 
@@ -23,14 +21,24 @@ namespace ITestApp.Services.Contracts
 
         void SaveToDb(TestDto test);
 
+        int GetTestDuratonSeconds(int id);
+
+        int GetTestRequestedTime(int id);
+
+        string GetCategoryNameByTestId(int id);
+
+        string GetStatusNameByTestId(int id);
+
+        TestDto GetById(int id);
+
         TestDto CreateNew(TestDto test);
+
+        IEnumerable<QuestionDto> GetQuestions(int testId);
 
         IEnumerable<TestDto> GetAllTests();
 
         IEnumerable<TestDto> GetByAuthorId(string id);
 
-        string GetCategoryNameByTestId(int id);
-
-        int GetTestRequestedTime(int id);
+        
     }
 }

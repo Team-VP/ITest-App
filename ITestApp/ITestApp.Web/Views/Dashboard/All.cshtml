@@ -12,7 +12,7 @@
         {
             if (i == 0)
             {
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link in active" data-toggle="tab" href="#@category.Id">@category.Name</a>
                 </li>
             }
@@ -49,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var test in category.Tests)
+                        @foreach (var test in category.Tests.Where(t => t.Status != "Draft"))
                         {
                             var userTest = Model.UserTests.FirstOrDefault(ut => ut.TestId == test.Id);
                             <tr>

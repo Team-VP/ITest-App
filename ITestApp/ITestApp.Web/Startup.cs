@@ -149,7 +149,7 @@ namespace ITestApp.Web
             });
 
 
-            CreateUserRoles(serviceProvider).Wait();
+            //CreateUserRoles(serviceProvider).Wait();
         }
     }
 }

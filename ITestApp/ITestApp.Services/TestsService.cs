@@ -24,11 +24,12 @@ namespace ITestApp.Services
         public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers, IRepository<Category> categories)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
-            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
+            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests repo can not be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
+
         }
 
         public void Delete(int id)
@@ -75,7 +76,7 @@ namespace ITestApp.Services
             return result;
         }
 
-        public void Publish(TestDto test) 
+        public void Publish(TestDto test)
         {
             if (test == null)
             {
@@ -104,7 +105,7 @@ namespace ITestApp.Services
             test.StatusId = 2; //Draft
             tests.Add(mapper.MapTo<Test>(test));
             saver.SaveChanges();
-            
+
         }
 
         public TestDto GetById(int id)
@@ -163,7 +164,7 @@ namespace ITestApp.Services
         }
 
         public int GetTestDuratonSeconds(int id)
-        { 
+        {
             int seconds = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime * 60;
 
             return seconds;
@@ -174,7 +175,7 @@ namespace ITestApp.Services
             var name = tests.All.
                 Where(t => t.Id == id).Include(c => c.Category).
                 FirstOrDefault().Category.Name;
-            
+
             return name;
         }
 
@@ -183,6 +184,42 @@ namespace ITestApp.Services
             int time = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime;
 
             return time;
+        }
+
+        public string GetStatusNameByTestId(int id)
+        {
+            string name = tests.All
+                .Where(t => t.Id == id).Include(st => st.Status)
+                .FirstOrDefault().Status.Name ?? throw new ArgumentNullException("Status name cannot be null or empty");
+
+            return name;
+        }
+
+        public void DisableTest(int id)
+        {
+            var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
+            if (test != null)
+            {
+                test.StatusId = 2; //Draft
+
+                tests.Update(test);
+                saver.SaveChanges();
+            }
+
+        }
+
+        public void PublishExistingTest(int id)
+        {
+            var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
+
+            if (test != null)
+            {
+                test.StatusId = 1; //Published
+
+                tests.Update(test);
+                saver.SaveChanges();
+            }
+
         }
     }
 }

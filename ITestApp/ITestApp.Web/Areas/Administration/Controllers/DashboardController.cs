@@ -41,7 +41,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             var adminId = admin.Id;
 
             var userResults = adminService.GetUserResults();
-            var authorTests = adminService.GetTestsByAuthor(admin.UserName);
+            var authorTests = adminService.GetTestsByAuthor(adminId);
             //Model creating
             var userResultsList = new List<UserTestViewModel>();
             var authorTestsList = new List<TestViewModel>();
@@ -64,8 +64,10 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             {
                 var cur = new TestViewModel()
                 {
+                    Id = authorTest.Id.ToString(),
                     TestName = authorTest.Title,
-                    CategoryName = authorTest.Category.Name
+                    CategoryName = authorTest.Category.Name,
+                    Status = tests.GetStatusNameByTestId(authorTest.Id)
                 };
                 authorTestsList.Add(cur);
             }
@@ -78,6 +80,32 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Disable(int id)
+        {
+            tests.DisableTest(id);
+
+
+            return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Publish(int id)
+        {
+            tests.PublishExistingTest(id);
+
+            return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            tests.Delete(id);
+
+            return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
     }
 }
