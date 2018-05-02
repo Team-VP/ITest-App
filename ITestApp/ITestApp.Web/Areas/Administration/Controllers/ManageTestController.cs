@@ -62,6 +62,8 @@ namespace ITestApp.Web.Controllers
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
+                TempData["Success-Message"] = "You successfully published a new test!";
+
                 //this.tests.Publish(dto);
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
@@ -69,6 +71,7 @@ namespace ITestApp.Web.Controllers
 
             var allCategories = categories.GetAllCategories();
             ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            TempData["Error-Message"] = "Test publish failed!";
 
             return View(model);
         }
@@ -88,7 +91,6 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet("administration/edit/{id}")]
-        //[HttpGet]
         [Authorize]
         public IActionResult Edit(int id)
         {

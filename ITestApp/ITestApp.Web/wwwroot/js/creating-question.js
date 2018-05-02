@@ -186,10 +186,10 @@ function IncrementQuestions() {
     $.each($questionHolders, (i, el) => {
         let $el = $(el);
         $el.prev("h3").find(".question-number").html(i + 1);
-        //$el.find(".question-number").html(i + 1);
     });
 }
 
+// Validation for empty or too long answers and questions
 function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $question) {
     let msg;
     let questionNumber = $question.prev().find(".question-number").html();
