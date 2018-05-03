@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using ITestApp.Common.Exceptions;
 
 namespace ITestApp.Services
 {
@@ -76,25 +77,25 @@ namespace ITestApp.Services
             return result;
         }
 
-        public void Publish(TestDto test)
+        public void Publish(TestDto testDto)
         {
-            if (test == null)
+            if (testDto == null)
             {
                 throw new ArgumentNullException("Test cannot be null!");
             }
 
-            var testToFind = tests.All.FirstOrDefault(t => t.Id == test.Id);
+            var test = tests.All.FirstOrDefault(t => t.Id == testDto.Id);
 
-            if (testToFind == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
+            if (test == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
             {
-                test.StatusId = 1; //Publish
-                var newPublishedTest = mapper.MapTo<Test>(test);
+                testDto.StatusId = 1; //Publish
+                var newPublishedTest = mapper.MapTo<Test>(testDto);
                 tests.Add(newPublishedTest);
             }
             else
             {
-                testToFind.StatusId = 2; //Draft
-                tests.Update(testToFind);
+                test.StatusId = 1; //Draft
+                tests.Update(test);
             }
 
             saver.SaveChanges();
@@ -105,7 +106,6 @@ namespace ITestApp.Services
             test.StatusId = 2; //Draft
             tests.Add(mapper.MapTo<Test>(test));
             saver.SaveChanges();
-
         }
 
         public TestDto GetById(int id)
@@ -211,6 +211,21 @@ namespace ITestApp.Services
         public void PublishExistingTest(int id)
         {
             var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
+
+            if (!test.Questions.Any())
+            {
+                throw new InvalidTestException("Cannot publish a test with no questions!");
+            }
+            else
+            {
+                foreach (var question in test.Questions)
+                {
+                    if (question.Answers.Count < 2)
+                    {
+                        throw new InvalidTestException("Cannot publish a test with a question with less than 2 answers!");
+                    }
+                }
+            }
 
             if (test != null)
             {

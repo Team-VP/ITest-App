@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITestApp.Common.Exceptions;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Services.Contracts;
@@ -87,7 +88,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         public IActionResult Disable(int id)
         {
             tests.DisableTest(id);
-            
+
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
@@ -95,7 +96,14 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         [Authorize]
         public IActionResult Publish(int id)
         {
-            tests.PublishExistingTest(id);
+            try
+            {
+                tests.PublishExistingTest(id);
+            }
+            catch (InvalidTestException ex)
+            {
+                TempData["Error-Message"] = string.Format("Publishing test failed! {0}", ex.Message);
+            }
 
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }

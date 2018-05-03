@@ -55,17 +55,43 @@ namespace ITestApp.Web.Controllers
         [Route("administration/create")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
-            if (this.ModelState.IsValid)
+            bool isValid = true;
+
+            if (model.Status == "Published")
+            {
+                if (!model.Questions.Any())
+                {
+                    isValid = false;
+                }
+
+                foreach (var question in model.Questions)
+                {
+                    if (question.Answers.Count > 2)
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isValid && this.ModelState.IsValid)
             {
                 var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
-                TempData["Success-Message"] = "You successfully published a new test!";
-
-                this.tests.Publish(dto);
-
+                if (model.Status == "Published")
+                {
+                    TempData["Success-Message"] = "You successfully published a new test!";
+                    this.tests.Publish(dto);
+                }
+                else
+                {
+                    TempData["Success-Message"] = "You successfully created a new test!";
+                    this.tests.SaveAsDraft(dto);
+                }
+                
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
@@ -78,16 +104,16 @@ namespace ITestApp.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult AddQuestion(CreateQuestionViewModel model)
+        public IActionResult AddQuestion()
         {
-            return PartialView("_CreateQuestionPartialView", model);
+            return PartialView("_CreateQuestionPartialView");
         }
 
         [HttpGet]
         [Authorize]
-        public IActionResult AddAnswer(CreateAnswerViewModel model)
+        public IActionResult AddAnswer()
         {
-            return PartialView("_CreateAnswerPartialView", model);
+            return PartialView("_CreateAnswerPartialView");
         }
 
         [HttpGet("administration/edit/{id}")]
