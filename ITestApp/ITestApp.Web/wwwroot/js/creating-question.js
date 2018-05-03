@@ -72,9 +72,7 @@
             }
 
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
-
-            //$("#loading-container").show();
-
+            
             $.ajax({
                 url: "/administration/create/new",
                 type: "POST",
@@ -82,7 +80,6 @@
                 headers: { "__RequestVerificationToken": tokenHeader },
                 data: JSON.stringify(data),
                 success: (response) => {
-                    //$("#loading-container").hide();
                     window.location.href = response;
                 },
                 error: (err) => {
@@ -92,12 +89,32 @@
         }
     };
 
-    $("#publish-btn").on("click", () => {
-        finishTest(true);
+     $("#publish-btn").on("click", () => {
+         $.confirm({
+             title: 'Confirm!',
+             content: 'Are you sure you want to publish this test?',
+             buttons: {
+                 confirm: function () {
+                     finishTest(true);
+                 },
+                 cancel: function () {
+                 },
+             }
+         });
     });
 
-    $("#draft-btn").on("click", () => {
-        finishTest(false);
+     $("#draft-btn").on("click", () => {
+         $.confirm({
+             title: 'Confirm!',
+             content: 'Are you sure you want to save this test as draft?',
+             buttons: {
+                 confirm: function () {
+                     finishTest(false);
+                 },
+                 cancel: function () {
+                 },
+             }
+         });
     });
 
     // Add and delete questions

@@ -87,8 +87,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         public IActionResult Disable(int id)
         {
             tests.DisableTest(id);
-
-
+            
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
@@ -101,6 +100,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             tests.Delete(id);

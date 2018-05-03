@@ -3,11 +3,11 @@
     $('#admins-tests').DataTable();
 
     $('a[name=disable]').on('click', function (data) {
-        data.preventDefault()
+        data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
             title: 'Confirm!',
-            content: 'Are you sure that you want to disable this tests?',
+            content: 'Are you sure you want to disable this test?',
             buttons: {
                 confirm: function () {
                     $.ajax({
@@ -24,11 +24,11 @@
     });
 
     $('a[name=publish]').on('click', function (data) {
-        data.preventDefault()
+        data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
             title: 'Confirm!',
-            content: 'Are you sure that you want to publish this tests?',
+            content: 'Are you sure you want to publish this test?',
             buttons: {
                 confirm: function () {
                     $.ajax({
@@ -45,11 +45,11 @@
     });
 
     $('a[name=delete]').on('click', function (data) {
-        data.preventDefault()
+        data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
             title: 'Confirm!',
-            content: 'Are you sure that you want to delete this tests?',
+            content: 'Are you sure you want to delete this test?',
             buttons: {
                 confirm: function () {
                     $.ajax({
@@ -59,43 +59,38 @@
                         }
                     });
                 },
-                cancel: function () {
+                cancel: function (err) {
+                    console.log(err);
                 },
             }
         });
     });
 
-    $('a[name=edit]').on('click', function (data) {
-        data.preventDefault()
-        let url = $(this).attr('href');
-        $(".hidden-container").toggleClass("hide");
+    //$('a[name=edit]').on('click', function (data) {
+    //    data.preventDefault();
+    //    let url = $(this).attr('href');
 
-        Promise.resolve($.ajax({
-            url: url,
-            type: "GET"
-        })).then((result) => {
-            $(".hidden-container").toggleClass("hide");
-            $("body").html(result);
-            window.location.href = url;
-        }).catch((err) => {
-            console.log(err)
-        })
+    //    $(".hidden-container").toggleClass("hide");
+    //    window.location.href = url
+    //    //Promise.resolve(
+    //    //    $.ajax({
+    //    //        url: url,
+    //    //        type: "GET"
+    //    //    })).then((result) => {
+    //    //        $(".hidden-container").toggleClass("hide");
+    //    //        console.log(result);
+    //    //        $("body").html(result);
+    //    //        //window.location.href = url;
+    //    //    }).catch((err) => {
+    //    //        console.log(err)
+    //    //    })
 
-        //$.confirm({
-        //    title: 'Confirm!',
-        //    content: 'Are you sure that you want to publish this tests?',
-        //    buttons: {
-        //        confirm: function () {
-        //            $.ajax({
-        //                url: url,
-        //                success: function (r) {
-        //                    window.location.href = r;
-        //                }
-        //            });
-        //        },
-        //        cancel: function () {
-        //        },
-        //    }
-        //});
-    });
+    //    //Promise.resolve()
+    //    //    .then((result) => {
+    //    //        console.log(result);
+    //    //        //$(".hidden-container").toggleClass("hide");
+    //    //    }).catch((err) => {
+    //    //        console.log(err)
+    //    //    })
+    //});
 });
