@@ -64,7 +64,7 @@ namespace ITestApp.Web.Controllers
 
                 TempData["Success-Message"] = "You successfully published a new test!";
 
-                //this.tests.Publish(dto);
+                this.tests.Publish(dto);
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }

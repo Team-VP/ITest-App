@@ -87,7 +87,7 @@ namespace ITestApp.Services
 
             if (testToFind == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
             {
-                //test.StatusId = 1; //Publish
+                test.StatusId = 1; //Publish
                 var newPublishedTest = mapper.MapTo<Test>(test);
                 tests.Add(newPublishedTest);
             }
