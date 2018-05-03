@@ -87,7 +87,7 @@
             $('#countdownExample .values').html('Time Expired');
             e.preventDefault();
             $('#test-form')
-                .ajaxSubmit({
+                .ajaxSubmit({   
                     url: '/TakeTest/Index/',
                     type: 'POST',
                     success: function (response) {
