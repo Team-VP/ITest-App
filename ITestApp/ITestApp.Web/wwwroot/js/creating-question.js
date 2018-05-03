@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿ $(function () {
     let finishTest = function (shouldPublish) {
         let errorPanel = $(".error-panel ul");
         errorPanel.children().remove();
@@ -73,8 +73,7 @@
 
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
 
-            $("#loading-container").show();
-            console.log($("#loading-container"));
+            //$("#loading-container").show();
 
             $.ajax({
                 url: "/administration/create/new",
@@ -83,7 +82,7 @@
                 headers: { "__RequestVerificationToken": tokenHeader },
                 data: JSON.stringify(data),
                 success: (response) => {
-                    $("#loading-container").hide();
+                    //$("#loading-container").hide();
                     window.location.href = response;
                 },
                 error: (err) => {

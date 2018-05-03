@@ -48,23 +48,26 @@
     </nav>
     <div class="container body-content">
         <a href="/administration/edit/1" class="btn btn-warning ttt">Edit</a>
-        @if (((string)(TempData["Success-Message"] ?? "")).Any())
-        {
-            <br />
-            <div class="alert alert-success">
-                <strong>Success!</strong> @TempData["Success-Message"]
-            </div>
-        }
+        <div class="hidden-container hide"><img src="~/images/loading.gif" alt="loading" class="img-responsive center-block" /></div>
+        <div class="hidden-container">
+            @if (((string)(TempData["Success-Message"] ?? "")).Any())
+            {
+                <br />
+                <div class="alert alert-success">
+                    <strong>Success!</strong> @TempData["Success-Message"]
+                </div>
+            }
 
-        @if (((string)(TempData["Error-Message"] ?? "")).Any())
-        {
-            <br />
-            <div class="alert alert-danger">
-                <strong>Error!</strong> @TempData["Error-Message"]
-            </div>
-        }
-        <div id="loading-container"><img src="~/images/loading.gif" alt="loading" class="img-responsive center-block"/></div>
-        @RenderBody()
+            @if (((string)(TempData["Error-Message"] ?? "")).Any())
+            {
+                <br />
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> @TempData["Error-Message"]
+                </div>
+            }
+            @RenderBody()
+        </div>
+
         <hr />
         <footer>
             <p>&copy; 2018 - ITestApp.Web</p>
