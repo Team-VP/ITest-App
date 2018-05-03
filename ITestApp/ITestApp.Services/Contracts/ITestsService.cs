@@ -39,6 +39,6 @@ namespace ITestApp.Services.Contracts
 
         IEnumerable<TestDto> GetByAuthorId(string id);
 
-        
+        TestDto GetRandomTestByCategory(string name, string user);
     }
 }

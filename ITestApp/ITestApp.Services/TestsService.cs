@@ -20,8 +20,9 @@ namespace ITestApp.Services
         private readonly IRepository<Question> questions;
         private readonly IRepository<Answer> answers;
         private readonly IRepository<Category> categories;
+        private readonly IRepository<UserTest> userTests;
 
-        public TestsService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers, IRepository<Category> categories)
+        public TestsService(IRepository<UserTest> userTests, ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers, IRepository<Category> categories)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
@@ -29,7 +30,7 @@ namespace ITestApp.Services
             this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
-
+            this.userTests = userTests;
         }
 
         public void Delete(int id)
@@ -220,6 +221,49 @@ namespace ITestApp.Services
                 saver.SaveChanges();
             }
 
+        }
+
+        public TestDto GetRandomTestByCategory(string name, string user)
+        {
+            var filteredTests = tests.All.Include(c => c.Category).Include(ut => ut.UserTests).Where(t => t.StatusId != 2 && t.Category.Name == name);
+            var userTest = userTests.All.Where(ut => ut.UserId == user && ut.TimeExpire > DateTime.Now.AddSeconds(5) && ut.SubmittedOn == null).FirstOrDefault();
+            
+            if (userTest != null)
+            {
+                var test = tests.All.FirstOrDefault(t => t.Id == userTest.TestId);
+                var dto = mapper.MapTo<TestDto>(test);
+                dto.TakinStatus = "Ongoing";
+                return dto;
+            }
+            else if(filteredTests.Count() != 0)
+            {
+                var curenttests = new List<TestDto>();
+
+                foreach (var item in filteredTests)
+                {
+                    if (!(item.UserTests.Any(tst => tst.UserId == user)))
+                    {
+                        curenttests.Add(mapper.MapTo<TestDto>(item));
+                    }
+                }
+                if (curenttests.Count > 1)
+                {
+                    var randoninstance = new Random();
+                    int testCount = curenttests.Count();
+                    int random = randoninstance.Next(testCount);
+
+                    var test = curenttests[random];
+                    return test;
+                }
+                else
+                {
+                    return curenttests.FirstOrDefault();
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

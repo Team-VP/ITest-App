@@ -17,6 +17,6 @@ namespace ITestApp.Web.Models.DashboardViewModels
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        public ICollection<TestViewModel> Tests { get; set; }
+        public TestViewModel Test { get; set; }
     }
 }

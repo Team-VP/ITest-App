@@ -29,6 +29,7 @@ namespace ITestApp.Data.DataSeed
                         Email = "someName@someDomain.test",
                         UserName = "Test",
                         
+                        
                     };
 
                     var statusPublished = new Status { IsDeleted = false, Name = "Published" };

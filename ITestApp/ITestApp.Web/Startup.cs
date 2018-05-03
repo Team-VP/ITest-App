@@ -149,7 +149,8 @@ namespace ITestApp.Web
 
             //Assign Admin role to the main User here we have given our newly loregistered login id for Admin management  
             //User user = await UserManager.FindByEmailAsync("w@w.com");
-            User user = await UserManager.FindByEmailAsync("aaa@aa.aa");
+            User user = await UserManager.FindByEmailAsync("w@w.com");
+           
             var User = new User();
             await UserManager.AddToRoleAsync(user, "Admin");
         }

@@ -48,15 +48,19 @@ namespace ITestApp.Web.Controllers
             {
                 return RedirectToAction("Index", "Dashboard", new { Area = "Administration"});
             }
-            var userResults = results.GetSubmitedTestsByUser(this.userManager.GetUserId(HttpContext.User));
-
+            var userId = this.userManager.GetUserId(HttpContext.User);
             var categories = this.categories.GetAll();
-
+            
             var model = new DashboardViewModel()
             {
                 Categories = this.mapper.ProjectTo<CategoryViewModel>(categories).ToList(),
-                UserTests = this.mapper.ProjectTo<UserTestViewModel>(userResults).ToList()
             };
+
+            foreach (var category in model.Categories)
+            {
+                var randomTest = tests.GetRandomTestByCategory(category.Name, userId);
+                category.Test = mapper.MapTo<TestViewModel>(randomTest);
+            }
 
             return View(model);
         }

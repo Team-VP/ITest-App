@@ -21,6 +21,8 @@ namespace ITestApp.DTO
         public int StatusId { get; set; }
         public StatusDto Status { get; set; }
 
+        public string TakinStatus { get; set; }
+
         public ICollection<QuestionDto> Questions { get; set; }
     }
 }

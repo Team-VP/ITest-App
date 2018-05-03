@@ -40,60 +40,19 @@
                 activeTab = "tab-pane fade";
             }
             <div id="@category.Id" class="@activeTab">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Test Id</th>
-                            <th scope="col">Title</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var test in category.Tests.Where(t => t.Status != "Draft"))
-                        {
-                            var userTest = Model.UserTests.FirstOrDefault(ut => ut.TestId == test.Id);
-                            <tr>
-                                <th scope="row" id="@test.Id">@test.Id</th>
-                                <td>@test.Title</td>
-                                @if (userTest != null)
-                                {
-                                    if (userTest.SubmittedOn == null)
-                                    {
-                                        if (userTest.TimeExpire > DateTime.Now)
-                                        {
-                                            <td>
-                                                <p><a class="btn btn-success btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Continue</a></p>
+                @if (category.Test == null)
+                {
+                    <div class="user-test">
+                        <p>No test to display!</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="user-test">
+                        <p>@category.Test.Title</p>
+                    </div>
+                }
 
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <p><a class="btn btn-primary btn-sm" role="button" disabled="disabled" style="float: right">Submitted</a></p>
-
-                                            </td>
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            <p><a class="btn btn-primary btn-sm" role="button" disabled="disabled" style="float: right">Submitted</a></p>
-
-                                        </td>
-                                    }
-                                }
-                                else
-                                {
-                                    <td>
-                                        <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@test.Id" style="float: right">Begin Test</a></p>
-
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
             j++;
         }

@@ -26,6 +26,8 @@ namespace ITestApp.Web.Models.DashboardViewModels
 
         public string TestCategory { get; set; }
 
+        public string TakinStatus { get; set; }
+
         [DataType(DataType.Text)]
         public string Status { get; set; }
 
