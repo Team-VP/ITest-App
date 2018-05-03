@@ -11,6 +11,8 @@ namespace ITestApp.Services.Contracts
 
         void PublishExistingTest(int id);
 
+        void AddQuestionToTheTest(QuestionDto dto);
+
         void SaveAsDraft(TestDto test);
 
         void Publish(TestDto test);
