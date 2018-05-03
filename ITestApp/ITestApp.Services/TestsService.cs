@@ -87,7 +87,7 @@ namespace ITestApp.Services
 
             if (testToFind == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
             {
-                //test.StatusId = 1; //Publish
+                test.StatusId = 1; //Publish
                 var newPublishedTest = mapper.MapTo<Test>(test);
                 tests.Add(newPublishedTest);
             }
@@ -163,8 +163,8 @@ namespace ITestApp.Services
             return GetById(newTestEntity.Id);
         }
 
-        public int GetTestDuratonSeconds(int id)
-        {
+        public int GetTestDurationSeconds(int id)
+        { 
             int seconds = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime * 60;
 
             return seconds;

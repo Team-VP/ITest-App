@@ -1,12 +1,24 @@
 ﻿$(function () {
-    $("#publish-btn").on("click", () => {
+    let finishTest = function (shouldPublish) {
+        let errorPanel = $(".error-panel ul");
+        errorPanel.children().remove();
+        $("#question-container").accordion({ header: "h3", active: false });
+        let shouldPost = true;
+
         if ($("#test-form").valid()) {
             let data = {};
-
+            let valid = true;
             data.Title = $("#test-name").val();
             data.RequiredTime = $("#test-time").val();
             data.Category = $("#test-category").val();
-            data.Status = "Published";
+
+            if (shouldPublish) {
+                data.Status = "Published";
+            }
+            else {
+                data.Status = "Draft";
+            }
+
             data.Questions = [];
 
             let allQuestionHolders = $(".question-holder");
@@ -17,6 +29,12 @@
 
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
+                valid = ValidateElements("Question", errorPanel, qContent, $q, $q);
+
+                if (!valid) {
+                    shouldPost = false;
+                }
+
                 question.Content = qContent;
                 question.Answers = [];
 
@@ -25,7 +43,16 @@
                 $.each(qAnswers, (i, a) => {
                     let $a = $(a);
                     let answer = {};
-                    answer.Content = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
+                    let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
+
+                    valid = ValidateElements("Answer", errorPanel, aContent, $a, $q);
+
+                    if (!valid) {
+                        shouldPost = false;
+                    }
+
+                    answer.Content = aContent;
+
                     if ($a.find(".correct-answer-cb").is(":checked")) {
                         answer.IsCorrect = true;
                     }
@@ -33,15 +60,30 @@
                     question.Answers.push(answer);
                 });
 
+                if (!valid) {
+                    shouldPost = false;
+                }
+
                 data.Questions.push(question);
             });
 
+            if (!shouldPost) {
+                return;
+            }
+
+            let tokenHeader = $("input[name=__RequestVerificationToken]").val();
+
+            $("#loading-container").show();
+            console.log($("#loading-container"));
+
             $.ajax({
-                url: "/Administration/ManageTest/New",
+                url: "/administration/create/new",
                 type: "POST",
                 contentType: "application/json",
+                headers: { "__RequestVerificationToken": tokenHeader },
                 data: JSON.stringify(data),
                 success: (response) => {
+                    $("#loading-container").hide();
                     window.location.href = response;
                 },
                 error: (err) => {
@@ -49,6 +91,14 @@
                 }
             })
         }
+    };
+
+    $("#publish-btn").on("click", () => {
+        finishTest(true);
+    });
+
+    $("#draft-btn").on("click", () => {
+        finishTest(false);
     });
 
     // Add and delete questions
@@ -113,47 +163,81 @@
         heightStyle: "content",
         collapsible: true
     });
-});
 
-// Summernote.js init
-function summernoteInit() {
-    $(".summernote").summernote({
-        height: 150,
-        disableResizeEditor: true,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['fontsize', ['fontname', 'fontsize']],
-            ['color', ['color']],
-            ['font', ['strikethrough', 'superscript', 'subscript', 'height']],
-            ['para', ['ul', 'ol', 'paragraph', 'table']],
-            ['misc', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-}
-
-summernoteInit();
-
-// Answers and questions number incrementation
-function IncrementAnswers() {
-    
-    let $answerHolders = $(".answer-holder")
-
-    $.each($answerHolders, (i, el) => {
-        let $answers = $(el).find(".answer-number");
-
-        $.each($answers, (i, el) => {
-            $(el).html(i + 1);
+    // Summernote.js init
+    function summernoteInit() {
+        $(".summernote").summernote({
+            height: 150,
+            disableResizeEditor: true,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontname', 'fontsize']],
+                ['color', ['color']],
+                ['font', ['strikethrough', 'superscript', 'subscript', 'height']],
+                ['para', ['ul', 'ol', 'paragraph', 'table']],
+                ['misc', ['fullscreen', 'codeview', 'help']]
+            ]
         });
-    });
-}
+    }
 
-function IncrementQuestions() {
+    summernoteInit();
 
-    let $questionHolders = $(".question-holder")
+    // Answers and questions number incrementation
+    function IncrementAnswers() {
 
-    $.each($questionHolders, (i, el) => {
-        let $el = $(el);
-        $el.prev("h3").find(".question-number").html(i + 1);
-        //$el.find(".question-number").html(i + 1);
-    });
-}
+        let $answerHolders = $(".answer-holder")
+
+        $.each($answerHolders, (i, el) => {
+            let $answers = $(el).find(".answer-number");
+
+            $.each($answers, (i, el) => {
+                $(el).html(i + 1);
+            });
+        });
+    }
+
+    function IncrementQuestions() {
+
+        let $questionHolders = $(".question-holder")
+
+        $.each($questionHolders, (i, el) => {
+            let $el = $(el);
+            $el.prev("h3").find(".question-number").html(i + 1);
+        });
+    }
+
+    // Validation for empty or too long answers and questions
+    function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $question) {
+        let msg;
+        let questionNumber = $question.prev().find(".question-number").html();
+
+        if (!content) {
+            if (answerOrQuestionStr === "Question") {
+                msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty!</li>`;
+            }
+            else {
+                let answerNumber = $element.find(".answer-number").html();
+                msg = `<li>${answerOrQuestionStr} ${answerNumber} text for Question ${questionNumber} is empty!</li>`;
+            }
+
+            let liEl = $(msg);
+            $errorPanel.append(liEl);
+            return false;
+        }
+        else if (content.length > 500) {
+            if (answerOrQuestionStr === "Question") {
+                msg = `<li>${answerOrQuestionStr} ${questionNumber} text length is invalid! It must be max 500 characters!</li>`;
+            }
+            else {
+                let answerNumber = $element.find(".answer-number").html();
+                msg = `<li>${answerOrQuestionStr} ${answerNumber} text length for Question ${questionNumber} is invalid! It must be max 500 characters!</li>`;
+            }
+
+            let liEl = $(msg);
+            $errorPanel.append(liEl);
+            return false;
+        }
+
+        return true;
+    }
+});

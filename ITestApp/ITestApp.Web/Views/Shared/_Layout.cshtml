@@ -7,8 +7,8 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/summernote/dist/summernote.css" />
         <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.css" />
+        <link rel="stylesheet" href="~/lib/summernote/dist/summernote.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -47,6 +47,23 @@
         </div>
     </nav>
     <div class="container body-content">
+        <a href="/administration/edit/1" class="btn btn-warning ttt">Edit</a>
+        @if (((string)(TempData["Success-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-success">
+                <strong>Success!</strong> @TempData["Success-Message"]
+            </div>
+        }
+
+        @if (((string)(TempData["Error-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-danger">
+                <strong>Error!</strong> @TempData["Error-Message"]
+            </div>
+        }
+        <div id="loading-container"><img src="~/images/loading.gif" alt="loading" class="img-responsive center-block"/></div>
         @RenderBody()
         <hr />
         <footer>

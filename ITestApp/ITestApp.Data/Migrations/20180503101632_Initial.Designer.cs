@@ -11,8 +11,8 @@ using System;
 namespace ITestApp.Data.Migrations
 {
     [DbContext(typeof(ITestAppDbContext))]
-    [Migration("20180428115125_UserTest Changes")]
-    partial class UserTestChanges
+    [Migration("20180503101632_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,7 +223,7 @@ namespace ITestApp.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<int>("ExecutionTime");
+                    b.Property<TimeSpan>("ExecutionTime");
 
                     b.Property<bool>("IsDeleted");
 
@@ -238,6 +238,8 @@ namespace ITestApp.Data.Migrations
                     b.Property<DateTime?>("SubmittedOn");
 
                     b.Property<int>("TestId");
+
+                    b.Property<DateTime?>("TimeExpire");
 
                     b.Property<string>("UserId");
 

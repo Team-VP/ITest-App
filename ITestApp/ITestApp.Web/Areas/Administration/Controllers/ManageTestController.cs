@@ -38,9 +38,9 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
-        //[Route("/create/new")]
+        [Authorize]
+        [Route("administration/create/new")]
+        [Route("administration/create")]
         public IActionResult New()
         {
             var allCategories = categories.GetAllCategories();
@@ -49,9 +49,10 @@ namespace ITestApp.Web.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
-        //[Route("/create/new")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [Route("administration/create/new")]
+        [Route("administration/create")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
             if (this.ModelState.IsValid)
@@ -61,6 +62,8 @@ namespace ITestApp.Web.Controllers
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
+                TempData["Success-Message"] = "You successfully published a new test!";
+
                 this.tests.Publish(dto);
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
@@ -68,25 +71,27 @@ namespace ITestApp.Web.Controllers
 
             var allCategories = categories.GetAllCategories();
             ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            TempData["Error-Message"] = "Test publish failed!";
 
             return View(model);
         }
 
         [HttpGet]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult AddQuestion(CreateQuestionViewModel model)
         {
             return PartialView("_CreateQuestionPartialView", model);
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddAnswer(CreateAnswerViewModel model)
         {
             return PartialView("_CreateAnswerPartialView", model);
         }
 
-        [HttpGet]
+        [HttpGet("administration/edit/{id}")]
+        [Authorize]
         public IActionResult Edit(int id)
         {
             TestDto testToEdit;

@@ -81,5 +81,15 @@ namespace ITestApp.Services
 
             saver.SaveChanges();
         }
+
+        public void AddAnswerToTheQuestion(AnswerDto dto)
+        {
+            var answer = mapper.MapTo<Answer>(dto)
+                ?? throw new ArgumentNullException("Answer can not be null.");
+
+            answers.Add(answer);
+
+            saver.SaveChanges();
+        }
     }
 }

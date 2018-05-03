@@ -264,12 +264,15 @@ namespace ITestApp.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    ExecutionTime = table.Column<int>(nullable: false),
+                    ExecutionTime = table.Column<TimeSpan>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsPassed = table.Column<bool>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Points = table.Column<float>(nullable: false),
+                    Points = table.Column<float>(nullable: true),
+                    StartOn = table.Column<DateTime>(nullable: false),
+                    SubmittedOn = table.Column<DateTime>(nullable: true),
                     TestId = table.Column<int>(nullable: false),
+                    TimeExpire = table.Column<DateTime>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

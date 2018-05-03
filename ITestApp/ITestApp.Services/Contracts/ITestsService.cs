@@ -21,7 +21,7 @@ namespace ITestApp.Services.Contracts
 
         void SaveToDb(TestDto test);
 
-        int GetTestDuratonSeconds(int id);
+        int GetTestDurationSeconds(int id);
 
         int GetTestRequestedTime(int id);
 
