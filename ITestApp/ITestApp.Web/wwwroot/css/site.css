@@ -37,3 +37,11 @@
 .create-btns-container, .add-question-btn-container {
     padding-right: 50px;
 }
+
+#loading-container {
+    display: none;
+}
+
+#loading-container > img {
+    width: 500px;
+}

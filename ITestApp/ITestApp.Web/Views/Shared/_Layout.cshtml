@@ -47,6 +47,7 @@
         </div>
     </nav>
     <div class="container body-content">
+        <a href="/administration/edit/1" class="btn btn-warning ttt">Edit</a>
         @if (((string)(TempData["Success-Message"] ?? "")).Any())
         {
             <br />
@@ -62,6 +63,7 @@
                 <strong>Error!</strong> @TempData["Error-Message"]
             </div>
         }
+        <div id="loading-container"><img src="~/images/loading.gif" alt="loading" class="img-responsive center-block"/></div>
         @RenderBody()
         <hr />
         <footer>

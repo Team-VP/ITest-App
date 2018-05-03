@@ -48,7 +48,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             //UserTestViewModels creating
             foreach (var userResult in userResults)
             {
-                var cur = new UserTestViewModel()
+                var currentModel = new UserTestViewModel()
                 {
                     TestName = userResult.Test.Title,
                     UserName = userResult.User.UserName,
@@ -57,7 +57,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                     ExecutionTime = (int)userResult.ExecutionTime.TotalMinutes,
                     Result = (userResult.IsPassed) ? "Passed" : "Failed"
                 };
-                userResultsList.Add(cur);
+                userResultsList.Add(currentModel);
             }
             //TestViewModels creating
             foreach (var authorTest in authorTests)

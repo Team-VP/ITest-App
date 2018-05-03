@@ -73,6 +73,9 @@
 
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
 
+            $("#loading-container").show();
+            console.log($("#loading-container"));
+
             $.ajax({
                 url: "/administration/create/new",
                 type: "POST",
@@ -80,6 +83,7 @@
                 headers: { "__RequestVerificationToken": tokenHeader },
                 data: JSON.stringify(data),
                 success: (response) => {
+                    $("#loading-container").hide();
                     window.location.href = response;
                 },
                 error: (err) => {
