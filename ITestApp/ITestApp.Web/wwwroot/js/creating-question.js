@@ -1,6 +1,6 @@
-﻿ $(function () {
+﻿$(function () {
+    const errorPanel = $(".error-panel ul");
     let finishTest = function (shouldPublish) {
-        let errorPanel = $(".error-panel ul");
         errorPanel.children().remove();
         $("#question-container").accordion({ header: "h3", active: false });
         let shouldPost = true;
@@ -29,7 +29,7 @@
 
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
-                valid = ValidateElements("Question", errorPanel, qContent, $q, $q);
+                valid = validateStringContetn("Question", errorPanel, qContent, $q, $q);
 
                 if (!valid) {
                     shouldPost = false;
@@ -45,7 +45,7 @@
                     let answer = {};
                     let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
 
-                    valid = ValidateElements("Answer", errorPanel, aContent, $a, $q);
+                    valid = validateStringContetn("Answer", errorPanel, aContent, $a, $q);
 
                     if (!valid) {
                         shouldPost = false;
@@ -127,8 +127,8 @@
             contentType: 'application/html',
             success: function (html) {
                 $accordion.append(html);
-                IncrementAnswers();
-                IncrementQuestions();
+                incrementAnswers();
+                incrementQuestions();
                 $accordion.accordion("refresh")
                 $accordion.accordion("option", "active", ($accordion.children("div").length - 1))
                 summernoteInit();
@@ -145,7 +145,7 @@
         let questionHolderTitleTab = questionHolder.prev();
         questionHolder.remove();
         questionHolderTitleTab.remove();
-        IncrementQuestions();
+        incrementQuestions();
     });
 
     // Add and delete answers
@@ -158,7 +158,7 @@
             contentType: 'application/html',
             success: function (html) {
                 extraAnswersContainer.append(html);
-                IncrementAnswers();
+                incrementAnswers();
                 summernoteInit();
             },
             error: function (err) {
@@ -169,9 +169,13 @@
 
     $('#question-container').on("click", '.delete-answer-btn', (e) => {
         let buttonClicked = $(e.target);
-        let answerContent = buttonClicked.closest(".answer-content");
-        answerContent.remove();
-        IncrementAnswers();
+        const isValid = validateAnswerCount(buttonClicked);
+
+        if (isValid) {
+            let answerContent = buttonClicked.closest(".answer-content");
+            answerContent.remove();
+            incrementAnswers();
+        }
     });
 
     // Accordion init
@@ -199,7 +203,7 @@
     summernoteInit();
 
     // Answers and questions number incrementation
-    function IncrementAnswers() {
+    function incrementAnswers() {
 
         let $answerHolders = $(".answer-holder")
 
@@ -212,7 +216,7 @@
         });
     }
 
-    function IncrementQuestions() {
+    function incrementQuestions() {
 
         let $questionHolders = $(".question-holder")
 
@@ -223,7 +227,7 @@
     }
 
     // Validation for empty or too long answers and questions
-    function ValidateElements(answerOrQuestionStr, $errorPanel, content, $element, $question) {
+    function validateStringContetn(answerOrQuestionStr, $errorPanel, content, $element, $question) {
         let msg;
         let questionNumber = $question.prev().find(".question-number").html();
 
@@ -255,5 +259,18 @@
         }
 
         return true;
-    }
+     }
+
+     function validateAnswerCount($answerToBeDeleted) {
+         const minNumOfAnswers = 2;
+         const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
+
+         if (actualAnswers === minNumOfAnswers) {
+             
+             toastr.error('A question must have at least 2 answers!')
+             return false;
+         }
+
+         return true;
+     }
 });
