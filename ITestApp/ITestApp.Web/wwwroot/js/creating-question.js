@@ -23,13 +23,19 @@
 
             let allQuestionHolders = $(".question-holder");
 
+            if (shouldPublish && allQuestionHolders.length === 0) {
+                toastr.options.positionClass = "toast-top-center";
+                toastr.error("Cannot publish a test with no questions!");
+                return;
+            }
+
             $.each(allQuestionHolders, (i, q) => {
                 let $q = $(q);
                 let question = {};
 
                 let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
 
-                valid = validateStringContetn("Question", errorPanel, qContent, $q, $q);
+                valid = validateStringContent("Question", errorPanel, qContent, $q, $q);
 
                 if (!valid) {
                     shouldPost = false;
@@ -45,7 +51,7 @@
                     let answer = {};
                     let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
 
-                    valid = validateStringContetn("Answer", errorPanel, aContent, $a, $q);
+                    valid = validateStringContent("Answer", errorPanel, aContent, $a, $q);
 
                     if (!valid) {
                         shouldPost = false;
@@ -72,7 +78,7 @@
             }
 
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
-            
+
             $.ajax({
                 url: "/administration/create/new",
                 type: "POST",
@@ -89,32 +95,32 @@
         }
     };
 
-     $("#publish-btn").on("click", () => {
-         $.confirm({
-             title: 'Confirm!',
-             content: 'Are you sure you want to publish this test?',
-             buttons: {
-                 confirm: function () {
-                     finishTest(true);
-                 },
-                 cancel: function () {
-                 },
-             }
-         });
+    $("#publish-btn").on("click", () => {
+        $.confirm({
+            title: 'Confirm!',
+            content: 'Are you sure you want to publish this test?',
+            buttons: {
+                confirm: function () {
+                    finishTest(true);
+                },
+                cancel: function () {
+                },
+            }
+        });
     });
 
-     $("#draft-btn").on("click", () => {
-         $.confirm({
-             title: 'Confirm!',
-             content: 'Are you sure you want to save this test as draft?',
-             buttons: {
-                 confirm: function () {
-                     finishTest(false);
-                 },
-                 cancel: function () {
-                 },
-             }
-         });
+    $("#draft-btn").on("click", () => {
+        $.confirm({
+            title: 'Confirm!',
+            content: 'Are you sure you want to save this test as draft?',
+            buttons: {
+                confirm: function () {
+                    finishTest(false);
+                },
+                cancel: function () {
+                },
+            }
+        });
     });
 
     // Add and delete questions
@@ -227,7 +233,7 @@
     }
 
     // Validation for empty or too long answers and questions
-    function validateStringContetn(answerOrQuestionStr, $errorPanel, content, $element, $question) {
+    function validateStringContent(answerOrQuestionStr, $errorPanel, content, $element, $question) {
         let msg;
         let questionNumber = $question.prev().find(".question-number").html();
 
@@ -259,18 +265,18 @@
         }
 
         return true;
-     }
+    }
 
-     function validateAnswerCount($answerToBeDeleted) {
-         const minNumOfAnswers = 2;
-         const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
+    function validateAnswerCount($answerToBeDeleted) {
+        const minNumOfAnswers = 2;
+        const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
 
-         if (actualAnswers === minNumOfAnswers) {
-             
-             toastr.error('A question must have at least 2 answers!')
-             return false;
-         }
+        if (actualAnswers === minNumOfAnswers) {
+            toastr.options.positionClass = "toast-bottom-left";
+            toastr.error('A question must have at least 2 answers!')
+            return false;
+        }
 
-         return true;
-     }
+        return true;
+    }
 });
