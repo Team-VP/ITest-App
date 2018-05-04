@@ -6,6 +6,7 @@
     string activeTab;
 }
 <h1>Tests</h1>
+<hr />
 <div class="category-tabs">
     <ul class="nav nav-tabs nav-justified">
         @foreach (var category in Model.Categories)
@@ -40,19 +41,34 @@
                 activeTab = "tab-pane fade";
             }
             <div id="@category.Id" class="@activeTab">
-                @if (category.Test == null)
-                {
-                    <div class="user-test">
-                        <p>No test to display!</p>
+                <div class="user-test" style="border: 1px solid #ddd; border-top: none;">
+                    <div class="row" style="padding-top: 20px; margin-bottom: 20px;">
+                        @if (category.Test == null)
+                        {
+                            <div class="col-md-12 col-xs-12 text-center">
+                                <span class="text-center">Sorry! But there are no tests to display :-(</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6 col-xs-6" style="padding-top: 5px;">
+                                <span style="margin-left: 105px"><b>@category.Test.Title</b></span>
+                            </div>
+                            @if (category.Test.TakinStatus != "Ongoing")
+                            {
+                                <div class="col-md-6 col-xs-6">
+                                    <p><a class="btn btn-primary btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@category.Test.Id" style="float: right; margin-right: 15px;">Begin Test</a></p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6 col-xs-6">
+                                    <p><a class="btn btn-success btn-sm" role="button" asp-controller="TakeTest" asp-action="Index" asp-route-id="@category.Test.Id" style="float: right; margin-right: 15px;">Continue</a></p>
+                                </div>
+                            }
+                        }
                     </div>
-                }
-                else
-                {
-                    <div class="user-test">
-                        <p>@category.Test.Title</p>
-                    </div>
-                }
-
+                </div>
             </div>
             j++;
         }

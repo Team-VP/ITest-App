@@ -225,8 +225,12 @@ namespace ITestApp.Services
 
         public TestDto GetRandomTestByCategory(string name, string user)
         {
-            var filteredTests = tests.All.Include(c => c.Category).Include(ut => ut.UserTests).Where(t => t.StatusId != 2 && t.Category.Name == name);
-            var userTest = userTests.All.Where(ut => ut.UserId == user && ut.TimeExpire > DateTime.Now.AddSeconds(5) && ut.SubmittedOn == null).FirstOrDefault();
+            var filteredTests = tests.All.Include(c => c.Category).Include(ut => ut.UserTests)
+                .Where(t => t.StatusId != 2 && t.Category.Name == name);
+
+            var userTest = userTests.All.Include(t => t.Test).ThenInclude(c => c.Category)
+                .Where(ut => ut.UserId == user && ut.TimeExpire > DateTime.Now.AddSeconds(5) 
+                && ut.SubmittedOn == null && ut.Test.Category.Name == name).FirstOrDefault();
             
             if (userTest != null)
             {
@@ -235,6 +239,7 @@ namespace ITestApp.Services
                 dto.TakinStatus = "Ongoing";
                 return dto;
             }
+
             else if(filteredTests.Count() != 0)
             {
                 var curenttests = new List<TestDto>();

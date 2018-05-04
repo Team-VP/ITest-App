@@ -14,5 +14,7 @@ namespace ITestApp.Services.Contracts
         void Add(UserTestDto dto);
 
         UserTestDto GetStartedTest(string userId, int testId);
+
+        float CalculateTestPoints(int correctAnswers, int totalQuestionCount);
     }
 }

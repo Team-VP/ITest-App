@@ -67,6 +67,11 @@ namespace ITestApp.Services
             return dto;
         }
 
-        
+        public float CalculateTestPoints(int correctAnswers, int totalQuestionCount)
+        {
+            float points = (float)((100.0 * correctAnswers) / totalQuestionCount);
+
+            return points;
+        }
     }
 }

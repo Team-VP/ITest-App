@@ -8,16 +8,14 @@ namespace ITestApp.Web.Models.TakeTestViewModels
 {
     public class QuestionViewModel
     {
+        [Required]
         public string Id { get; set; }
 
-        [Required]
-        [MinLength(1)]
-        [MaxLength(500)]
-        [DataType(DataType.Text)]
         public string Content { get; set; }
 
         public IList<AnswerViewModel> Answers { get; set; }
 
+        [Required]
         public string AndswerId { get; set; }
     }
 }

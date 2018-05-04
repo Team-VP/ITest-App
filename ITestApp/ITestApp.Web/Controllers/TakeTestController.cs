@@ -28,7 +28,7 @@ namespace ITestApp.Web.Controllers
             this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
-            this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null"); 
+            this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");
         }
 
         [HttpGet]
@@ -81,52 +81,58 @@ namespace ITestApp.Web.Controllers
 
             return View(model);
         }
-
+        //TODO: Refactor make some extra methods 
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(IndexViewModel model)
         {
-            model.SubmitedOn = DateTime.Now;
-            var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
-
-            var testRequiredTimeSeconds = tests.GetTestDurationSeconds(model.TestId);
-
-            if (testRequiredTimeSeconds < testDuration.TotalSeconds - 5)
+            if (this.ModelState.IsValid)
             {
-                return Ok("You are cheater. Test failed");
-            }
+                model.SubmitedOn = DateTime.Now;
+                var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
 
-            var currentTestEntity = resultService.GetStartedTest(model.UserId, model.TestId);
-            currentTestEntity.SubmittedOn = model.SubmitedOn;
-            currentTestEntity.ExecutionTime = testDuration;
+                var testRequiredTimeSeconds = tests.GetTestDurationSeconds(model.TestId);
 
-            int correctAnswers = 0;
-            int totalQuestions = model.Questions.Count();
-
-            foreach (var q in model.Questions)
-            {
-                if (q.AndswerId != null)
+                if (testRequiredTimeSeconds < testDuration.TotalSeconds - 5)
                 {
-                    var answer = answers.GetById(int.Parse(q.AndswerId));
-                    if (answer.IsCorrect)
+                    TempData["Error-Message"] = "Test submition failed, please do not turn off JS!";
+                    return Json(Url.Action("All", "Dashboard"));
+                }
+
+                var currentTestEntity = resultService.GetStartedTest(model.UserId, model.TestId);
+                currentTestEntity.SubmittedOn = model.SubmitedOn;
+                currentTestEntity.ExecutionTime = testDuration;
+
+                int correctAnswers = 0;
+                int totalQuestions = model.Questions.Count();
+
+                foreach (var q in model.Questions)
+                {
+                    if (q.AndswerId != null)
                     {
-                        correctAnswers++;
+                        var answer = answers.GetById(int.Parse(q.AndswerId));
+                        if (answer.IsCorrect)
+                        {
+                            correctAnswers++;
+                        }
                     }
                 }
+
+                currentTestEntity.Points = this.resultService.CalculateTestPoints(correctAnswers, totalQuestions);
+
+                currentTestEntity.IsPassed = (currentTestEntity.Points > 80) ? true : false;
+
+                resultService.Submit(currentTestEntity);
+                TempData["Success-Message"] = "Test submited!";
             }
-
-            currentTestEntity.Points = (float)((100.0 * correctAnswers) / totalQuestions);
-
-            if (currentTestEntity.Points > 80)
+            else
             {
-                currentTestEntity.IsPassed = true;
+                TempData["Error-Message"] = "Test submition failed!";
             }
 
-            resultService.Submit(currentTestEntity);
-
-            //return this.RedirectToAction("All", "Dashboard");
             return Json(Url.Action("All", "Dashboard"));
+
         }
     }
 

@@ -101,6 +101,8 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
+        [HttpGet]
+        [Authorize]
         public IActionResult Delete(int id)
         {
             tests.Delete(id);
