@@ -58,6 +58,7 @@ namespace ITestApp.Services
                 .ThenInclude(a => a.Answers)
                 .FirstOrDefault();
 
+
             var testToEditFrom = this.mapper.MapTo<Test>(testDto);
 
             if (test == null)
@@ -156,14 +157,22 @@ namespace ITestApp.Services
 
         public TestDto GetById(int id)
         {
-            Test testWithId = tests.All.Where(t => t.Id == id)
+            var test = tests.All.Where(t => t.Id == id)
                 .Include(t => t.Status)
                 .Include(t => t.Category)
                 .Include(t => t.Author)
-                .Include(q => q.Questions)
-                    .ThenInclude(a => a.Answers)
-                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
-            return mapper.MapTo<TestDto>(testWithId);
+                .FirstOrDefault() ?? throw new ArgumentNullException("Test not found!");
+
+            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).ToList();
+
+            foreach (var question in testQuestions)
+            {
+                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).ToList();
+            }
+
+            test.Questions = testQuestions;
+
+            return mapper.MapTo<TestDto>(test);
         }
 
         public int GetTestDurationSeconds(int id)

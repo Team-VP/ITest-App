@@ -33,7 +33,7 @@
                 let $q = $(q);
                 let question = {};
 
-                let qContent = $q.find(".question-content .summernote").summernote("code")/*.replace(/<\/?[^>]+(>|$)/g, "")*/;
+                let qContent = $q.find(".question-content .summernote").summernote("code");
 
                 valid = validateStringContent("Question", errorPanel, qContent, $q, $q);
 
@@ -49,7 +49,7 @@
                 $.each(qAnswers, (i, a) => {
                     let $a = $(a);
                     let answer = {};
-                    let aContent = $a.find(".summernote").summernote("code")/*.replace(/<\/?[^>]+(>|$)/g, "")*/;
+                    let aContent = $a.find(".summernote").summernote("code");
 
                     valid = validateStringContent("Answer", errorPanel, aContent, $a, $q);
 
@@ -82,7 +82,7 @@
             $.ajax({
                 url: url,
                 type: "POST",
-                contentType: "application/json",
+                contentType: "application/json; text/html; charset=utf-8",
                 headers: { "__RequestVerificationToken": tokenHeader },
                 data: JSON.stringify(data),
                 success: (response) => {
@@ -125,6 +125,21 @@
     });
     
     $("#edit-save-btn").on("click", (e) => {
+        $.confirm({
+            title: 'Confirm!',
+            content: 'Save the test?',
+            buttons: {
+                confirm: function () {
+                    const elId = $(e.target).attr("data-id");
+                    finishTest(false, `/administration/edit/${elId}`);
+                },
+                cancel: function () {
+                },
+            }
+        });
+    });
+
+    $("#edit-publish-btn").on("click", (e) => {
         $.confirm({
             title: 'Confirm!',
             content: 'Save the test?',
@@ -214,7 +229,6 @@
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontname', 'fontsize']],
-                ['color', ['color']],
                 ['font', ['strikethrough', 'superscript', 'subscript', 'height']],
                 ['para', ['ul', 'ol', 'paragraph', 'table']],
                 ['misc', ['fullscreen', 'codeview', 'help']]

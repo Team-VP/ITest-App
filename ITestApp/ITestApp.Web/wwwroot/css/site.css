@@ -45,3 +45,7 @@
 #loading-container > img {
     width: 500px;
 }
+
+.answer-display-content {
+    float: none !important;
+}

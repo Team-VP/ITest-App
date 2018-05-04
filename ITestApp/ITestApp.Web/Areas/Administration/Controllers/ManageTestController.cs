@@ -66,7 +66,7 @@ namespace ITestApp.Web.Controllers
 
                 foreach (var question in model.Questions)
                 {
-                    if (question.Answers.Count > 2)
+                    if (question.Answers.Count < 2)
                     {
                         isValid = false;
                         break;

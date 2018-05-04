@@ -6,7 +6,7 @@
 <div class="question-holder">
     <div class="question-content">
         <h4><strong>Question</strong><span class="question-number"></span>:</h4>
-        <div class="summernote">@Model.Content</div>
+        <div class="summernote">@Html.Raw(Model.Content)</div>
         <div>
             <button type="button" class="btn btn-default btn-sm btn-danger delete-question-btn">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -34,7 +34,7 @@
                         Correct answer?
                     </div>
                 </div>
-                <div class="summernote">@answer.Content</div>
+                <div class="summernote">@Html.Raw(answer.Content)</div>
                 <div>
                     <button type="button" class="btn btn-default btn-sm btn-danger delete-answer-btn">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
