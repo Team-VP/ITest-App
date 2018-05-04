@@ -58,7 +58,7 @@
                     <div class="form-group has-feedback">
                         <label class="input-group">
                             <span class="input-group-addon">
-                                <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" />
+                                <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" required/>
                                 
                             </span>
                             <div class="form-control form-control-static">

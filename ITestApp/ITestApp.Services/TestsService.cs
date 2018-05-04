@@ -7,6 +7,7 @@ using ITestApp.DTO;
 using ITestApp.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ITestApp.Services
@@ -197,33 +198,6 @@ namespace ITestApp.Services
                 .FirstOrDefault().Status.Name ?? throw new ArgumentNullException("Status name cannot be null or empty");
 
             return name;
-        }
-
-        public void DisableTest(int id)
-        {
-            var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
-            if (test != null)
-            {
-                test.StatusId = 2; //Draft
-
-                tests.Update(test);
-                saver.SaveChanges();
-            }
-
-        }
-
-        public void PublishExistingTest(int id)
-        {
-            var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
-
-            if (test != null)
-            {
-                test.StatusId = 1; //Published
-
-                tests.Update(test);
-                saver.SaveChanges();
-            }
-
         }
 
         public TestDto GetRandomTestByCategory(string name, string user)

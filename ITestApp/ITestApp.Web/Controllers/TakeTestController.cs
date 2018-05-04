@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITestApp.Common.Providers;
@@ -104,23 +106,10 @@ namespace ITestApp.Web.Controllers
                 currentTestEntity.SubmittedOn = model.SubmitedOn;
                 currentTestEntity.ExecutionTime = testDuration;
 
-                int correctAnswers = 0;
+                int correctAnswers = this.CalculateCorrectAnswers(model.Questions);
                 int totalQuestions = model.Questions.Count();
 
-                foreach (var q in model.Questions)
-                {
-                    if (q.AndswerId != null)
-                    {
-                        var answer = answers.GetById(int.Parse(q.AndswerId));
-                        if (answer.IsCorrect)
-                        {
-                            correctAnswers++;
-                        }
-                    }
-                }
-
                 currentTestEntity.Points = this.resultService.CalculateTestPoints(correctAnswers, totalQuestions);
-
                 currentTestEntity.IsPassed = (currentTestEntity.Points > 80) ? true : false;
 
                 resultService.Submit(currentTestEntity);
@@ -133,6 +122,25 @@ namespace ITestApp.Web.Controllers
 
             return Json(Url.Action("All", "Dashboard"));
 
+        }
+
+        private int CalculateCorrectAnswers(ICollection<QuestionViewModel> questions)
+        {
+            int correctAnswers = 0;
+
+            foreach (var q in questions)
+            {
+                if (q.AndswerId != null)
+                {
+                    var answer = answers.GetById(int.Parse(q.AndswerId));
+                    if (answer.IsCorrect)
+                    {
+                        correctAnswers++;
+                    }
+                }
+            }
+
+            return correctAnswers;
         }
     }
 
