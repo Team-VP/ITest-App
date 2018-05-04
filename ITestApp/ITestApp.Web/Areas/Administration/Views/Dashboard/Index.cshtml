@@ -2,7 +2,6 @@
 @model ITestApp.Web.Areas.Administration.Models.DashboardViewModels.IndexViewModel
 
 @{
-
     ViewData["Title"] = "Index";
 }
 
@@ -38,6 +37,7 @@
                             <th>Test Name</th>
                             <th>Category</th>
                             <th>Status</th>
+                            <th>Created on</th>
                             <th class="text-justify">Ations</th>
                         </tr>
                     </thead>
@@ -48,6 +48,7 @@
                                 <td>@test.TestName</td>
                                 <td>@test.CategoryName</td>
                                 <td>@test.Status</td>
+                                <td>@test.CreatedOn</td>
                                 <td class="text-justify">
                                     <div class="text-center">
                                         @if (test.Status == "Published")

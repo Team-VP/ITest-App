@@ -68,7 +68,8 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                     Id = authorTest.Id.ToString(),
                     TestName = authorTest.Title,
                     CategoryName = authorTest.Category.Name,
-                    Status = tests.GetStatusNameByTestId(authorTest.Id)
+                    Status = tests.GetStatusNameByTestId(authorTest.Id),
+                    CreatedOn = authorTest.CreatedOn
                 };
                 authorTestsList.Add(cur);
             }

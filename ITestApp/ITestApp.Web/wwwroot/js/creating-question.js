@@ -33,7 +33,7 @@
                 let $q = $(q);
                 let question = {};
 
-                let qContent = $q.find(".question-content .summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "");
+                let qContent = $q.find(".question-content .summernote").summernote("code")/*.replace(/<\/?[^>]+(>|$)/g, "")*/;
 
                 valid = validateStringContent("Question", errorPanel, qContent, $q, $q);
 
@@ -49,7 +49,7 @@
                 $.each(qAnswers, (i, a) => {
                     let $a = $(a);
                     let answer = {};
-                    let aContent = $a.find(".summernote").summernote("code").replace(/<\/?[^>]+(>|$)/g, "")
+                    let aContent = $a.find(".summernote").summernote("code")/*.replace(/<\/?[^>]+(>|$)/g, "")*/;
 
                     valid = validateStringContent("Answer", errorPanel, aContent, $a, $q);
 
@@ -94,7 +94,8 @@
             })
         }
     };
-    
+
+    // Button click events
     $("#publish-btn").on("click", () => {
         $.confirm({
             title: 'Confirm!',
@@ -199,7 +200,7 @@
         }
     });
 
-    // Accordion init
+    // JQuery accordion init
     $("#question-container").accordion({
         heightStyle: "content",
         collapsible: true
@@ -247,7 +248,7 @@
         });
     }
 
-    // Validation for empty or too long answers and questions
+    // Validations for empty or too long answers and questions
     function validateStringContent(answerOrQuestionStr, $errorPanel, content, $element, $question) {
         let msg;
         let questionNumber = $question.prev().find(".question-number").html();
@@ -281,7 +282,7 @@
 
         return true;
     }
-
+    
     function validateAnswerCount($answerToBeDeleted) {
         const minNumOfAnswers = 2;
         const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;

@@ -20,6 +20,8 @@ namespace ITestApp.DTO
 
         public int StatusId { get; set; }
         public StatusDto Status { get; set; }
+        
+        public DateTime? CreatedOn { get; set; }
 
         public ICollection<QuestionDto> Questions { get; set; }
     }
