@@ -1,6 +1,6 @@
 ﻿$(function () {
     const errorPanel = $(".error-panel ul");
-    let finishTest = function (shouldPublish) {
+    let finishTest = function (shouldPublish, url) {
         errorPanel.children().remove();
         $("#question-container").accordion({ header: "h3", active: false });
         let shouldPost = true;
@@ -80,7 +80,7 @@
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
 
             $.ajax({
-                url: "/administration/create/new",
+                url: url,
                 type: "POST",
                 contentType: "application/json",
                 headers: { "__RequestVerificationToken": tokenHeader },
@@ -94,14 +94,14 @@
             })
         }
     };
-
+    
     $("#publish-btn").on("click", () => {
         $.confirm({
             title: 'Confirm!',
             content: 'Are you sure you want to publish this test?',
             buttons: {
                 confirm: function () {
-                    finishTest(true);
+                    finishTest(true, "/administration/create/new");
                 },
                 cancel: function () {
                 },
@@ -115,7 +115,22 @@
             content: 'Are you sure you want to save this test as draft?',
             buttons: {
                 confirm: function () {
-                    finishTest(false);
+                    finishTest(false, "/administration/create/new");
+                },
+                cancel: function () {
+                },
+            }
+        });
+    });
+    
+    $("#edit-save-btn").on("click", (e) => {
+        $.confirm({
+            title: 'Confirm!',
+            content: 'Save the test?',
+            buttons: {
+                confirm: function () {
+                    const elId = $(e.target).attr("data-id");
+                    finishTest(false, `/administration/edit/${elId}`);
                 },
                 cancel: function () {
                 },

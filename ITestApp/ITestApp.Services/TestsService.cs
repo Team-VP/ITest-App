@@ -50,17 +50,27 @@ namespace ITestApp.Services
             saver.SaveChanges();
         }
 
-        public void Edit(TestDto test)
+        public void Edit(TestDto testDto)
         {
-            Test testToEdit = tests.All.Where(t => t.Id == test.Id)
+            var test = tests.All
+                .Where(t => t.Id == testDto.Id)
                 .Include(q => q.Questions)
-                .ThenInclude(a => a.Answers).FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null.");
+                .ThenInclude(a => a.Answers)
+                .FirstOrDefault();
 
-            testToEdit.Title = test.Title;
-            //testToEdit.CategoryId = test.CategoryId;
-            testToEdit.RequiredTime = test.RequiredTime;
+            var testToEditFrom = this.mapper.MapTo<Test>(testDto);
 
-            tests.Update(testToEdit);
+            if (test == null)
+            {
+                throw new ArgumentNullException("Test not found!");
+            }
+
+            test.Title = testToEditFrom.Title;
+            test.CategoryId = testToEditFrom.CategoryId;
+            test.RequiredTime = testToEditFrom.RequiredTime;
+            test.Questions = testToEditFrom.Questions;
+
+            tests.Update(test);
             saver.SaveChanges();
         }
 
@@ -112,9 +122,12 @@ namespace ITestApp.Services
         }
 
         public void PublishExistingTest(int id)
-
         {
-            var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
+            var test = tests.All
+                .Where(t => t.Id == id && t.StatusId != 1)
+                .Include(q => q.Questions)
+                .ThenInclude(a => a.Answers)
+                .FirstOrDefault();
 
             if (!test.Questions.Any())
             {

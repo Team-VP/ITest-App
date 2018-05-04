@@ -137,5 +137,31 @@ namespace ITestApp.Web.Controllers
 
             return View(testVm);
         }
+
+        [HttpPost("administration/edit/{id}")]
+        [Authorize]
+        public IActionResult Edit([FromBody]CreateTestViewModel model, int id)
+        {
+            model.Id = id;
+
+            if (this.ModelState.IsValid)
+            {
+                var dto = this.mapper.MapTo<TestDto>(model);
+                dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
+                dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
+                dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
+
+                TempData["Success-Message"] = "You successfully editted the test!";
+                this.tests.Edit(dto);
+
+                return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
+            }
+
+            var allCategories = categories.GetAllCategories();
+            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            TempData["Error-Message"] = "Test editting failed!";
+
+            return View(model);
+        }
     }
 }
