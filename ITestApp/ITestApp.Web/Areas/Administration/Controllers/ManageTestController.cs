@@ -79,14 +79,14 @@ namespace ITestApp.Web.Controllers
                 var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
-                dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
+                //dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
 
                 if (model.Status == "Published")
                 {
                     TempData["Success-Message"] = "You successfully published a new test!";
                     this.tests.Publish(dto);
                 }
-                else
+                else if (model.Status == "Draft")
                 {
                     TempData["Success-Message"] = "You successfully created a new test!";
                     this.tests.SaveAsDraft(dto);

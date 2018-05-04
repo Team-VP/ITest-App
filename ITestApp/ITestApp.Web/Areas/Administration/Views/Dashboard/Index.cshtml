@@ -58,11 +58,10 @@
                                         }
                                         else if (test.Status == "Draft")
                                         {
-                                            <a class="btn btn-primary" id="@test.Id" asp-action="Publish" asp-controller="Dashboard" asp-area="Administration" asp-route-id="@test.Id" name="publish">Publish</a>
-                                            <a class="btn btn-primary" asp-action="Edit" asp-controller="ManageTest" asp-area="Administration" asp-route-id="@test.Id" name="edit">Edit</a>
-                                            <a class="btn btn-primary" asp-action="Delete" asp-controller="Dashboard" asp-area="Administration" asp-route-id="@test.Id" name="delete">Delete</a>
+                                            <a class="btn btn-primary" asp-area="Administration" asp-controller="Dashboard" asp-action="Publish" asp-route-id="@test.Id" name="publish" id="@test.Id">Publish</a>
+                                            <a class="btn btn-primary" asp-area="Administration" asp-controller="ManageTest" asp-action="Edit" asp-route-id="@test.Id" name="edit">Edit</a>
+                                            <a class="btn btn-primary" asp-area="Administration" asp-controller="Dashboard" asp-action="Delete" asp-route-id="@test.Id" name="delete">Delete</a>
                                         }
-
                                     </div>
                                 </td>
                             </tr>

@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using ITestApp.Common.Exceptions;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using ITestApp.Common.Exceptions;
+using System.Linq;
 
 namespace ITestApp.Services
 {
@@ -66,17 +64,10 @@ namespace ITestApp.Services
             saver.SaveChanges();
         }
 
-        public IEnumerable<QuestionDto> GetQuestions(int testId)
-        {
-            var currTests = tests.All
-                .Where(t => t.Id == testId)
-                .Select(q => q.Questions) ?? throw new ArgumentNullException("Collection of Questions can not be null");
-
-            var result = mapper.ProjectTo<QuestionDto>(currTests);
-
-            return result;
-        }
-
+        /// <summary>
+        /// Creates a new test and directly publishes it.
+        /// </summary>
+        /// <param name="testDto">Test dto to publish.</param>
         public void Publish(TestDto testDto)
         {
             if (testDto == null)
@@ -84,28 +75,70 @@ namespace ITestApp.Services
                 throw new ArgumentNullException("Test cannot be null!");
             }
 
-            var test = tests.All.FirstOrDefault(t => t.Id == testDto.Id);
-
-            if (test == null) //The test can be new and directry published or can be existing in the DB and only needs to change status. 
-            {
-                testDto.StatusId = 1; //Publish
-                var newPublishedTest = mapper.MapTo<Test>(testDto);
-                tests.Add(newPublishedTest);
-            }
-            else
-            {
-                test.StatusId = 1; //Draft
-                tests.Update(test);
-            }
-
+            var test = mapper.MapTo<Test>(testDto);
+            test.StatusId = 1; // Published
+            tests.Add(test);
             saver.SaveChanges();
         }
 
-        public void SaveAsDraft(TestDto test)
+        /// <summary>
+        /// Creates a new test and saves it as draft.
+        /// </summary>
+        /// <param name="testDto">Test dto to save.</param>
+        public void SaveAsDraft(TestDto testDto)
         {
-            test.StatusId = 2; //Draft
-            tests.Add(mapper.MapTo<Test>(test));
+            if (testDto == null)
+            {
+                throw new ArgumentNullException("Test cannot be null!");
+            }
+
+            var test = mapper.MapTo<Test>(testDto);
+            test.StatusId = 2; // Draft
+            tests.Add(test);
             saver.SaveChanges();
+        }
+
+        public void DisableTest(int id)
+        {
+            var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
+            if (test != null)
+            {
+                test.StatusId = 2; //Draft
+
+                tests.Update(test);
+                saver.SaveChanges();
+            }
+
+        }
+
+        public void PublishExistingTest(int id)
+
+        {
+            var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
+
+            if (!test.Questions.Any())
+            {
+                throw new InvalidTestException("Cannot publish a test with no questions!");
+            }
+            else
+            {
+                foreach (var question in test.Questions)
+                {
+                    if (question.Answers.Count < 2)
+                    {
+                        throw new InvalidTestException("Cannot publish a test with a question with less than 2 answers!");
+                    }
+                }
+            }
+
+            if (test != null)
+            {
+                test.StatusId = 1; //Published
+
+                tests.Update(test);
+                saver.SaveChanges();
+            }
+
         }
 
         public TestDto GetById(int id)
@@ -120,51 +153,8 @@ namespace ITestApp.Services
             return mapper.MapTo<TestDto>(testWithId);
         }
 
-        public IEnumerable<TestDto> GetByAuthorId(string id)
-        {
-            var currentTests = tests.All.
-                Where(test => test.AuthorId == id)
-                .Include(q => q.Questions).ThenInclude(a => a.Answers);
-
-            return mapper.ProjectTo<TestDto>(currentTests);
-        }
-
-        public IEnumerable<TestDto> GetAllTests()
-        {
-            var allTests = tests.All
-                .Include(t => t.Questions)
-                .ThenInclude(q => q.Answers);
-
-            return mapper.ProjectTo<TestDto>(allTests);
-        }
-
-        /// <summary>
-        /// Saves a newly created test to the database.
-        /// </summary>
-        /// <param name="test">DTO test to be saved.</param>
-        public void SaveToDb(TestDto test)
-        {
-            var newTestEntity = mapper.MapTo<Test>(test) ?? throw new ArgumentNullException("Test Can Not Be Null");
-            tests.Add(newTestEntity);
-            saver.SaveChanges();
-        }
-
-        /// <summary>
-        /// Gets a new test, converts it to DB entity, saves it to the database and returns the newly created entity test as DTO.
-        /// </summary>
-        /// <param name="test">DTO test to be saved.</param>
-        /// <returns>DTO test with id from the database.</returns>
-        public TestDto CreateNew(TestDto test)
-        {
-            var newTestEntity = mapper.MapTo<Test>(test) ?? throw new ArgumentNullException("Test Can Not Be Null");
-            tests.Add(newTestEntity);
-            saver.SaveChanges();
-
-            return GetById(newTestEntity.Id);
-        }
-
         public int GetTestDurationSeconds(int id)
-        { 
+        {
             int seconds = tests.All.FirstOrDefault(t => t.Id == id).RequiredTime * 60;
 
             return seconds;
@@ -193,48 +183,6 @@ namespace ITestApp.Services
                 .FirstOrDefault().Status.Name ?? throw new ArgumentNullException("Status name cannot be null or empty");
 
             return name;
-        }
-
-        public void DisableTest(int id)
-        {
-            var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
-            if (test != null)
-            {
-                test.StatusId = 2; //Draft
-
-                tests.Update(test);
-                saver.SaveChanges();
-            }
-
-        }
-
-        public void PublishExistingTest(int id)
-        {
-            var test = tests.All.Where(t => t.Id == id && t.StatusId != 1).FirstOrDefault();
-
-            if (!test.Questions.Any())
-            {
-                throw new InvalidTestException("Cannot publish a test with no questions!");
-            }
-            else
-            {
-                foreach (var question in test.Questions)
-                {
-                    if (question.Answers.Count < 2)
-                    {
-                        throw new InvalidTestException("Cannot publish a test with a question with less than 2 answers!");
-                    }
-                }
-            }
-
-            if (test != null)
-            {
-                test.StatusId = 1; //Published
-
-                tests.Update(test);
-                saver.SaveChanges();
-            }
-
         }
     }
 }

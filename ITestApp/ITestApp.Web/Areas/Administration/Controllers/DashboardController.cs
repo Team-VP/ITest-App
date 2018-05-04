@@ -99,6 +99,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             try
             {
                 tests.PublishExistingTest(id);
+                TempData["Success-Message"] = "You successfully published a test!";
             }
             catch (InvalidTestException ex)
             {
