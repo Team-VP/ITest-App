@@ -38,7 +38,7 @@
     padding-right: 50px;
 }
 
-#loading-container {
+.hide {
     display: none;
 }
 

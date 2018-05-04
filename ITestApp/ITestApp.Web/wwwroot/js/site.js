@@ -1,20 +1,22 @@
 ﻿// Write your JavaScript code.
-$(".ttt").on("click", () => {
-    $("#loading-container").show();
-
-    Promise.resolve
-    $.ajax({
-        url: "/administration/create/new",
-        type: "POST",
-        contentType: "application/json",
-        headers: { "__RequestVerificationToken": tokenHeader },
-        data: JSON.stringify(data),
-        success: (response) => {
-            $("#loading-container").hide();
-            window.location.href = response;
-        },
-        error: (err) => {
-            console.log(err)
+$(function () {
+    (function () {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-left",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "3000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
         }
-    })
+    })();
 });

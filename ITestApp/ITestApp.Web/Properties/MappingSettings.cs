@@ -16,6 +16,12 @@ namespace ITestApp.Web.Properties
                    .ForMember(dto => dto.Category, options => options.MapFrom(source => source.Category))
                    .ReverseMap().MaxDepth(3);
 
+            this.CreateMap<TestDto, Test>()
+                   .ForMember(m => m.Questions, options => options.MapFrom(dto => dto.Questions))
+                   .ForMember(m => m.Status, options => options.MapFrom(dto => dto.Status))
+                   .ForMember(m => m.Category, options => options.MapFrom(dto => dto.Category))
+                   .ReverseMap().MaxDepth(3);
+
             this.CreateMap<TestDto, TestViewModel>()
                    .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
                    .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name))
@@ -25,6 +31,10 @@ namespace ITestApp.Web.Properties
                    .ForMember(dto => dto.Answers, options => options.MapFrom(source => source.Answers))
                    .ReverseMap().MaxDepth(3);
 
+            this.CreateMap<QuestionDto, Question>()
+                .ForMember(m => m.Test, options => options.MapFrom(dto => dto.Test))
+                .ForMember(m => m.Answers, options => options.MapFrom(dto => dto.Answers));
+
             this.CreateMap<QuestionDto, QuestionViewModel>()
                 .ForMember(dto => dto.Answers, opt => opt.MapFrom(src => src.Answers))
                 .ReverseMap().MaxDepth(3);
@@ -32,12 +42,18 @@ namespace ITestApp.Web.Properties
             this.CreateMap<Answer, AnswerDto>()
                 .ReverseMap().MaxDepth(3);
 
+            this.CreateMap<AnswerDto, Answer>();
+
             this.CreateMap<AnswerDto, AnswerViewModel>()
                 .ReverseMap().MaxDepth(3);
 
             this.CreateMap<Category, CategoryDto>()
                 .ForMember(dto => dto.Tests, opt => opt.MapFrom(src => src.Tests))
                 .ReverseMap().MaxDepth(3);
+
+            this.CreateMap<CategoryDto, Category>()
+               .ForMember(m => m.Tests, opt => opt.MapFrom(dto => dto.Tests))
+               .ReverseMap().MaxDepth(3);
 
             this.CreateMap<CategoryDto, CategoryViewModel>()
                 .ForMember(vm => vm.Tests, opt => opt.MapFrom(src => src.Tests));
