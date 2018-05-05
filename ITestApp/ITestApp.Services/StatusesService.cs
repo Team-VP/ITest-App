@@ -1,4 +1,5 @@
-﻿using ITestApp.Common.Providers;
+﻿using Bytes2you.Validation;
+using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.DTO;
@@ -23,9 +24,13 @@ namespace ITestApp.Services
 
         public StatusDto GetStatusByName(string name)
         {
+            Guard.WhenArgument(name, "Status Name").IsNullOrEmpty().Throw();
+
             var status = this.statuses.All.Where(s => s.Name == name).FirstOrDefault() ?? throw new ArgumentNullException("Status not found!");
 
-            return this.mapper.MapTo<StatusDto>(status);
+            var dto = this.mapper.MapTo<StatusDto>(status);
+
+            return dto;
         }
     }
 }
