@@ -7,6 +7,7 @@ using ITestApp.DTO;
 using ITestApp.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ITestApp.Services
@@ -56,20 +57,90 @@ namespace ITestApp.Services
             {
                 throw new ArgumentNullException("Test dto cannot be null!");
             }
-            
+
             var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
-            
-            var testToEditFrom = this.mapper.MapTo<Test>(testDto);
+
+            //var testToEditFrom = this.mapper.MapTo<Test>(testDto);
 
             if (test == null)
             {
                 throw new ArgumentNullException("Test not found!");
             }
 
-            test.Title = testToEditFrom.Title;
-            test.CategoryId = testToEditFrom.CategoryId;
-            test.RequiredTime = testToEditFrom.RequiredTime;
-            test.Questions = testToEditFrom.Questions;
+            test.Title = testDto.Title;
+            test.CategoryId = testDto.CategoryId;
+            test.RequiredTime = testDto.RequiredTime;
+            var newlyCreatedQuestions = new List<Question>();
+
+            foreach (var questionDto in testDto.Questions)
+            {
+                var questionEntity = test.Questions.FirstOrDefault(q => q.Id == questionDto.Id);
+
+                if (questionEntity != null)
+                {
+                    if (questionDto.IsDeleted)
+                    {
+                        questions.Delete(questionEntity);
+                    }
+                    else
+                    {
+                        questionEntity.Content = questionDto.Content;
+                        questions.Update(questionEntity);
+                    }
+                }
+                else
+                {
+                    questionEntity = new Question()
+                    {
+                        Content = questionDto.Content
+                    };
+
+                    newlyCreatedQuestions.Add(questionEntity);
+                    //test.Questions.Add(questionEntity);
+                }
+
+                var newlyCreatedAnswers = new List<Answer>();
+
+                foreach (var answerDto in questionDto.Answers)
+                {
+                    var answerEntity = questionEntity.Answers.FirstOrDefault(a => a.Id == answerDto.Id);
+
+                    if (answerEntity != null)
+                    {
+                        if (answerDto.IsDeleted)
+                        {
+                            answers.Delete(answerEntity);
+                        }
+                        else
+                        {
+                            answerEntity.Content = answerDto.Content;
+                            answerEntity.IsCorrect = answerDto.IsCorrect;
+                            answers.Update(answerEntity);
+                        }
+                    }
+                    else
+                    {
+                        answerEntity = new Answer()
+                        {
+                            Content = answerDto.Content,
+                            IsCorrect = answerDto.IsCorrect
+                        };
+
+                        newlyCreatedAnswers.Add(answerEntity);
+                        //questionEntity.Answers.Add(answerEntity);
+                    }
+                }
+
+                foreach(var a in newlyCreatedAnswers)
+                {
+                    questionEntity.Answers.Add(a);
+                }
+            }
+
+            foreach (var q in newlyCreatedQuestions)
+            {
+                test.Questions.Add(q);
+            }
 
             tests.Update(test);
             saver.SaveChanges();
