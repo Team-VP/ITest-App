@@ -38,18 +38,27 @@ namespace ITestApp.Services
             var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault(t => t.Id == id) ?? throw new ArgumentNullException("Test can not be null");
 
-            tests.Delete(testToDelete);
+            var tetsUser = userTests.All;
 
-            foreach (var question in testToDelete.Questions)
+            if (testToDelete != null && !(tetsUser.Any(ut => ut.TestId == testToDelete.Id)))
             {
-                this.questions.Delete(question);
-                foreach (var answer in question.Answers)
-                {
-                    this.answers.Delete(answer);
-                }
-            }
+                tests.Delete(testToDelete);
 
-            saver.SaveChanges();
+                foreach (var question in testToDelete.Questions)
+                {
+                    this.questions.Delete(question);
+                    foreach (var answer in question.Answers)
+                    {
+                        this.answers.Delete(answer);
+                    }
+                }
+
+                saver.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidTestException("Cannot delete test it has been taked by users.");
+            }
         }
 
         public void Edit(TestDto testDto)
@@ -113,12 +122,18 @@ namespace ITestApp.Services
         public void DisableTest(int id)
         {
             var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
-            if (test != null)
+            var userTests = this.userTests.All.Where(ut => ut.TimeExpire > DateTime.Now.AddSeconds(5));
+
+            if (test != null && !(userTests.Any(ut => ut.TestId == id)))
             {
                 test.StatusId = 2; //Draft
 
                 tests.Update(test);
                 saver.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidTestException("Cannot set test status as Draft cause it been used right now by users.");
             }
 
         }

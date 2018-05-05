@@ -77,63 +77,18 @@
     </div>
     <button id="submit-test-button" class="btn btn-primary btn-lg">Submit</button>
 </form>
-@*TODO Refactor this mess*@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
     <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
     <script src="~/js/easytimer.min.js"></script>
+    <script src="~/js/take-test.js"></script>
     <script>
-        var timer = new Timer();
-        console.log(@Model.TimeLeft.TotalSeconds);
-        timer.start({ countdown: true, startValues: { seconds: @Model.TimeLeft.TotalSeconds} });
-        $('#countdownExample .values').html(timer.getTimeValues().toString());
-        timer.addEventListener('secondsUpdated', function (e) {
-            $('#countdownExample .values').html(timer.getTimeValues().toString());
-        });
-        timer.addEventListener('targetAchieved', function (e) {
-            $('#countdownExample .values').html('Time Expired');
-            e.preventDefault();
-            $('#test-form')
-                .ajaxSubmit({
-                    url: '/TakeTest/Index/',
-                    type: 'POST',
-                    success: function (response) {
-                        $.confirm({
-                            title: 'Time is over. :-(',
-                            content: 'Your test submitted!',
-                            buttons: {
-                                Ok: function () {
-                                    window.location.href = response;
-                                },
-                            }
-                        });
-                    }
-                });
-        });
+        var mTime = @Model.TimeLeft.TotalSeconds;
+        takeTest(mTime);
     </script>
-    <script>
-        $('#test-form').on('submit', function (e) {
-            e.preventDefault();
-            var url = this.action;
-            var data = $(this).serialize();
-            $.confirm({
-                title: 'Confirm!',
-                content: 'Your test is about to be submitted!',
-                buttons: {
-                    confirm: function () {
-                        $.post(url, data, function (r) {
-                            console.log(r);
-                            window.location.href = r;
-                        });
-                    },
-                    cancel: function () {
-                    },
-                }
-            });
-        });
-    </script>
+   
 }
 
 

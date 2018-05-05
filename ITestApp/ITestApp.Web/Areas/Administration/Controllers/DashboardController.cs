@@ -87,7 +87,17 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         [Authorize]
         public IActionResult Disable(int id)
         {
-            tests.DisableTest(id);
+            try
+            {
+                tests.DisableTest(id);
+                TempData["Success-Message"] = "You successfully set test status as Draft!";
+            }
+            catch (InvalidTestException ex)
+            {
+
+                TempData["Error-Message"] = string.Format("Disable test failed! {0}", ex.Message);
+            }
+
 
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
@@ -113,7 +123,19 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         [Authorize]
         public IActionResult Delete(int id)
         {
-            tests.Delete(id);
+            try
+            {
+                tests.Delete(id);
+                TempData["Success-Message"] = "You successfully delited a test!";
+
+            }
+            catch (InvalidTestException ex)
+            {
+
+                TempData["Error-Message"] = string.Format("Deliting test failed! {0}", ex.Message);
+
+            }
+
 
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
