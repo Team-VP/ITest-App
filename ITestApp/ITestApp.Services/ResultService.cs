@@ -66,6 +66,9 @@ namespace ITestApp.Services
 
         public UserTestDto GetStartedTest(string userId, int testId)
         {
+            Guard.WhenArgument(userId, "UserId").IsNullOrEmpty().Throw();
+            Guard.WhenArgument(testId, "TestId").IsLessThan(1).Throw();
+
             var test = userTests.All
                 .Where(t => t.UserId == userId && t.TestId == testId)
                 .FirstOrDefault();
