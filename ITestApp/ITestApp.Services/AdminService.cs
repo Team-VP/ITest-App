@@ -22,7 +22,7 @@ namespace ITestApp.Services
         public AdminService(ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<UserTest> userTests)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
-            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null"); ;
+            this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests repo can not be null");
             this.userTests = userTests ?? throw new ArgumentNullException("Tests repo can not be null");
 
