@@ -1,5 +1,5 @@
 ﻿@model ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels.CreateQuestionViewModel
-@{ 
+@{
     int counter = 1;
 }
 <h3>Question <span class="question-number">@ViewData["QuestionNumber"]</span></h3>
@@ -23,15 +23,17 @@
                         <strong>Answer <span class="answer-number">@(counter++)</span>:</strong>
                     </div>
                     <div class="col-xs-6 col-md-9 text-right">
-                        @if (answer.IsCorrect)
-                        {
-                            <input type="checkbox" class="correct-answer-cb" value="option1" checked>
-                        }
-                        else
-                        {
-                            <input type="checkbox" class="correct-answer-cb" value="option1">
-                        }
-                        Correct answer?
+                        <label>
+                            @if (answer.IsCorrect)
+                            {
+                                <input type="checkbox" class="correct-answer-cb" value="option1" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="correct-answer-cb" value="option1">
+                            }
+                            Correct answer?
+                        </label>
                     </div>
                 </div>
                 <div class="summernote" data-answer-id="@answer.Id">@Html.Raw(answer.Content)</div>
