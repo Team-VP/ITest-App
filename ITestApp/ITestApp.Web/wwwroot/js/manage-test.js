@@ -1,13 +1,18 @@
 ﻿$(function () {
-    const errorPanel = $(".error-panel ul");
-    let finishTest = function (shouldPublish, url) {
-        errorPanel.children().remove();
+    summernoteInit();
+    const data = initDataObj();
+
+    console.log(data);
+    const $errorPanel = $(".error-panel ul");
+
+    let finishTestCreation = function (shouldPublish, url) {
+        $errorPanel.children().remove();
         $("#question-container").accordion({ header: "h3", active: false });
         let shouldPost = true;
 
         if ($("#test-form").valid()) {
-            let data = {};
-            let valid = true;
+            let validStringContent = true;
+
             data.Title = $("#test-name").val();
             data.RequiredTime = $("#test-time").val();
             data.Category = $("#test-category").val();
@@ -15,13 +20,8 @@
             if (shouldPublish) {
                 data.Status = "Published";
             }
-            else {
-                data.Status = "Draft";
-            }
 
-            data.Questions = [];
-
-            let allQuestionHolders = $(".question-holder");
+            const allQuestionHolders = $(".question-holder");
 
             if (shouldPublish && allQuestionHolders.length === 0) {
                 toastr.options.positionClass = "toast-top-center";
@@ -30,47 +30,87 @@
             }
 
             $.each(allQuestionHolders, (i, q) => {
-                let $q = $(q);
-                let question = {};
+                const $q = $(q);
+                const qSummernote = $q.find(".question-content .summernote");
+                const qContent = qSummernote.summernote("code");
+                const qId = +qSummernote.attr("data-question-id");
 
-                let qContent = $q.find(".question-content .summernote").summernote("code");
+                validStringContent = validateStringContent("Question", $errorPanel, qContent, $q, $q);
 
-                valid = validateStringContent("Question", errorPanel, qContent, $q, $q);
-
-                if (!valid) {
+                if (!validStringContent) {
                     shouldPost = false;
                 }
 
-                question.Content = qContent;
-                question.Answers = [];
+                let question;
+                let shouldAddQuestion = true;
+                if (!isNaN(qId)) {
+                    question = data.Questions.filter(q => q.Id === qId)[0];
+                    shouldAddQuestion = false;
+                } else {
+                    question = {};
+                    question.Answers = [];
+                }
 
-                let qAnswers = $q.find(".answer-holder .answer-content");
+                question.Content = qContent;
+
+                const qAnswers = $q.find(".answer-holder .answer-content");
+                let correctAnswers = 0;
 
                 $.each(qAnswers, (i, a) => {
-                    let $a = $(a);
-                    let answer = {};
-                    let aContent = $a.find(".summernote").summernote("code");
+                    const $a = $(a);
+                    const aSummernote = $a.find(".summernote");
+                    const aContent = aSummernote.summernote("code");
+                    const aId = +aSummernote.attr("data-answer-id");
+                    validStringContent = validateStringContent("Answer", $errorPanel, aContent, $a, $q);
 
-                    valid = validateStringContent("Answer", errorPanel, aContent, $a, $q);
-
-                    if (!valid) {
+                    if (!validStringContent) {
                         shouldPost = false;
+                    }
+
+                    let answer;
+                    let shouldAddAnswer = true;
+                    if (!isNaN(aId)) {
+                        answer = question.Answers.filter(a => a.Id === aId)[0];
+                        shouldAddAnswer = false;
+                    } else {
+                        answer = {};
                     }
 
                     answer.Content = aContent;
 
                     if ($a.find(".correct-answer-cb").is(":checked")) {
                         answer.IsCorrect = true;
+                        correctAnswers++;
                     }
 
-                    question.Answers.push(answer);
+                    if (correctAnswers > 1) {
+                        shouldPost = false;
+                        toastr.options.positionClass = "toast-top-center";
+                        const questionNumber = $q.prev().find(".question-number").html()
+                        toastr.error(`Question ${questionNumber} must have exactly 1 correct answer!`);
+                        return false;
+                    }
+
+                    if (shouldAddAnswer) {
+                        question.Answers.push(answer);
+                    }
                 });
 
-                if (!valid) {
+                if (correctAnswers < 1) {
+                    shouldPost = false;
+                    toastr.options.positionClass = "toast-top-center";
+                    const questionNumber = $q.prev().find(".question-number").html()
+                    toastr.error(`Question ${questionNumber} must have exactly 1 correct answer!`);
+                    return false;
+                }
+
+                if (!validStringContent) {
                     shouldPost = false;
                 }
 
-                data.Questions.push(question);
+                if (shouldAddQuestion) {
+                    data.Questions.push(question);
+                }
             });
 
             if (!shouldPost) {
@@ -78,7 +118,7 @@
             }
 
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
-
+            
             $.ajax({
                 url: url,
                 type: "POST",
@@ -95,6 +135,53 @@
         }
     };
 
+    // Initialize data object to hold the initial state of the test. It will have empty values upon creation or filled ones upon editting
+    function initDataObj() {
+        const data = {};
+        data.Title = $("#test-name").val();
+        data.RequiredTime = $("#test-time").val();
+        data.Category = $("#test-category").val();
+        data.Status = "Draft";
+        data.Questions = [];
+
+        const allQuestionHolders = $(".question-holder");
+
+        $.each(allQuestionHolders, (i, q) => {
+            const question = {};
+            const $q = $(q);
+            const qSummernote = $q.find(".question-content .summernote");
+            const qContent = qSummernote.summernote("code");
+            const qId = qSummernote.attr("data-question-id");
+
+            question.Content = qContent;
+            question.Id = +qId;
+            question.Answers = [];
+
+            const qAnswers = $q.find(".answer-holder .answer-content");
+
+            $.each(qAnswers, (i, a) => {
+                const $a = $(a);
+                const answer = {};
+                const aSummernote = $a.find(".summernote");
+                const aContent = aSummernote.summernote("code");
+                const aId = aSummernote.attr("data-answer-id");
+
+                answer.Content = aContent;
+                answer.Id = +aId;
+
+                if ($a.find(".correct-answer-cb").is(":checked")) {
+                    answer.IsCorrect = true;
+                }
+
+                question.Answers.push(answer);
+            });
+
+            data.Questions.push(question);
+        });
+
+        return data;
+    }
+
     // Button click events
     $("#publish-btn").on("click", () => {
         $.confirm({
@@ -102,7 +189,7 @@
             content: 'Are you sure you want to publish this test?',
             buttons: {
                 confirm: function () {
-                    finishTest(true, "/administration/create/new");
+                    finishTestCreation(true, "/administration/create/new");
                 },
                 cancel: function () {
                 },
@@ -116,14 +203,14 @@
             content: 'Are you sure you want to save this test as draft?',
             buttons: {
                 confirm: function () {
-                    finishTest(false, "/administration/create/new");
+                    finishTestCreation(false, "/administration/create/new");
                 },
                 cancel: function () {
                 },
             }
         });
     });
-    
+
     $("#edit-save-btn").on("click", (e) => {
         $.confirm({
             title: 'Confirm!',
@@ -131,7 +218,7 @@
             buttons: {
                 confirm: function () {
                     const elId = $(e.target).attr("data-id");
-                    finishTest(false, `/administration/edit/${elId}`);
+                    finishTestCreation(false, `/administration/edit/${elId}`);
                 },
                 cancel: function () {
                 },
@@ -146,7 +233,7 @@
             buttons: {
                 confirm: function () {
                     const elId = $(e.target).attr("data-id");
-                    finishTest(false, `/administration/edit/${elId}`);
+                    finishTestCreation(true, `/administration/edit/${elId}`);
                 },
                 cancel: function () {
                 },
@@ -177,18 +264,26 @@
     });
 
     $('#question-container').on("click", '.delete-question-btn', (e) => {
-        let buttonClicked = $(e.target);
-        let questionHolder = buttonClicked.closest(".question-holder");
-        let questionHolderTitleTab = questionHolder.prev();
+        const buttonClicked = $(e.target);
+        const questionHolder = buttonClicked.closest(".question-holder");
+        const questionHolderTitleTab = questionHolder.prev();
         questionHolder.remove();
         questionHolderTitleTab.remove();
         incrementQuestions();
+
+        const qId = +questionHolder.find(".summernote").attr("data-question-id");
+        console.log(qId);
+        if (!isNaN(qId)) {
+            data.Questions.filter(q => q.Id === qId)[0].IsDeleted = true;
+        }
+
+        console.log(data);
     });
 
     // Add and delete answers
     $('#question-container').on("click", '.add-answer-btn', (e) => {
-        let buttonClicked = $(e.target);
-        let extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
+        const buttonClicked = $(e.target);
+        const extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
         $.ajax({
             url: '/Administration/ManageTest/AddAnswer/',
             type: 'GET',
@@ -205,13 +300,20 @@
     });
 
     $('#question-container').on("click", '.delete-answer-btn', (e) => {
-        let buttonClicked = $(e.target);
-        const isValid = validateAnswerCount(buttonClicked);
+        const $buttonClicked = $(e.target);
+        const isValid = validateAnswerCount($buttonClicked);
 
         if (isValid) {
-            let answerContent = buttonClicked.closest(".answer-content");
+            const answerContent = $buttonClicked.closest(".answer-content");
+            const aId = +answerContent.find(".summernote").attr("data-answer-id");
+            const qId = +$buttonClicked.closest(".answer-holder").prev().find(".summernote").attr("data-question-id");
+
             answerContent.remove();
             incrementAnswers();
+            
+            if (!isNaN(aId)) {
+                data.Questions.filter(q => q.Id === qId)[0].Answers.filter(a => a.Id === aId)[0].IsDeleted = true;
+            }
         }
     });
 
@@ -229,22 +331,20 @@
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontname', 'fontsize']],
-                ['font', ['strikethrough', 'superscript', 'subscript', 'height']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
                 ['para', ['ul', 'ol', 'paragraph', 'table']],
                 ['misc', ['fullscreen', 'codeview', 'help']]
             ]
         });
     }
 
-    summernoteInit();
-
     // Answers and questions number incrementation
     function incrementAnswers() {
 
-        let $answerHolders = $(".answer-holder")
+        const $answerHolders = $(".answer-holder")
 
         $.each($answerHolders, (i, el) => {
-            let $answers = $(el).find(".answer-number");
+            const $answers = $(el).find(".answer-number");
 
             $.each($answers, (i, el) => {
                 $(el).html(i + 1);
@@ -253,30 +353,29 @@
     }
 
     function incrementQuestions() {
-
-        let $questionHolders = $(".question-holder")
+        const $questionHolders = $(".question-holder")
 
         $.each($questionHolders, (i, el) => {
-            let $el = $(el);
+            const $el = $(el);
             $el.prev("h3").find(".question-number").html(i + 1);
         });
     }
 
-    // Validations for empty or too long answers and questions
+    // Validations for empty or too long answer and question contents
     function validateStringContent(answerOrQuestionStr, $errorPanel, content, $element, $question) {
         let msg;
-        let questionNumber = $question.prev().find(".question-number").html();
+        const questionNumber = $question.prev().find(".question-number").html();
 
         if (!content) {
             if (answerOrQuestionStr === "Question") {
                 msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty!</li>`;
             }
             else {
-                let answerNumber = $element.find(".answer-number").html();
+                const answerNumber = $element.find(".answer-number").html();
                 msg = `<li>${answerOrQuestionStr} ${answerNumber} text for Question ${questionNumber} is empty!</li>`;
             }
 
-            let liEl = $(msg);
+            const liEl = $(msg);
             $errorPanel.append(liEl);
             return false;
         }
@@ -285,18 +384,18 @@
                 msg = `<li>${answerOrQuestionStr} ${questionNumber} text length is invalid! It must be max 500 characters!</li>`;
             }
             else {
-                let answerNumber = $element.find(".answer-number").html();
+                const answerNumber = $element.find(".answer-number").html();
                 msg = `<li>${answerOrQuestionStr} ${answerNumber} text length for Question ${questionNumber} is invalid! It must be max 500 characters!</li>`;
             }
 
-            let liEl = $(msg);
+            const liEl = $(msg);
             $errorPanel.append(liEl);
             return false;
         }
 
         return true;
     }
-    
+
     function validateAnswerCount($answerToBeDeleted) {
         const minNumOfAnswers = 2;
         const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;

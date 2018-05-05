@@ -52,13 +52,13 @@ namespace ITestApp.Services
 
         public void Edit(TestDto testDto)
         {
-            var test = tests.All
-                .Where(t => t.Id == testDto.Id)
-                .Include(q => q.Questions)
-                .ThenInclude(a => a.Answers)
-                .FirstOrDefault();
-
-
+            if (testDto == null)
+            {
+                throw new ArgumentNullException("Test dto cannot be null!");
+            }
+            
+            var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
+            
             var testToEditFrom = this.mapper.MapTo<Test>(testDto);
 
             if (test == null)
@@ -83,7 +83,7 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test cannot be null!");
+                throw new ArgumentNullException("Test dto cannot be null!");
             }
 
             var test = mapper.MapTo<Test>(testDto);
@@ -157,20 +157,7 @@ namespace ITestApp.Services
 
         public TestDto GetById(int id)
         {
-            var test = tests.All.Where(t => t.Id == id)
-                .Include(t => t.Status)
-                .Include(t => t.Category)
-                .Include(t => t.Author)
-                .FirstOrDefault() ?? throw new ArgumentNullException("Test not found!");
-
-            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).ToList();
-
-            foreach (var question in testQuestions)
-            {
-                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).ToList();
-            }
-
-            test.Questions = testQuestions;
+            var test = GetTestWithoutDeletedQuestionsAndAnswers(id);
 
             return mapper.MapTo<TestDto>(test);
         }
@@ -205,6 +192,31 @@ namespace ITestApp.Services
                 .FirstOrDefault().Status.Name ?? throw new ArgumentNullException("Status name cannot be null or empty");
 
             return name;
+        }
+
+        private Test GetTestWithoutDeletedQuestionsAndAnswers(int id)
+        {
+            var test = tests.All.Where(t => t.Id == id)
+               .Include(t => t.Status)
+               .Include(t => t.Category)
+               .Include(t => t.Author)
+               .FirstOrDefault();
+
+            if (test == null)
+            {
+                throw new ArgumentNullException($"Test with id {id} not found!");
+            }
+
+            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).AsNoTracking().ToList();
+
+            foreach (var question in testQuestions)
+            {
+                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).AsNoTracking().ToList();
+            }
+
+            test.Questions = testQuestions;
+
+            return test;
         }
     }
 }

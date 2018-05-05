@@ -16,6 +16,8 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
         [DataType(DataType.Text)]
         public string Content { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public ICollection<CreateAnswerViewModel> Answers { get; set; }
     }
 }

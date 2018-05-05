@@ -144,6 +144,8 @@ namespace ITestApp.Web.Controllers
         {
             model.Id = id;
 
+            //TODO validate answer and question count
+
             if (this.ModelState.IsValid)
             {
                 var dto = this.mapper.MapTo<TestDto>(model);

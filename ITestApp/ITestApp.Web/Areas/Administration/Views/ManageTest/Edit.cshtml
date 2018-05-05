@@ -13,7 +13,7 @@ var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
     <form id="test-form">
         <div class="row">
             <div class="form-group col-xs-4 col-md-4">
-                <p><strong>Id: @Model.Id</strong></p>
+                <p><strong>Test Id: @Model.Id</strong></p>
             </div>
         </div>
         <div class="row">
@@ -66,5 +66,5 @@ var categories = (List<CreateCategoryViewModel>)ViewData["Categories"];
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script src="~/js/creating-question.js"></script>
+    <script src="~/js/manage-test.js"></script>
 }
