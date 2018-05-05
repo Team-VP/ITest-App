@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Bytes2you.Validation;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
@@ -26,6 +27,8 @@ namespace ITestApp.Services
 
         public IEnumerable<UserTestDto> GetSubmitedTestsByUser (string id)
         {
+            Guard.WhenArgument(id, "User id").IsNullOrEmpty().Throw();
+
             var tests = userTests.All.Where(t => t.UserId == id);
 
             var dto = mapper.ProjectTo<UserTestDto>(tests);
