@@ -43,7 +43,7 @@ namespace ITestApp.Services
         public IEnumerable<UserTestDto> GetUserResults()
         {
             var userResults = userTests.All.Include(t => t.Test).Include(u => u.User)
-                .Where(ur => ur.TimeExpire < DateTime.Now.AddSeconds(5));
+                .Where(ur => ur.TimeExpire < DateTime.Now.AddSeconds(5) || ur.SubmittedOn != null);
 
             var dto = mapper.ProjectTo<UserTestDto>(userResults);
 
