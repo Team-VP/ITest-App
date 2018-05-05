@@ -38,6 +38,8 @@ namespace ITestApp.Services
 
         public void Submit(UserTestDto dto)
         {
+            Guard.WhenArgument(dto, "UserTestDto us null").IsNull().Throw();
+
             var testToUpdate = userTests.All
                 .Where(ut => ut.UserId == dto.UserId && ut.TestId == dto.TestId)
                 .FirstOrDefault() ?? throw new ArgumentNullException("UserTest Entity can not be null.");
@@ -53,7 +55,10 @@ namespace ITestApp.Services
 
         public void Add(UserTestDto dto)
         {
+            Guard.WhenArgument(dto, "UserTestDto").IsNull().Throw();
+
             var test = mapper.MapTo<UserTest>(dto);
+
             userTests.Add(test);
 
             saver.SaveChanges();
