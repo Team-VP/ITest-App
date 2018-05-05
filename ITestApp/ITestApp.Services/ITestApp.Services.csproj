@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bytes2you.Validation" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ITestApp.Common\ITestApp.Common.csproj" />
     <ProjectReference Include="..\ITestApp.Data\ITestApp.Data.csproj" />
     <ProjectReference Include="..\ITestApp.DTO\ITestApp.DTO.csproj" />

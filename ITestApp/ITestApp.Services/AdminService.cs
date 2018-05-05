@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Bytes2you.Validation;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
@@ -30,6 +31,8 @@ namespace ITestApp.Services
 
         public IEnumerable<TestDto> GetTestsByAuthor(string id)
         {
+            Guard.WhenArgument(id, "Author's Id").IsNullOrEmpty().Throw();
+
             var authorTests = tests.All.Where(t => t.AuthorId == id).Include(c => c.Category);
 
             var dto = mapper.ProjectTo<TestDto>(authorTests);

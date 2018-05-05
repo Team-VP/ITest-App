@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ITestApp.Common.Providers;
-using ITestApp.Data;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
