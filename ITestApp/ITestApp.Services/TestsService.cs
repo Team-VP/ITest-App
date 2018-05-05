@@ -30,7 +30,7 @@ namespace ITestApp.Services
             this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
-            this.userTests = userTests;
+            this.userTests = userTests ?? throw new ArgumentNullException("UserTests repo can not be null"); ;
         }
 
         public void Delete(int id)
