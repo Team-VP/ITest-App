@@ -53,7 +53,10 @@ namespace ITestApp.Services
                 .FirstOrDefault(answer => answer.Id == id) 
                 ?? throw new ArgumentNullException("Answer can not be Null.");
 
-            return mapper.MapTo<AnswerDto>(currentAnwer);
+            var dto = mapper.MapTo<AnswerDto>(currentAnwer)
+                 ?? throw new ArgumentNullException("AnswerDto can not be Null.");
+
+            return dto;
         }
     }
 }
