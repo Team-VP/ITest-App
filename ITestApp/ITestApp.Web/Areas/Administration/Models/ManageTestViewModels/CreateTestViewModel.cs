@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ITestApp.Common.Constants;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
@@ -8,20 +9,19 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
         public int Id { get; set; }
 
         [Required]
-        [MinLength(2)]
-        [MaxLength(50)]
+        [MinLength(ModelConstants.MinTestTitleLength)]
+        [MaxLength(ModelConstants.MaxTestTitleLength)]
         [DataType(DataType.Text)]
         public string Title { get; set; }
 
-        [Range(1, 1000, ErrorMessage = "Time must be positive value, between 1 and 1000 minutes")]
+        [Range(ModelConstants.MinRequiredTestTime, ModelConstants.MaxRequiredTestTime, ErrorMessage = ModelConstants.RequiredTestTimeErrorMsg)]
         public int RequiredTime { get; set; }
 
         public bool IsDeleted { get; set; }
 
         [DataType(DataType.Text)]
         public string Author { get; set; }
-
-        [DataType(DataType.Text)]
+        
         public string Category { get; set; }
 
         [DataType(DataType.Text)]

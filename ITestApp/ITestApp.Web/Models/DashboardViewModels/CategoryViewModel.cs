@@ -1,4 +1,5 @@
-﻿using ITestApp.DTO;
+﻿using ITestApp.Common.Constants;
+using ITestApp.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,8 +13,8 @@ namespace ITestApp.Web.Models.DashboardViewModels
         public int Id { get; set; }
 
         [Required]
-        [MinLength(2)]
-        [MaxLength(50)]
+        [MinLength(ModelConstants.MinTestCategoryLength)]
+        [MaxLength(ModelConstants.MaxTestCategoryLength)]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 

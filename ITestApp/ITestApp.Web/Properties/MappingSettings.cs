@@ -58,7 +58,7 @@ namespace ITestApp.Web.Properties
 
             this.CreateMap<Status, StatusDto>().ReverseMap();
 
-            this.CreateMap<CreateTestViewModel, TestDto>()
+            this.CreateMap<CreateTestViewModel, TestDto>(MemberList.Destination)
                 .ForMember(dto => dto.Category, options => options.Ignore())
                 .ForMember(dto => dto.Status, options => options.Ignore());
 
@@ -66,6 +66,9 @@ namespace ITestApp.Web.Properties
                 .ForMember(vm => vm.Author, options => options.MapFrom(dto => dto.Author.Email))
                 .ForMember(vm => vm.Category, options => options.MapFrom(dto => dto.Category.Name))
                 .ForMember(vm => vm.Status, options => options.MapFrom(dto => dto.Status.Name));
+
+            this.CreateMap<QuestionDto, CreateQuestionViewModel>(MemberList.Source);
+            this.CreateMap<AnswerDto, CreateAnswerViewModel>(MemberList.Source);
 
             this.CreateMap<CreateQuestionViewModel, QuestionDto>();
             this.CreateMap<CreateAnswerViewModel, AnswerDto>();

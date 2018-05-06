@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ITestApp.Common.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace ITestApp.Web.Models.TakeTestViewModels
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITestApp.Common.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,10 +12,13 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
         public int Id { get; set; }
 
         [Required]
-        [MinLength(1)]
-        [MaxLength(500)]
+        [MinLength(ModelConstants.MinAnswerContentLength)]
+        [MaxLength(ModelConstants.MaxAnswerContentLength)]
         [DataType(DataType.Text)]
         public string Content { get; set; }
+        
+        [DataType(DataType.Text)]
+        public string ContentWithoutTags { get; set; }
 
         public bool IsDeleted { get; set; }
 

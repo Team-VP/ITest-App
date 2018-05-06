@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ITestApp.Common.Constants;
 using ITestApp.Data.Models.Abstracts;
 
 namespace ITestApp.Data.Models
@@ -14,11 +15,10 @@ namespace ITestApp.Data.Models
         }
 
         [Required]
-        [StringLength(maximumLength: 500)]
+        [StringLength(maximumLength: ModelConstants.MaxQuestionContentLength)]
         public string Content { get; set; }
 
         public int TestId { get; set; }
-        //[Required]
         public Test Test { get; set; }
 
         public ICollection<Answer> Answers { get; set; }

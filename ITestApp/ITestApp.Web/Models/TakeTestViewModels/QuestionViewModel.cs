@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITestApp.Common.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +12,10 @@ namespace ITestApp.Web.Models.TakeTestViewModels
         [Required]
         public string Id { get; set; }
 
+        [Required]
+        [MinLength(ModelConstants.MinQuestionContentLength)]
+        [MaxLength(ModelConstants.MaxQuestionContentLength)]
+        [DataType(DataType.Text)]
         public string Content { get; set; }
 
         public IList<AnswerViewModel> Answers { get; set; }

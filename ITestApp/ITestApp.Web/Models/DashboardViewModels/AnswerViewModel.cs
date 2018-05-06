@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ITestApp.Common.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace ITestApp.Web.Models.DashboardViewModels
 {
@@ -7,8 +8,8 @@ namespace ITestApp.Web.Models.DashboardViewModels
         public int Id { get; set; }
 
         [Required]
-        [MinLength(1)]
-        [MaxLength(500)]
+        [MinLength(ModelConstants.MinAnswerContentLength)]
+        [MaxLength(ModelConstants.MaxAnswerContentLength)]
         [DataType(DataType.Text)]
         public string Content { get; set; }
 
