@@ -1,10 +1,12 @@
-﻿var takeTest = function (modelTime) {
+﻿
+var takeTest = function (modelTime) {
     var timer = new Timer();
 
     timer.start({
         countdown: true, startValues: {
             seconds: modelTime
 } });
+
 $('#countdownExample .values').html(timer.getTimeValues().toString());
 timer.addEventListener('secondsUpdated', function (e) {
     $('#countdownExample .values').html(timer.getTimeValues().toString());
@@ -30,6 +32,7 @@ timer.addEventListener('targetAchieved', function (e) {
         });
 });
 }
+
 $('#test-form').on('submit', function (e) {
     e.preventDefault();
     var url = this.action;
@@ -49,6 +52,8 @@ $('#test-form').on('submit', function (e) {
         }
     });
 });
+
+
 
 
 
