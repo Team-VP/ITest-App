@@ -8,6 +8,8 @@ namespace ITestApp.DTO
 
         public string Content { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public int TestId { get; set; }
         public TestDto Test { get; set; }
 

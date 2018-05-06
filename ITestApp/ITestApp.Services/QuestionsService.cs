@@ -29,7 +29,7 @@ namespace ITestApp.Services
         public void Edit(QuestionDto question)
         {
             Question questionToEdit = questions.All
-                .Where(q => q.Id == question.Id).Include(a => a.Answers)
+                .Where(q => q.Id == question.Id)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Question can not be null.");
 
             questionToEdit.Content = question.Content;

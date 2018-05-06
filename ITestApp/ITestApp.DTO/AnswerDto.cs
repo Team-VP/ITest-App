@@ -10,5 +10,7 @@
         public QuestionDto Question { get; set; }
 
         public bool IsCorrect { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
 {
@@ -20,6 +15,8 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
 
         [Range(1, 1000, ErrorMessage = "Time must be positive value, between 1 and 1000 minutes")]
         public int RequiredTime { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         [DataType(DataType.Text)]
         public string Author { get; set; }

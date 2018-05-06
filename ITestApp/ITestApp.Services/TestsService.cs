@@ -63,23 +63,94 @@ namespace ITestApp.Services
 
         public void Edit(TestDto testDto)
         {
-            var test = tests.All
-                .Where(t => t.Id == testDto.Id)
-                .Include(q => q.Questions)
-                .ThenInclude(a => a.Answers)
-                .FirstOrDefault();
+            if (testDto == null)
+            {
+                throw new ArgumentNullException("Test dto cannot be null!");
+            }
 
-            var testToEditFrom = this.mapper.MapTo<Test>(testDto);
+            var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
+
+            //var testToEditFrom = this.mapper.MapTo<Test>(testDto);
 
             if (test == null)
             {
                 throw new ArgumentNullException("Test not found!");
             }
 
-            test.Title = testToEditFrom.Title;
-            test.CategoryId = testToEditFrom.CategoryId;
-            test.RequiredTime = testToEditFrom.RequiredTime;
-            test.Questions = testToEditFrom.Questions;
+            test.Title = testDto.Title;
+            test.CategoryId = testDto.CategoryId;
+            test.RequiredTime = testDto.RequiredTime;
+            var newlyCreatedQuestions = new List<Question>();
+
+            foreach (var questionDto in testDto.Questions)
+            {
+                var questionEntity = test.Questions.FirstOrDefault(q => q.Id == questionDto.Id);
+
+                if (questionEntity != null)
+                {
+                    if (questionDto.IsDeleted)
+                    {
+                        questions.Delete(questionEntity);
+                    }
+                    else
+                    {
+                        questionEntity.Content = questionDto.Content;
+                        questions.Update(questionEntity);
+                    }
+                }
+                else
+                {
+                    questionEntity = new Question()
+                    {
+                        Content = questionDto.Content
+                    };
+
+                    newlyCreatedQuestions.Add(questionEntity);
+                    //test.Questions.Add(questionEntity);
+                }
+
+                var newlyCreatedAnswers = new List<Answer>();
+
+                foreach (var answerDto in questionDto.Answers)
+                {
+                    var answerEntity = questionEntity.Answers.FirstOrDefault(a => a.Id == answerDto.Id);
+
+                    if (answerEntity != null)
+                    {
+                        if (answerDto.IsDeleted)
+                        {
+                            answers.Delete(answerEntity);
+                        }
+                        else
+                        {
+                            answerEntity.Content = answerDto.Content;
+                            answerEntity.IsCorrect = answerDto.IsCorrect;
+                            answers.Update(answerEntity);
+                        }
+                    }
+                    else
+                    {
+                        answerEntity = new Answer()
+                        {
+                            Content = answerDto.Content,
+                            IsCorrect = answerDto.IsCorrect
+                        };
+
+                        newlyCreatedAnswers.Add(answerEntity);
+                        //questionEntity.Answers.Add(answerEntity);
+                    }
+                }
+
+                foreach(var a in newlyCreatedAnswers)
+                {
+                    questionEntity.Answers.Add(a);
+                }
+            }
+
+            foreach (var q in newlyCreatedQuestions)
+            {
+                test.Questions.Add(q);
+            }
 
             tests.Update(test);
             saver.SaveChanges();
@@ -93,7 +164,7 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test cannot be null!");
+                throw new ArgumentNullException("Test dto cannot be null!");
             }
 
             var test = mapper.MapTo<Test>(testDto);
@@ -173,14 +244,9 @@ namespace ITestApp.Services
 
         public TestDto GetById(int id)
         {
-            Test testWithId = tests.All.Where(t => t.Id == id)
-                .Include(t => t.Status)
-                .Include(t => t.Category)
-                .Include(t => t.Author)
-                .Include(q => q.Questions)
-                    .ThenInclude(a => a.Answers)
-                .FirstOrDefault() ?? throw new ArgumentNullException("Test can not be null");
-            return mapper.MapTo<TestDto>(testWithId);
+            var test = GetTestWithoutDeletedQuestionsAndAnswers(id);
+
+            return mapper.MapTo<TestDto>(test);
         }
 
         public int GetTestDurationSeconds(int id)
@@ -261,6 +327,31 @@ namespace ITestApp.Services
             {
                 return null;
             }
+        }
+
+        private Test GetTestWithoutDeletedQuestionsAndAnswers(int id)
+        {
+            var test = tests.All.Where(t => t.Id == id)
+               .Include(t => t.Status)
+               .Include(t => t.Category)
+               .Include(t => t.Author)
+               .FirstOrDefault();
+
+            if (test == null)
+            {
+                throw new ArgumentNullException($"Test with id {id} not found!");
+            }
+
+            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).AsNoTracking().ToList();
+
+            foreach (var question in testQuestions)
+            {
+                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).AsNoTracking().ToList();
+            }
+
+            test.Questions = testQuestions;
+
+            return test;
         }
     }
 }

@@ -47,6 +47,7 @@ namespace ITestApp.Web
             {
                 var connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
+                //options.EnableSensitiveDataLogging();
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

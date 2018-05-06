@@ -66,7 +66,7 @@ namespace ITestApp.Web.Controllers
 
                 foreach (var question in model.Questions)
                 {
-                    if (question.Answers.Count > 2)
+                    if (question.Answers.Count < 2)
                     {
                         isValid = false;
                         break;
@@ -143,6 +143,8 @@ namespace ITestApp.Web.Controllers
         public IActionResult Edit([FromBody]CreateTestViewModel model, int id)
         {
             model.Id = id;
+
+            //TODO validate answer and question count
 
             if (this.ModelState.IsValid)
             {

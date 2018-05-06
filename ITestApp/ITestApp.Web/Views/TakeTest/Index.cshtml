@@ -50,19 +50,21 @@
         <div class="panel-heading"><h4><b>@(questionCounter + 1) . Question</b></h4></div>
         <div class="panel-body">
 
-            <p>@question.Content</p>
-            <div class="row-xs-8">
-                <div class="answers">
-                    @foreach (var ans in question.Answers)
-                {
-                    <div class="form-group has-feedback">
-                        <label class="input-group">
-                            <span class="input-group-addon">
-                                <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@ans.Id" required/>
-                                
-                            </span>
-                            <div class="form-control form-control-static">
-                                @ans.Content
+                <p>@Html.Raw(question.Content)</p>
+                <div class="row-xs-8">
+                    <div class="answers">
+                        @foreach (var answer in question.Answers)
+                        {
+                            <div class="form-group has-feedback">
+                                <div class="input-group answer-display-content">
+                                    <span class="input-group-addon">
+                                        <input asp-for="@Model.Questions[questionCounter].AndswerId" type="radio" value="@answer.Id" />
+                                    </span>
+                                    <div class="form-control form-control-static answer-display-content">
+                                        @Html.Raw(answer.Content)
+                                    </div>
+                                    <span class="glyphicon form-control-feedback "></span>
+                                </div>
                             </div>
                             <span class="glyphicon form-control-feedback "></span>
                         </label>
