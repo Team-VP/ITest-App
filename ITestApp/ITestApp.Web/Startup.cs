@@ -104,7 +104,7 @@ namespace ITestApp.Web
         {
             if (this.Environment.IsDevelopment())
             {
-                DataSeeder.Seed(serviceProvider);
+                //DataSeeder.Seed(serviceProvider);
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
@@ -128,8 +128,8 @@ namespace ITestApp.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
-            CreateUserRoles(serviceProvider).Wait();
+
+            //CreateUserRoles(serviceProvider).Wait();
         }
 
         private async Task CreateUserRoles(IServiceProvider serviceProvider)

@@ -29,26 +29,26 @@
 <form asp-controller="TakeTest" asp-action="Index" method="post" id="test-form">
 
     <input asp-for="@Model.CategoryName" type="hidden" value="@Model.CategoryName">
-    
+
     <input asp-for="@Model.TestName" type="hidden" value="@Model.TestName">
-    
+
     <input asp-for="@Model.TestId" type="hidden" value="@Model.TestId">
-    
+
     <input asp-for="@Model.Duration" type="hidden" value="@Model.Duration">
-    
+
     <input asp-for="@Model.StartedOn" type="hidden" value="@Model.StartedOn">
-    
+
     <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
-    
+
 
     <div class="panel panel-default" id="questions">
         @foreach (var question in Model.Questions)
-    {
-        <!-- Default panel contents -->
-        <input asp-for="@Model.Questions[questionCounter].Id" type="hidden" value="@question.Id">
-        
-        <div class="panel-heading"><h4><b>@(questionCounter + 1) . Question</b></h4></div>
-        <div class="panel-body">
+        {
+            <!-- Default panel contents -->
+            <input asp-for="@Model.Questions[questionCounter].Id" type="hidden" value="@question.Id">
+
+            <div class="panel-heading"><h4><b>@(questionCounter + 1) . Question</b></h4></div>
+            <div class="panel-body">
 
                 <p>@Html.Raw(question.Content)</p>
                 <div class="row-xs-8">
@@ -67,15 +67,15 @@
                                 </div>
                             </div>
                             <span class="glyphicon form-control-feedback "></span>
-                        </label>
+
+
+                            answerCounter++;
+                        }
                     </div>
-                answerCounter++;
-            }
                 </div>
             </div>
-        </div>
-    questionCounter++;
-}
+            questionCounter++;
+        }
     </div>
     <button id="submit-test-button" class="btn btn-primary btn-lg">Submit</button>
 </form>
@@ -90,7 +90,7 @@
         var mTime = @Model.TimeLeft.TotalSeconds;
         takeTest(mTime);
     </script>
-   
+
 }
 
 

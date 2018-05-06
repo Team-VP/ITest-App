@@ -245,7 +245,7 @@ namespace ITestApp.Services
         public TestDto GetById(int id)
         {
             var test = GetTestWithoutDeletedQuestionsAndAnswers(id);
-
+            //var test = tests.All.Include(c => c.Category).Include(q => q.Questions).ThenInclude(a => a.Answers).Where(t => t.Id == id).FirstOrDefault();
             return mapper.MapTo<TestDto>(test);
         }
 
@@ -342,14 +342,14 @@ namespace ITestApp.Services
                 throw new ArgumentNullException($"Test with id {id} not found!");
             }
 
-            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).AsNoTracking().ToList();
+            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id && q.IsDeleted == false);
 
             foreach (var question in testQuestions)
             {
-                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).AsNoTracking().ToList();
+                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id && a.IsDeleted == false).ToList();
             }
 
-            test.Questions = testQuestions;
+            test.Questions = testQuestions.ToList();
 
             return test;
         }
