@@ -48,7 +48,7 @@ namespace ITestApp.Services.UniTests.CategoryServiceTests
             
             //Assert
             Assert.AreEqual(data.Count, collection.Count());
-            Assert.IsInstanceOfType(collection, typeof(IEnumerable<Category>));
+            Assert.IsInstanceOfType(collection, typeof(IEnumerable<CategoryDto>));
 
         }
 
