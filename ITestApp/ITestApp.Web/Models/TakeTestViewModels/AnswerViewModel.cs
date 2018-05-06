@@ -1,5 +1,4 @@
-﻿using ITestApp.Common.Constants;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ITestApp.Web.Models.TakeTestViewModels
 {
@@ -9,7 +8,5 @@ namespace ITestApp.Web.Models.TakeTestViewModels
         public int Id { get; set; }
 
         public string Content { get; set; }
-
-        //public bool IsCorrect { get; set; }
     }
 }
