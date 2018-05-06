@@ -9,9 +9,48 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/site.min.js",
+    "outputFileName": "wwwroot/js/init.min.js",
     "inputFiles": [
-      "wwwroot/js/site.js"
+      "wwwroot/js/init.js"
+    ],
+    // Optionally specify minification options
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    // Optionally generate .map file
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/admin-dashboard.min.js",
+    "inputFiles": [
+      "wwwroot/js/admin-dashboard.js"
+    ],
+    // Optionally specify minification options
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    // Optionally generate .map file
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/manage-test.min.js",
+    "inputFiles": [
+      "wwwroot/js/manage-test.js"
+    ],
+    // Optionally specify minification options
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    // Optionally generate .map file
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/take-test.min.js",
+    "inputFiles": [
+      "wwwroot/js/take-test.js"
     ],
     // Optionally specify minification options
     "minify": {

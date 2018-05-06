@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Areas\Private\Data\" />
   </ItemGroup>
 
 </Project>

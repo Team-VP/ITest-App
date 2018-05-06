@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ITestApp.Common.Providers;
+﻿using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
-using ITestApp.Web.Models.TakeTestViewModels;
+using ITestApp.Web.Areas.Private.Models.TakeTestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ITestApp.Web.Controllers
+namespace ITestApp.Web.Areas.Private.Controllers
 {
+    [Area("Private")]
     public class TakeTestController : Controller
     {
         private readonly IMappingProvider mapper;
@@ -84,8 +84,8 @@ namespace ITestApp.Web.Controllers
             return View(model);
         }
         //TODO: Refactor make some extra methods 
-        [Authorize]
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public IActionResult Index(IndexViewModel model)
         {

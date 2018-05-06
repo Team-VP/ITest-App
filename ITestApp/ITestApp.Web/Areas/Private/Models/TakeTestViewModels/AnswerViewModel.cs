@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITestApp.Web.Models.TakeTestViewModels
+namespace ITestApp.Web.Areas.Private.Models.TakeTestViewModels
 {
     public class AnswerViewModel
     {

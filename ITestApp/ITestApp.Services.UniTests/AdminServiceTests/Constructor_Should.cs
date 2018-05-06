@@ -7,7 +7,7 @@ using ITestApp.Services.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ITestApp.Services.UniTests.AdminServiceTests
+namespace ITestApp.Services.UnitTests.AdminServiceTests
 {
     [TestClass]
     public class Constructor_Should

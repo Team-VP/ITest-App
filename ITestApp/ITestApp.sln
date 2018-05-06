@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Data", "ITestApp.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Web", "ITestApp.Web\ITestApp.Web.csproj", "{E3AE7321-8ADB-4AF7-9EB1-042675302182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestApp.Services.UniTests", "ITestApp.Services.UniTests\ITestApp.Services.UniTests.csproj", "{B1007152-8341-4C6C-B456-469B97ED5261}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITestApp.Services.UnitTests", "ITestApp.Services.UniTests\ITestApp.Services.UnitTests.csproj", "{B1007152-8341-4C6C-B456-469B97ED5261}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

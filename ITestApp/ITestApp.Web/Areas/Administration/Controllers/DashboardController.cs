@@ -22,7 +22,6 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         private readonly ITestsService tests;
         private readonly IResultService resultService;
         private readonly IAdminService adminService;
-
         private readonly UserManager<User> userManager;
 
         public DashboardController(IAdminService adminService, IMappingProvider mapper, ITestsService tests, IResultService resultService, UserManager<User> userManager)
@@ -46,6 +45,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             //Model creating
             var userResultsList = new List<UserTestViewModel>();
             var authorTestsList = new List<TestViewModel>();
+
             //UserTestViewModels creating
             foreach (var userResult in userResults)
             {
@@ -60,6 +60,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                 };
                 userResultsList.Add(currentModel);
             }
+
             //TestViewModels creating
             foreach (var authorTest in authorTests)
             {
@@ -136,8 +137,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                 TempData["Error-Message"] = string.Format("Deliting test failed! {0}", ex.Message);
 
             }
-
-
+            
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
     }

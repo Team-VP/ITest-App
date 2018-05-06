@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ITestApp.Web.Models.DashboardViewModels
+namespace ITestApp.Web.Areas.Private.Models.DashboardViewModels
 {
     public class UserTestViewModel
     {
