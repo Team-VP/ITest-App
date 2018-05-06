@@ -1,13 +1,12 @@
 ﻿$(function () {
     summernoteInit();
     const data = initDataObj();
-
-    console.log(data);
     const $errorPanel = $(".error-panel ul");
+    const $accordion = $("#question-container");
 
-    let finishTestCreation = function (shouldPublish, url) {
+    const finishTestCreation = function (shouldPublish, url) {
         $errorPanel.children().remove();
-        $("#question-container").accordion({ header: "h3", active: false });
+        $accordion.accordion({ header: "h3", active: false });
         let shouldPost = true;
 
         if ($("#test-form").valid()) {
@@ -35,7 +34,7 @@
                 const qContent = qSummernote.summernote("code");
                 const qId = +qSummernote.attr("data-question-id");
 
-                validStringContent = validateStringContent("Question", $errorPanel, qContent, $q, $q);
+                validStringContent = validator.validateStringContent("Question", qContent, $q, $q);
 
                 if (!validStringContent) {
                     shouldPost = false;
@@ -61,7 +60,7 @@
                     const aSummernote = $a.find(".summernote");
                     const aContent = aSummernote.summernote("code");
                     const aId = +aSummernote.attr("data-answer-id");
-                    validStringContent = validateStringContent("Answer", $errorPanel, aContent, $a, $q);
+                    validStringContent = validator.validateStringContent("Answer", aContent, $a, $q);
 
                     if (!validStringContent) {
                         shouldPost = false;
@@ -117,8 +116,9 @@
                 return;
             }
 
+            return;
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
-            
+
             $.ajax({
                 url: url,
                 type: "POST",
@@ -242,7 +242,7 @@
     });
 
     // Add and delete questions
-    let $accordion = $("#question-container");
+
 
     $('#add-question-btn').on("click", () => {
         $.ajax({
@@ -251,37 +251,34 @@
             contentType: 'application/html',
             success: function (html) {
                 $accordion.append(html);
-                incrementAnswers();
-                incrementQuestions();
+                incrementator.incrementAnswers();
+                incrementator.incrementQuestions();
                 $accordion.accordion("refresh")
                 $accordion.accordion("option", "active", ($accordion.children("div").length - 1))
                 summernoteInit();
             },
             error: function (err) {
-                $('#question-container').append("<p>Something went wrong... Status: " + err.status + "</p>");
+                $accordion.append("<p>Something went wrong... Status: " + err.status + "</p>");
             }
         });
     });
 
-    $('#question-container').on("click", '.delete-question-btn', (e) => {
+    $accordion.on("click", '.delete-question-btn', (e) => {
         const buttonClicked = $(e.target);
         const questionHolder = buttonClicked.closest(".question-holder");
         const questionHolderTitleTab = questionHolder.prev();
         questionHolder.remove();
         questionHolderTitleTab.remove();
-        incrementQuestions();
+        incrementator.incrementQuestions();
 
         const qId = +questionHolder.find(".summernote").attr("data-question-id");
-        console.log(qId);
         if (!isNaN(qId)) {
             data.Questions.filter(q => q.Id === qId)[0].IsDeleted = true;
         }
-
-        console.log(data);
     });
 
     // Add and delete answers
-    $('#question-container').on("click", '.add-answer-btn', (e) => {
+    $accordion.on("click", '.add-answer-btn', (e) => {
         const buttonClicked = $(e.target);
         const extraAnswersContainer = buttonClicked.parent().find(".extra-answer-container");
         $.ajax({
@@ -290,7 +287,7 @@
             contentType: 'application/html',
             success: function (html) {
                 extraAnswersContainer.append(html);
-                incrementAnswers();
+                incrementator.incrementAnswers();
                 summernoteInit();
             },
             error: function (err) {
@@ -299,9 +296,9 @@
         });
     });
 
-    $('#question-container').on("click", '.delete-answer-btn', (e) => {
+    $accordion.on("click", '.delete-answer-btn', (e) => {
         const $buttonClicked = $(e.target);
-        const isValid = validateAnswerCount($buttonClicked);
+        const isValid = validator.validateAnswerCount($buttonClicked);
 
         if (isValid) {
             const answerContent = $buttonClicked.closest(".answer-content");
@@ -309,8 +306,8 @@
             const qId = +$buttonClicked.closest(".answer-holder").prev().find(".summernote").attr("data-question-id");
 
             answerContent.remove();
-            incrementAnswers();
-            
+            incrementator.incrementAnswers();
+
             if (!isNaN(aId)) {
                 data.Questions.filter(q => q.Id === qId)[0].Answers.filter(a => a.Id === aId)[0].IsDeleted = true;
             }
@@ -318,7 +315,7 @@
     });
 
     // JQuery accordion init
-    $("#question-container").accordion({
+    $accordion.accordion({
         heightStyle: "content",
         collapsible: true
     });
@@ -339,73 +336,92 @@
     }
 
     // Answers and questions number incrementation
-    function incrementAnswers() {
+    const incrementator = (function () {
+        const incrementAnswers = function () {
 
-        const $answerHolders = $(".answer-holder")
+            const $answerHolders = $(".answer-holder")
 
-        $.each($answerHolders, (i, el) => {
-            const $answers = $(el).find(".answer-number");
+            $.each($answerHolders, (i, el) => {
+                const $answers = $(el).find(".answer-number");
 
-            $.each($answers, (i, el) => {
-                $(el).html(i + 1);
+                $.each($answers, (i, el) => {
+                    $(el).html(i + 1);
+                });
             });
-        });
-    }
+        }
 
-    function incrementQuestions() {
-        const $questionHolders = $(".question-holder")
+        const incrementQuestions = function () {
+            const $questionHolders = $(".question-holder")
 
-        $.each($questionHolders, (i, el) => {
-            const $el = $(el);
-            $el.prev("h3").find(".question-number").html(i + 1);
-        });
-    }
+            $.each($questionHolders, (i, el) => {
+                const $el = $(el);
+                $el.prev("h3").find(".question-number").html(i + 1);
+            });
+        }
+
+        return {
+            incrementAnswers,
+            incrementQuestions
+        }
+    })();
+
 
     // Validations for empty or too long answer and question contents
-    function validateStringContent(answerOrQuestionStr, $errorPanel, content, $element, $question) {
-        let msg;
-        const questionNumber = $question.prev().find(".question-number").html();
+    const validator = (function () {
 
-        if (!content) {
-            if (answerOrQuestionStr === "Question") {
-                msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty!</li>`;
+        const validateStringContent = function (answerOrQuestionStr, content, $element, $question) {
+            console.log($element);
+            let msg;
+            const questionNumber = $question.prev().find(".question-number").html();
+            const contentWithNoTags = content.replace(/<\/?[^>]+(>|$)/g, "");
+
+            if (!contentWithNoTags) {
+                if (answerOrQuestionStr === "Question") {
+                    msg = `<li>${answerOrQuestionStr} ${questionNumber} text is empty!</li>`;
+                }
+                else {
+                    const answerNumber = $element.find(".answer-number").html();
+                    msg = `<li>${answerOrQuestionStr} ${answerNumber} text for Question ${questionNumber} is empty!</li>`;
+                }
+
+                const liEl = $(msg);
+                $errorPanel.append(liEl);
+                return false;
             }
-            else {
-                const answerNumber = $element.find(".answer-number").html();
-                msg = `<li>${answerOrQuestionStr} ${answerNumber} text for Question ${questionNumber} is empty!</li>`;
+            else if (content.length > 500) {
+                if (answerOrQuestionStr === "Question") {
+                    msg = `<li>${answerOrQuestionStr} ${questionNumber} text length is invalid! It must be max 500 characters!</li>`;
+                }
+                else {
+                    const answerNumber = $element.find(".answer-number").html();
+                    msg = `<li>${answerOrQuestionStr} ${answerNumber} text length for Question ${questionNumber} is invalid! It must be max 500 characters!</li>`;
+                }
+
+                const liEl = $(msg);
+                $errorPanel.append(liEl);
+                return false;
             }
 
-            const liEl = $(msg);
-            $errorPanel.append(liEl);
-            return false;
-        }
-        else if (content.length > 500) {
-            if (answerOrQuestionStr === "Question") {
-                msg = `<li>${answerOrQuestionStr} ${questionNumber} text length is invalid! It must be max 500 characters!</li>`;
-            }
-            else {
-                const answerNumber = $element.find(".answer-number").html();
-                msg = `<li>${answerOrQuestionStr} ${answerNumber} text length for Question ${questionNumber} is invalid! It must be max 500 characters!</li>`;
-            }
-
-            const liEl = $(msg);
-            $errorPanel.append(liEl);
-            return false;
-        }
-
-        return true;
-    }
-
-    function validateAnswerCount($answerToBeDeleted) {
-        const minNumOfAnswers = 2;
-        const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
-
-        if (actualAnswers === minNumOfAnswers) {
-            toastr.options.positionClass = "toast-bottom-left";
-            toastr.error('A question must have at least 2 answers!')
-            return false;
+            return true;
         }
 
-        return true;
-    }
+        const validateAnswerCount = function ($answerToBeDeleted) {
+            console.log("in validate answer count");
+            const minNumOfAnswers = 2;
+            const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
+
+            if (actualAnswers === minNumOfAnswers) {
+                toastr.options.positionClass = "toast-bottom-left";
+                toastr.error('A question must have at least 2 answers!')
+                return false;
+            }
+
+            return true;
+        }
+
+        return {
+            validateStringContent,
+            validateAnswerCount
+        }
+    })();
 });

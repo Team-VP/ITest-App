@@ -21,11 +21,7 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
 
         [DataType(DataType.Text)]
         public string Author { get; set; }
-
-        [Required]
-        [MinLength(ModelConstants.MinTestCategoryLength)]
-        [MaxLength(ModelConstants.MaxTestCategoryLength)]
-        [DataType(DataType.Text)]
+        
         public string Category { get; set; }
 
         [DataType(DataType.Text)]

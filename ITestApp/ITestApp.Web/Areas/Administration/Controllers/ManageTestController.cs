@@ -55,24 +55,7 @@ namespace ITestApp.Web.Controllers
         [Route("administration/create")]
         public IActionResult New([FromBody]CreateTestViewModel model)
         {
-            bool isValid = true;
-
-            if (model.Status == "Published")
-            {
-                if (!model.Questions.Any())
-                {
-                    isValid = false;
-                }
-
-                foreach (var question in model.Questions)
-                {
-                    if (question.Answers.Count < 2)
-                    {
-                        isValid = false;
-                        break;
-                    }
-                }
-            }
+            bool isValid = ValidateTestModel(model);
 
             if (isValid && this.ModelState.IsValid)
             {
@@ -91,7 +74,7 @@ namespace ITestApp.Web.Controllers
                     TempData["Success-Message"] = "You successfully created a new test!";
                     this.tests.SaveAsDraft(dto);
                 }
-                
+
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
@@ -144,9 +127,9 @@ namespace ITestApp.Web.Controllers
         {
             model.Id = id;
 
-            //TODO validate answer and question count
+            bool isValid = ValidateTestModel(model);
 
-            if (this.ModelState.IsValid)
+            if (isValid && this.ModelState.IsValid)
             {
                 var dto = this.mapper.MapTo<TestDto>(model);
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
@@ -164,6 +147,41 @@ namespace ITestApp.Web.Controllers
             TempData["Error-Message"] = "Test editting failed!";
 
             return View(model);
+        }
+
+        [NonAction]
+        private bool ValidateTestModel(CreateTestViewModel model)
+        {
+            bool isValid = true;
+
+            if (model.Status == "Published")
+            {
+                if (!model.Questions.Any())
+                {
+                    isValid = false;
+                }
+                else
+                {
+                    foreach (var question in model.Questions)
+                    {
+                        if (question.Answers.Count < 2)
+                        {
+                            isValid = false;
+                            break;
+                        }
+
+                        var correctAnswers = question.Answers.Where(a => a.IsCorrect).Count();
+
+                        if (correctAnswers != 1)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return isValid;
         }
     }
 }

@@ -10,11 +10,7 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
     public class CreateCategoryViewModel
     {
         public int Id { get; set; }
-
-        [Required]
-        [MinLength(ModelConstants.MinTestCategoryLength)]
-        [MaxLength(ModelConstants.MaxTestCategoryLength)]
-        [DataType(DataType.Text)]
+        
         public string Name { get; set; }
     }
 }
