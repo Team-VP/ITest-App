@@ -146,9 +146,9 @@ namespace ITestApp.Services.UniTests.CategoryServiceTests
             mapperMock.Setup(m => m.MapTo<CategoryDto>(It.IsAny<Category>())).Returns(dataMapper[0]);
 
             var categoriesService = new CategoriesService(saverMock.Object, mapperMock.Object, categoriesRepoMock.Object);
-
-            var category = categoriesService.GetCategoryByName(".Net");
             //Act
+            var category = categoriesService.GetCategoryByName(".Net");
+            //Assert
             mapperMock.Verify(m => m.MapTo<CategoryDto>(It.IsAny<Category>()), Times.Once);
         }
     }
