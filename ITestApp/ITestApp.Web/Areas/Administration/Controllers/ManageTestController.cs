@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
+using ITestApp.Common.Constants;
 
 namespace ITestApp.Web.Controllers
 {
@@ -80,9 +81,9 @@ namespace ITestApp.Web.Controllers
 
             var allCategories = categories.GetAllCategories();
             ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
-            TempData["Error-Message"] = "Test publish failed!";
+            TempData["Error-Message"] = "Test creation failed!";
 
-            return View(model);
+            return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
         [HttpGet]
@@ -154,29 +155,57 @@ namespace ITestApp.Web.Controllers
         {
             bool isValid = true;
 
-            if (model.Status == "Published")
+            if (!model.Questions.Any())
             {
-                if (!model.Questions.Any())
+                isValid = false;
+            }
+            else
+            {
+                foreach (var question in model.Questions)
                 {
-                    isValid = false;
-                }
-                else
-                {
-                    foreach (var question in model.Questions)
+                    var qLength = question.ContentWithoutTags.Length;
+                    if (ModelConstants.MinQuestionContentLength > qLength || qLength > ModelConstants.MaxQuestionContentLength)
                     {
-                        if (question.Answers.Count < 2)
+                        isValid = false;
+                        break;
+                    }
+
+                    if (question.Answers.Count < 2)
+                    {
+                        isValid = false;
+                        break;
+                    }
+                    
+                    var correctAnswers = 0;
+                    foreach (var answer in question.Answers)
+                    {
+                        var aLength = answer.ContentWithoutTags.Length;
+                        if (ModelConstants.MinAnswerContentLength > aLength || aLength > ModelConstants.MaxAnswerContentLength)
                         {
                             isValid = false;
                             break;
                         }
 
-                        var correctAnswers = question.Answers.Where(a => a.IsCorrect).Count();
-
-                        if (correctAnswers != 1)
+                        if (answer.IsCorrect)
                         {
-                            isValid = false;
-                            break;
+                            correctAnswers++;
+
+                            if (correctAnswers > 1)
+                            {
+                                break;
+                            }
                         }
+                    }
+
+                    if (correctAnswers != 1)
+                    {
+                        isValid = false;
+                        break;
+                    }
+
+                    if (!isValid)
+                    {
+                        break;
                     }
                 }
             }

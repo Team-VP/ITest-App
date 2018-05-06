@@ -51,6 +51,7 @@
                 }
 
                 question.Content = qContent;
+                question.ContentWithoutTags = qContent.replace(/<\/?[^>]+(>|$)/g, "");
 
                 const qAnswers = $q.find(".answer-holder .answer-content");
                 let correctAnswers = 0;
@@ -76,6 +77,7 @@
                     }
 
                     answer.Content = aContent;
+                    answer.ContentWithoutTags = aContent.replace(/<\/?[^>]+(>|$)/g, "");
 
                     if ($a.find(".correct-answer-cb").is(":checked")) {
                         answer.IsCorrect = true;
@@ -106,7 +108,7 @@
                 if (!validStringContent) {
                     shouldPost = false;
                 }
-
+                
                 if (shouldAddQuestion) {
                     data.Questions.push(question);
                 }
@@ -116,7 +118,6 @@
                 return;
             }
 
-            return;
             let tokenHeader = $("input[name=__RequestVerificationToken]").val();
 
             $.ajax({
@@ -370,7 +371,6 @@
     const validator = (function () {
 
         const validateStringContent = function (answerOrQuestionStr, content, $element, $question) {
-            console.log($element);
             let msg;
             const questionNumber = $question.prev().find(".question-number").html();
             const contentWithNoTags = content.replace(/<\/?[^>]+(>|$)/g, "");
@@ -406,7 +406,6 @@
         }
 
         const validateAnswerCount = function ($answerToBeDeleted) {
-            console.log("in validate answer count");
             const minNumOfAnswers = 2;
             const actualAnswers = $answerToBeDeleted.closest(".question-holder").find(".answer-content").length;
 

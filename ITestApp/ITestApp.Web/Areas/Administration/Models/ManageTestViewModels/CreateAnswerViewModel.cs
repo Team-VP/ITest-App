@@ -16,6 +16,9 @@ namespace ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels
         [MaxLength(ModelConstants.MaxAnswerContentLength)]
         [DataType(DataType.Text)]
         public string Content { get; set; }
+        
+        [DataType(DataType.Text)]
+        public string ContentWithoutTags { get; set; }
 
         public bool IsDeleted { get; set; }
 

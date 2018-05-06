@@ -275,11 +275,11 @@ namespace ITestApp.Services
                 throw new ArgumentNullException($"Test with id {id} not found!");
             }
 
-            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).AsNoTracking().ToList();
+            var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).ToList();
 
             foreach (var question in testQuestions)
             {
-                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).AsNoTracking().ToList();
+                question.Answers = this.answers.All.Where(a => a.QuestionId == question.Id).ToList();
             }
 
             test.Questions = testQuestions;
