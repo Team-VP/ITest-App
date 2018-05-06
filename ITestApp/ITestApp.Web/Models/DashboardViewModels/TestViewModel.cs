@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITestApp.Common.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,19 +12,20 @@ namespace ITestApp.Web.Models.DashboardViewModels
         public int Id { get; set; }
 
         [Required]
-        [MinLength(2)]
-        [MaxLength(50)]
+        [MinLength(ModelConstants.MinTestTitleLength)]
+        [MaxLength(ModelConstants.MaxTestTitleLength)]
         [DataType(DataType.Text)]
         public string Title { get; set; }
 
+        [Range(ModelConstants.MinRequiredTestTime, ModelConstants.MaxRequiredTestTime, ErrorMessage = ModelConstants.RequiredTestTimeErrorMsg)]
         public int RequiredTime { get; set; }
 
         [DataType(DataType.Text)]
         public string Author { get; set; }
-
-        //[DataType(DataType.Text)]
-        //public string Category { get; set; }
-
+        
+        [MinLength(ModelConstants.MinTestCategoryLength)]
+        [MaxLength(ModelConstants.MaxTestCategoryLength)]
+        [DataType(DataType.Text)]
         public string TestCategory { get; set; }
 
         [DataType(DataType.Text)]

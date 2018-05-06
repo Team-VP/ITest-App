@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ITestApp.Common.Constants;
 using ITestApp.Data.Models.Abstracts;
 
 namespace ITestApp.Data.Models
@@ -9,7 +10,7 @@ namespace ITestApp.Data.Models
     public class Answer : BaseEntity
     {
         [Required]
-        [StringLength(maximumLength: 500)]
+        [StringLength(maximumLength: ModelConstants.MaxAnswerContentLength)]
         public string Content { get; set; }
 
         public int QuestionId { get; set; }

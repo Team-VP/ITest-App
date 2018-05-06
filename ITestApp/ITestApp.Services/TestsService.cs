@@ -59,9 +59,7 @@ namespace ITestApp.Services
             }
 
             var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
-
-            //var testToEditFrom = this.mapper.MapTo<Test>(testDto);
-
+            
             if (test == null)
             {
                 throw new ArgumentNullException("Test not found!");
@@ -70,6 +68,7 @@ namespace ITestApp.Services
             test.Title = testDto.Title;
             test.CategoryId = testDto.CategoryId;
             test.RequiredTime = testDto.RequiredTime;
+            test.StatusId = testDto.StatusId;
             var newlyCreatedQuestions = new List<Question>();
 
             foreach (var questionDto in testDto.Questions)
@@ -96,7 +95,6 @@ namespace ITestApp.Services
                     };
 
                     newlyCreatedQuestions.Add(questionEntity);
-                    //test.Questions.Add(questionEntity);
                 }
 
                 var newlyCreatedAnswers = new List<Answer>();
@@ -127,7 +125,6 @@ namespace ITestApp.Services
                         };
 
                         newlyCreatedAnswers.Add(answerEntity);
-                        //questionEntity.Answers.Add(answerEntity);
                     }
                 }
 
