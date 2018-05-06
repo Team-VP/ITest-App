@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bytes2you.Validation;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
@@ -28,6 +29,8 @@ namespace ITestApp.Services
 
         public void Edit(QuestionDto question)
         {
+            Guard.WhenArgument(question, "QuestionDto").IsNull().Throw();
+
             Question questionToEdit = questions.All
                 .Where(q => q.Id == question.Id)
                 .FirstOrDefault() ?? throw new ArgumentNullException("Question can not be null.");
