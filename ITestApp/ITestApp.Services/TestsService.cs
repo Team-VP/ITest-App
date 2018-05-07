@@ -38,8 +38,13 @@ namespace ITestApp.Services
 
         public void Delete(int id)
         {
+            if (id < 0)
+            {
+                throw new ArgumentOutOfRangeException("Invalid id provided");
+            }
+
             var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
-                .FirstOrDefault(t => t.Id == id) ?? throw new ArgumentNullException("Test can not be null");
+                .FirstOrDefault(t => t.Id == id) ?? throw new TestNotFoundException($"No test with id {id} found!");
 
             var tetsUser = userTests.All;
 
