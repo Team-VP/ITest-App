@@ -107,26 +107,18 @@ namespace ITestApp.Web
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
-                //routes.MapRoute(
-                //  name: "areaPrivate",
-                //  template: "{area:exists}/{Dashboard}/{All}/{id?}");
-
-                //routes.MapRoute(
-                //  name: "areaAdmin",
-                //  template: "{area:exists}/{Dashboard}/{Index}/{id?}");
-
                 routes.MapRoute(
                    name: "areaRoute",
                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
