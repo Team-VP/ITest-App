@@ -1,4 +1,7 @@
 ﻿$(function () {
+    const time = +$("#test-total-time-left").attr("value");
+    
+
     $(':radio').change(function () {
         var names = {};
         $(':radio').each(function () {
@@ -13,7 +16,7 @@
         }
     }).change();
 
-    var takeTest = function (modelTime) {
+    var takeTest = (function (modelTime) {
         var timer = new Timer();
 
         timer.start({
@@ -46,7 +49,7 @@
                     }
                 });
         });
-    }
+    })(time);
 
     $('#test-form').on('submit', function (e) {
         e.preventDefault();
