@@ -1,7 +1,7 @@
 ﻿using ITestApp.Common.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITestApp.Web.Models.DashboardViewModels
+namespace ITestApp.Web.Areas.Private.Models.DashboardViewModels
 {
     public class AnswerViewModel
     {

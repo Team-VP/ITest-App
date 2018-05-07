@@ -2,7 +2,7 @@
 using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
-using ITestApp.Web.Models.DashboardViewModels;
+using ITestApp.Web.Areas.Private.Models.DashboardViewModels;
 
 namespace ITestApp.Web.Properties
 {

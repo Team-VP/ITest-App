@@ -1,5 +1,4 @@
-﻿// Write your JavaScript code.
-$(function () {
+﻿$(function () {
     (function () {
         toastr.options = {
             "closeButton": false,

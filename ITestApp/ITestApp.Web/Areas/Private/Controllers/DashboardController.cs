@@ -1,18 +1,17 @@
 ﻿using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Services.Contracts;
-using ITestApp.Web.Models.DashboardViewModels;
+using ITestApp.Web.Areas.Private.Models.DashboardViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace ITestApp.Web.Controllers
+namespace ITestApp.Web.Areas.Private.Controllers
 {
     [Authorize]
+    [Area("Private")]
     public class DashboardController : Controller
     {
         private readonly IMappingProvider mapper;
@@ -45,6 +44,7 @@ namespace ITestApp.Web.Controllers
             {
                 return RedirectToAction("Index", "Dashboard", new { Area = "Administration"});
             }
+
             var userId = this.userManager.GetUserId(HttpContext.User);
             var categories = this.categories.GetAll();
             
