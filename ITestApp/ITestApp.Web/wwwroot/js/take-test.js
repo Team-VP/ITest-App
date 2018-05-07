@@ -34,7 +34,7 @@
             e.preventDefault();
             $('#test-form')
                 .ajaxSubmit({
-                    url: '/TakeTest/Index/',
+                    //url: 'Private/TakeTest/Index/',
                     type: 'POST',
                     success: function (response) {
                         $.confirm({

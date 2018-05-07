@@ -45,7 +45,7 @@ namespace ITestApp.Services.UnitTests.AdminServiceTests
             //Act
             var adminService = new AdminService(saverMock.Object, mapperMock.Object, testsRepoMock.Object, userTestsRepoMock.Object);
             data.ToList();
-
+            
             var usersTests = adminService.GetUserResults();
             //Assert
             Assert.AreEqual(data.Count(), usersTests.Count());
