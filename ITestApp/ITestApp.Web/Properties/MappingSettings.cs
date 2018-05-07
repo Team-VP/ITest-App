@@ -50,10 +50,7 @@ namespace ITestApp.Web.Properties
             this.CreateMap<Category, CategoryDto>()
                 .ForMember(dto => dto.Tests, opt => opt.MapFrom(src => src.Tests))
                 .ReverseMap().MaxDepth(3);
-
-            //this.CreateMap<CategoryDto, CategoryViewModel>()
-            //    .ForMember(vm => vm.Tests, opt => opt.MapFrom(src => src.Tests));
-
+            
             this.CreateMap<UserTest, UserTestDto>().ReverseMap().MaxDepth(3);
 
             this.CreateMap<Status, StatusDto>().ReverseMap();

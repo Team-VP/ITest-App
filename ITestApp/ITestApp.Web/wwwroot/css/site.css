@@ -38,14 +38,6 @@
     padding-right: 50px;
 }
 
-.hide {
-    display: none;
-}
-
-#loading-container > img {
-    width: 500px;
-}
-
 .answer-display-content {
     float: none !important;
 }

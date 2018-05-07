@@ -6,6 +6,7 @@ using ITestApp.Web.Areas.Private.Models.TakeTestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
         private readonly IAnswersService answers;
         private readonly IResultService resultService;
         private readonly UserManager<User> userManager;
+        private readonly IMemoryCache cache;
 
         public TakeTestController
             (
@@ -28,12 +30,14 @@ namespace ITestApp.Web.Areas.Private.Controllers
             IMappingProvider mapper, 
             ITestsService tests, 
             IAnswersService answers, 
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IMemoryCache memoryCache)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
+            this.cache = memoryCache ?? throw new ArgumentNullException("MemoryCache cannot be null"); ;
             this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");
         }
 
@@ -41,7 +45,16 @@ namespace ITestApp.Web.Areas.Private.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int id)
         {
-            var test = this.tests.GetById(id);
+            string key = string.Format("TestId {0}", id);
+            if (!cache.TryGetValue(key, out TestDto test))
+            {
+                test = this.tests.GetById(id);
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                cache.Set(key, test, cacheEntryOptions);
+            }
+           // var test = this.tests.GetById(id);
 
             var user = await this.userManager.GetUserAsync(HttpContext.User);
             var userId = user.Id;
@@ -87,7 +100,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
 
             return View(model);
         }
-        //TODO: Refactor make some extra methods 
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -95,6 +108,9 @@ namespace ITestApp.Web.Areas.Private.Controllers
         {
             if (this.ModelState.IsValid)
             {
+                string key = string.Format("TestId {0}", model.TestId);
+                this.cache.Remove(key);
+
                 model.SubmitedOn = DateTime.Now;
                 var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
 
@@ -117,6 +133,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
                 currentTestEntity.IsPassed = (currentTestEntity.Points > 80) ? true : false;
 
                 resultService.Submit(currentTestEntity);
+                this.cache.Remove("TestResults");
                 TempData["Success-Message"] = "Test submited!";
             }
             else

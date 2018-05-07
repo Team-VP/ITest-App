@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Routing;
 using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
 using ITestApp.Common.Constants;
 using Microsoft.Extensions.Caching.Memory;
+using ITestApp.Common.Exceptions;
 
 namespace ITestApp.Web.Controllers
 {
@@ -49,7 +50,7 @@ namespace ITestApp.Web.Controllers
         public IActionResult New()
         {
             // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
                 // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
@@ -83,14 +84,19 @@ namespace ITestApp.Web.Controllers
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 //dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
+                var adminIdKey = this.userManager.GetUserId(HttpContext.User);
 
                 if (model.Status == "Published")
                 {
+                    this.cache.Remove(adminIdKey);
+                    //this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully published a new test!";
                     this.tests.Publish(dto);
                 }
                 else if (model.Status == "Draft")
                 {
+                    this.cache.Remove("AuthorTests");
+                    this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully created a new test!";
                     this.tests.SaveAsDraft(dto);
                 }
@@ -98,17 +104,13 @@ namespace ITestApp.Web.Controllers
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(300)); //5 mins
-
-                // Save data in cache.
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
             
@@ -140,27 +142,30 @@ namespace ITestApp.Web.Controllers
 
             try
             {
-                testToEdit = this.tests.GetById(id);
+                string key = string.Format("TestId {0}", id);
+                if (!cache.TryGetValue(key, out testToEdit))
+                {
+                    testToEdit = this.tests.GetById(id);
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                    cache.Set(key, testToEdit, cacheEntryOptions);
+                }
             }
-            catch (ArgumentNullException)
+            catch (InvalidTestException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);
-
-            // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
                     .SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
-                // Save data in cache.
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
 
@@ -173,6 +178,8 @@ namespace ITestApp.Web.Controllers
         [Authorize]
         public IActionResult Edit([FromBody]CreateTestViewModel model, int id)
         {
+            string key = string.Format("TestId {0}", id);
+            this.cache.Remove(key);
             model.Id = id;
 
             bool isValid = ValidateTestModel(model);
@@ -189,19 +196,14 @@ namespace ITestApp.Web.Controllers
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
-
-            // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
                     .SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
-                // Save data in cache.
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
             

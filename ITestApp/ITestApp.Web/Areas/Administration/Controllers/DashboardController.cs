@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using ITestApp.Common.Exceptions;
 using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
+using ITestApp.DTO;
 using ITestApp.Services.Contracts;
 using ITestApp.Web.Areas.Administration.Models.DashboardViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ITestApp.Web.Areas.Administration.Controllers
 {
@@ -22,15 +24,22 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         private readonly ITestsService tests;
         private readonly IResultService resultService;
         private readonly IAdminService adminService;
+        private readonly IMemoryCache cache;
         private readonly UserManager<User> userManager;
 
-        public DashboardController(IAdminService adminService, IMappingProvider mapper, ITestsService tests, IResultService resultService, UserManager<User> userManager)
+        public DashboardController(IAdminService adminService, 
+            IMappingProvider mapper, 
+            ITestsService tests, 
+            IResultService resultService, 
+            UserManager<User> userManager, 
+            IMemoryCache memoryCache)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
             this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");
             this.adminService = adminService ?? throw new ArgumentNullException("Admin service can not be null.");
+            this.cache = memoryCache ?? throw new ArgumentNullException("MemoryCache cannot be null!");
         }
 
         [HttpGet]
@@ -40,14 +49,33 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             var admin = await this.userManager.GetUserAsync(HttpContext.User);
             var adminId = admin.Id;
 
-            var userResults = adminService.GetUserResults();    
-            var authorTests = adminService.GetTestsByAuthor(adminId);
+            if (!cache.TryGetValue(adminId, out IEnumerable<TestDto> authorTests))
+            {
+                authorTests = adminService.GetTestsByAuthor(adminId).ToList();
+               
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); 
+                
+                cache.Set(adminId, authorTests, cacheEntryOptions);
+            }
+
+            if (!cache.TryGetValue("TestResults", out IEnumerable<UserTestDto> userResults))
+            {
+                userResults = adminService.GetUserResults().ToList();
+                
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); ;
+
+                cache.Set("TestResults", userResults, cacheEntryOptions);
+            }
+
             // Model creating
             var userResultsList = new List<UserTestViewModel>();
             var authorTestsList = new List<TestViewModel>();
 
-            // UserTestViewModels 
-
+            // UserTestViewModels creating
             foreach (var userResult in userResults)
             {
                 var currentModel = new UserTestViewModel()
@@ -96,13 +124,13 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             try
             {
                 tests.DisableTest(id);
-                TempData["Success-Message"] = "You successfully set test status as Draft!";
+                TempData["Success-Message"] = "You successfully set the test status as Draft!";
             }
             catch (InvalidTestException ex)
             {
                 TempData["Error-Message"] = string.Format("Disable test failed! {0}", ex.Message);
             }
-            
+
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
@@ -130,14 +158,14 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             try
             {
                 tests.Delete(id);
-                TempData["Success-Message"] = "You successfully delited a test!";
+                TempData["Success-Message"] = "You successfully deleted a test!";
 
             }
             catch (InvalidTestException ex)
             {
-                TempData["Error-Message"] = string.Format("Deliting test failed! {0}", ex.Message);
+                TempData["Error-Message"] = string.Format("Deleting test failed! {0}", ex.Message);
             }
-            
+
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
     }

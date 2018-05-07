@@ -22,7 +22,7 @@
             </li>
             <li style="float:right; margin-right: 15px">
                 <div>
-                    <a class="btn btn-primary" asp-action="New" asp-controller="ManageTest" asp-area="Administration">Create New Test</a>
+                    <a class="btn btn-success" asp-action="New" asp-controller="ManageTest" asp-area="Administration">Create New Test</a>
                 </div>
             </li>
         </ul>
@@ -38,7 +38,7 @@
                             <th>Category</th>
                             <th>Status</th>
                             <th>Created on</th>
-                            <th class="text-justify">Ations</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,13 +55,13 @@
                                         {
                                             <a class="btn btn-primary" disabled="disabled">Publish</a>
                                             <a class="btn btn-primary" id="@test.Id" disabled="disabled">Edit</a>
-                                            <a class="btn btn-primary" id="@test.Id" asp-action="Disable" asp-controller="Dashboard" asp-area="Administration" asp-route-id="@test.Id" name="disable">Disable</a>
+                                            <a class="btn btn-info" id="@test.Id" asp-action="Disable" asp-controller="Dashboard" asp-area="Administration" asp-route-id="@test.Id" name="disable">Disable</a>
                                         }
                                         else if (test.Status == "Draft")
                                         {
                                             <a class="btn btn-primary" asp-area="Administration" asp-controller="Dashboard" asp-action="Publish" asp-route-id="@test.Id" name="publish" id="@test.Id">Publish</a>
                                             <a class="btn btn-primary" asp-area="Administration" asp-controller="ManageTest" asp-action="Edit" asp-route-id="@test.Id" name="edit">Edit</a>
-                                            <a class="btn btn-primary" asp-area="Administration" asp-controller="Dashboard" asp-action="Delete" asp-route-id="@test.Id" name="delete">Delete</a>
+                                            <a class="btn btn-danger" asp-area="Administration" asp-controller="Dashboard" asp-action="Delete" asp-route-id="@test.Id" name="delete">Delete</a>
                                         }
                                     </div>
                                 </td>

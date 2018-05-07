@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ITestApp</title>
+    <title>@ViewData["Title"] - VIP-iTestApp</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -37,7 +37,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ITestApp</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">VIP-iTestApp</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -51,31 +51,25 @@
         </div>
     </nav>
     <div class="container body-content">
-        <div class="hidden-container hide">
-            <img src="~/images/loading.gif" alt="loading" class="img-responsive center-block" />
-        </div>
-        <div class="hidden-container">
-            @if (((string)(TempData["Success-Message"] ?? "")).Any())
-            {
-                <br />
-                <div class="alert alert-success">
-                    <strong>Success!</strong> @TempData["Success-Message"]
-                </div>
-            }
+        @if (((string)(TempData["Success-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-success">
+                <strong>Success!</strong> @TempData["Success-Message"]
+            </div>
+        }
 
-            @if (((string)(TempData["Error-Message"] ?? "")).Any())
-            {
-                <br />
-                <div class="alert alert-danger">
-                    <strong>Error!</strong> @TempData["Error-Message"]
-                </div>
-            }
-            @RenderBody()
-        </div>
-
+        @if (((string)(TempData["Error-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-danger">
+                <strong>Error!</strong> @TempData["Error-Message"]
+            </div>
+        }
+        @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - ITestApp</p>
+            <p>&copy; 2018 - TeamVP - ITestApp - Telerik Academy Alpha .NET</p>
         </footer>
     </div>
 
