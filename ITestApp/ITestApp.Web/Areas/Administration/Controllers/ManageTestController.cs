@@ -148,8 +148,23 @@ namespace ITestApp.Web.Controllers
             }
 
             var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);
-            var allCategories = categories.GetAllCategories();
-            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+
+            // Look for cache key.
+            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            {
+                // Key not in cache, so get data.
+                var allCategoriesDto = categories.GetAllCategories();
+                allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
+                // Set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Keep in cache for this time, reset time if accessed.
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                // Save data in cache.
+                cache.Set("Categories", allCategories, cacheEntryOptions);
+            }
+
+            ViewData["Categories"] = allCategories;
 
             return View(testVm);
         }
@@ -175,8 +190,22 @@ namespace ITestApp.Web.Controllers
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
-            var allCategories = categories.GetAllCategories();
-            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            // Look for cache key.
+            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            {
+                // Key not in cache, so get data.
+                var allCategoriesDto = categories.GetAllCategories();
+                allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
+                // Set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Keep in cache for this time, reset time if accessed.
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                // Save data in cache.
+                cache.Set("Categories", allCategories, cacheEntryOptions);
+            }
+            
+            ViewData["Categories"] = allCategories;
             TempData["Error-Message"] = "Test editting failed!";
 
             return View(model);

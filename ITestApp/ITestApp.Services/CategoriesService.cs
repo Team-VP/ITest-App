@@ -59,7 +59,5 @@ namespace ITestApp.Services
 
             return mapper.MapTo<CategoryDto>(category);
         }
-
-       
     }
 }

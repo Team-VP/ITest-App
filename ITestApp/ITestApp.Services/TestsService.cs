@@ -19,17 +19,20 @@ namespace ITestApp.Services
         private readonly IRepository<Test> tests;
         private readonly IRepository<Question> questions;
         private readonly IRepository<Answer> answers;
-        private readonly IRepository<Category> categories;
         private readonly IRepository<UserTest> userTests;
 
-        public TestsService(IRepository<UserTest> userTests, ISaver saver, IMappingProvider mapper, IRepository<Test> tests, IRepository<Question> questions, IRepository<Answer> answers, IRepository<Category> categories)
+        public TestsService(ISaver saver, 
+            IMappingProvider mapper, 
+            IRepository<Test> tests, 
+            IRepository<Question> questions, 
+            IRepository<Answer> answers, 
+            IRepository<UserTest> userTests)
         {
             this.saver = saver ?? throw new ArgumentNullException("Saver can not be null");
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests repo can not be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers repo can not be null");
             this.questions = questions ?? throw new ArgumentNullException("Questions repo can not be null");
-            this.categories = categories ?? throw new ArgumentNullException("Categories repo can not be null");
             this.userTests = userTests ?? throw new ArgumentNullException("UserTests repo can not be null"); ;
         }
 
