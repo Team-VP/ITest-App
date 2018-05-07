@@ -46,9 +46,9 @@ namespace ITestApp.Services
             var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault(t => t.Id == id) ?? throw new TestNotFoundException($"No test with id {id} found!");
 
-            var tetsUser = userTests.All;
+            var testsUser = userTests.All;
 
-            if (testToDelete != null && !(tetsUser.Any(ut => ut.TestId == testToDelete.Id)))
+            if (testToDelete != null && !(testsUser.Any(ut => ut.TestId == testToDelete.Id)))
             {
                 tests.Delete(testToDelete);
 
@@ -73,16 +73,11 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test dto cannot be null!");
+                throw new InvalidTestException("Test dto cannot be null!");
             }
 
             var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
             
-            if (test == null)
-            {
-                throw new ArgumentNullException("Test not found!");
-            }
-
             test.Title = testDto.Title;
             test.CategoryId = testDto.CategoryId;
             test.RequiredTime = testDto.RequiredTime;
@@ -169,7 +164,7 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test dto cannot be null!");
+                throw new InvalidTestException("Test dto cannot be null!");
             }
 
             var test = mapper.MapTo<Test>(testDto);
@@ -186,7 +181,7 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test cannot be null!");
+                throw new InvalidTestException("Test cannot be null!");
             }
 
             var test = mapper.MapTo<Test>(testDto);
@@ -344,7 +339,7 @@ namespace ITestApp.Services
 
             if (test == null)
             {
-                throw new ArgumentNullException($"Test with id {id} not found!");
+                throw new InvalidTestException($"Test with id {id} not found!");
             }
 
             var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).ToList();

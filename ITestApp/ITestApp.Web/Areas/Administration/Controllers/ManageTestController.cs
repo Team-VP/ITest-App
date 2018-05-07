@@ -49,7 +49,7 @@ namespace ITestApp.Web.Controllers
         public IActionResult New()
         {
             // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
                 // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
@@ -98,7 +98,7 @@ namespace ITestApp.Web.Controllers
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
                 // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
@@ -150,7 +150,7 @@ namespace ITestApp.Web.Controllers
             var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);
 
             // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
                 // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
@@ -191,7 +191,7 @@ namespace ITestApp.Web.Controllers
             }
 
             // Look for cache key.
-            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
                 // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
