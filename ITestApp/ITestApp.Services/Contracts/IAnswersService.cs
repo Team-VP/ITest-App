@@ -6,9 +6,9 @@ namespace ITestApp.Services.Contracts
 {
     public interface IAnswersService
     {
-        void Edit(AnswerDto answer);
+        //void Edit(AnswerDto answer);
 
-        void Delete(int id);
+        //void Delete(int id);
 
         AnswerDto GetById(int id);
     }

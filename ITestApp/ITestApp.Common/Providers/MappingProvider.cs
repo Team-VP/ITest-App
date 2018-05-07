@@ -11,7 +11,7 @@ namespace ITestApp.Common.Providers
 
         public MappingProvider(IMapper mapper)
         {
-            this.mapper = mapper;
+            this.mapper = mapper;   
         }
 
         public TDestination MapTo<TDestination>(object source)

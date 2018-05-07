@@ -82,7 +82,6 @@ namespace ITestApp.Web
         {
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IAnswersService, AnswersService>();
-            services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<ITestsService, TestsService>();
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IStatusesService, StatusesService>();

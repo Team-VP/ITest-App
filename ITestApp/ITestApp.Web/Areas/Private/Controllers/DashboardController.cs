@@ -16,7 +16,6 @@ namespace ITestApp.Web.Areas.Private.Controllers
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
-        private readonly IQuestionsService questions;
         private readonly IAnswersService answers;
         private readonly ICategoryService categories;
         private readonly IResultService results;
@@ -25,14 +24,12 @@ namespace ITestApp.Web.Areas.Private.Controllers
         public DashboardController(IResultService results, 
             IMappingProvider mapper, 
             ITestsService tests, 
-            IQuestionsService questions, 
             IAnswersService answers, 
             ICategoryService categories, 
             UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
-            this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");

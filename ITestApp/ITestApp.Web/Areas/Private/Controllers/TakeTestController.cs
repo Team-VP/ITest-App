@@ -18,16 +18,20 @@ namespace ITestApp.Web.Areas.Private.Controllers
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
-        private readonly IQuestionsService questions;
         private readonly IAnswersService answers;
         private readonly IResultService resultService;
         private readonly UserManager<User> userManager;
 
-        public TakeTestController(IResultService resultService, IMappingProvider mapper, ITestsService tests, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public TakeTestController
+            (
+            IResultService resultService, 
+            IMappingProvider mapper, 
+            ITestsService tests, 
+            IAnswersService answers, 
+            UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
-            this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
             this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");

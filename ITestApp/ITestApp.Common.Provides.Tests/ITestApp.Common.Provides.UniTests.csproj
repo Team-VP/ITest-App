@@ -16,12 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ITestApp.Common\ITestApp.Common.csproj" />
-    <ProjectReference Include="..\ITestApp.Data\ITestApp.Data.csproj" />
-    <ProjectReference Include="..\ITestApp.Services\ITestApp.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <ProjectReference Include="..\ITestApp.Data.Models\ITestApp.Data.Models.csproj" />
+    <ProjectReference Include="..\ITestApp.DTO\ITestApp.DTO.csproj" />
   </ItemGroup>
 
 </Project>

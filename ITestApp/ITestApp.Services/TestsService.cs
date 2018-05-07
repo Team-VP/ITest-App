@@ -195,7 +195,7 @@ namespace ITestApp.Services
             var test = tests.All.Where(t => t.Id == id && t.StatusId != 2).FirstOrDefault();
             var userTests = this.userTests.All.Where(ut => ut.TimeExpire > DateTime.Now.AddSeconds(5));
 
-            if (test != null && !(userTests.Any(ut => ut.TestId == id)))
+            if (test != null && !(userTests.Any(ut => ut.TestId == id && ut.SubmittedOn == null)))
             {
                 test.StatusId = 2; //Draft
 

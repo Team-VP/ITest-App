@@ -24,28 +24,28 @@ namespace ITestApp.Services
             this.answers = answers ?? throw new ArgumentNullException("Answer repository cannot be null");
         }
 
-        public void Edit(AnswerDto answer)
-        {
-            Answer answerToEdit = answers.All.
-                FirstOrDefault(a => a.Id == answer.Id) 
-                ?? throw new ArgumentNullException("Answer can not be null.");
+        //public void Edit(AnswerDto answer)
+        //{
+        //    Answer answerToEdit = answers.All.
+        //        FirstOrDefault(a => a.Id == answer.Id) 
+        //        ?? throw new ArgumentNullException("Answer can not be null.");
 
-            answerToEdit.Content = answer.Content;
-            answerToEdit.QuestionId = answer.QuestionId;
-            answerToEdit.IsCorrect = answer.IsCorrect;
+        //    answerToEdit.Content = answer.Content;
+        //    answerToEdit.QuestionId = answer.QuestionId;
+        //    answerToEdit.IsCorrect = answer.IsCorrect;
 
-            answers.Update(answerToEdit);
-            saver.SaveChanges();
-        }
+        //    answers.Update(answerToEdit);
+        //    saver.SaveChanges();
+        //}
 
-        public void Delete(int id)
-        {
-            var answerToDelete = answers.All
-                .FirstOrDefault(a => a.Id == id)
-                ?? throw new ArgumentNullException("Answer can not be null.");
+        //public void Delete(int id)
+        //{
+        //    var answerToDelete = answers.All
+        //        .FirstOrDefault(a => a.Id == id)
+        //        ?? throw new ArgumentNullException("Answer can not be null.");
 
-            answers.Delete(answerToDelete);
-        }
+        //    answers.Delete(answerToDelete);
+        //}
 
         public AnswerDto GetById(int id)
         {
@@ -53,7 +53,10 @@ namespace ITestApp.Services
                 .FirstOrDefault(answer => answer.Id == id) 
                 ?? throw new ArgumentNullException("Answer can not be Null.");
 
-            return mapper.MapTo<AnswerDto>(currentAnwer);
+            var dto = mapper.MapTo<AnswerDto>(currentAnwer)
+                 ?? throw new ArgumentNullException("AnswerDto can not be Null.");
+
+            return dto;
         }
     }
 }
