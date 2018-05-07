@@ -40,13 +40,14 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             var admin = await this.userManager.GetUserAsync(HttpContext.User);
             var adminId = admin.Id;
 
-            var userResults = adminService.GetUserResults();
+            var userResults = adminService.GetUserResults();    
             var authorTests = adminService.GetTestsByAuthor(adminId);
             // Model creating
             var userResultsList = new List<UserTestViewModel>();
             var authorTestsList = new List<TestViewModel>();
 
-            // UserTestViewModels creating
+            // UserTestViewModels 
+
             foreach (var userResult in userResults)
             {
                 var currentModel = new UserTestViewModel()

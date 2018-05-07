@@ -12,7 +12,6 @@ namespace ITestApp.Web.Areas.Private.Models.TakeTestViewModels
 
         public IList<AnswerViewModel> Answers { get; set; }
 
-        [Required]
         public string AndswerId { get; set; }
     }
 }

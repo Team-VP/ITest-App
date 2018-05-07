@@ -25,7 +25,7 @@
     </div>
 
 </div>
-<form asp-controller="TakeTest" asp-action="Index" method="post" id="test-form">
+<form asp-controller="TakeTest" asp-action="Index" asp-area="Private" method="post" id="test-form">
 
     <input asp-for="@Model.CategoryName" type="hidden" value="@Model.CategoryName">
 
