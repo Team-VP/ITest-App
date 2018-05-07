@@ -83,14 +83,19 @@ namespace ITestApp.Web.Controllers
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 //dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
+                var adminIdKey = this.userManager.GetUserId(HttpContext.User);
 
                 if (model.Status == "Published")
                 {
+                    this.cache.Remove(adminIdKey);
+                    //this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully published a new test!";
                     this.tests.Publish(dto);
                 }
                 else if (model.Status == "Draft")
                 {
+                    this.cache.Remove("AuthorTests");
+                    this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully created a new test!";
                     this.tests.SaveAsDraft(dto);
                 }
@@ -100,15 +105,11 @@ namespace ITestApp.Web.Controllers
 
             if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(300)); //5 mins
-
-                // Save data in cache.
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
             

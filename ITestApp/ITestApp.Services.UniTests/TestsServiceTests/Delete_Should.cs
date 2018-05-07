@@ -202,7 +202,7 @@ namespace ITestApp.Services.UnitTests.TestsServiceTests
             var userTestsMock = new Mock<IRepository<UserTest>>();
             var id = 1;
 
-        //    var testsService = new TestsService(saverMock.Object, mapperMock.Object, testsMock.Object, questionsMock.Object, answersMock.Object, userTestsMock.Object);
+            var testsService = new TestsService(saverMock.Object, mapperMock.Object, testsMock.Object, questionsMock.Object, answersMock.Object, userTestsMock.Object);
 
             var testToDelete = new List<Test>()
             {

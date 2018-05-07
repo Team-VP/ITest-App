@@ -27,14 +27,19 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         private readonly IMemoryCache cache;
         private readonly UserManager<User> userManager;
 
-        public DashboardController(IAdminService adminService, IMappingProvider mapper, ITestsService tests, IResultService resultService, UserManager<User> userManager, IMemoryCache memoryCache)
+        public DashboardController(IAdminService adminService, 
+            IMappingProvider mapper, 
+            ITestsService tests, 
+            IResultService resultService, 
+            UserManager<User> userManager, 
+            IMemoryCache memoryCache)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
             this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");
             this.adminService = adminService ?? throw new ArgumentNullException("Admin service can not be null.");
-            this.cache = memoryCache ?? throw new ArgumentNullException("Cache cannot be null!");
+            this.cache = memoryCache ?? throw new ArgumentNullException("MemoryCache cannot be null!");
         }
 
         [HttpGet]
@@ -44,8 +49,27 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             var admin = await this.userManager.GetUserAsync(HttpContext.User);
             var adminId = admin.Id;
 
-            var authorTests = adminService.GetTestsByAuthor(adminId);
-            var userResults = adminService.GetUserResults();
+            if (!cache.TryGetValue(adminId, out IEnumerable<TestDto> authorTests))
+            {
+                authorTests = adminService.GetTestsByAuthor(adminId).ToList();
+               
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); 
+                
+                cache.Set(adminId, authorTests, cacheEntryOptions);
+            }
+
+            if (!cache.TryGetValue("TestResults", out IEnumerable<UserTestDto> userResults))
+            {
+                userResults = adminService.GetUserResults().ToList();
+                
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); ;
+
+                cache.Set("TestResults", userResults, cacheEntryOptions);
+            }
 
             // Model creating
             var userResultsList = new List<UserTestViewModel>();

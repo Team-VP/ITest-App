@@ -22,9 +22,10 @@
 
             const allQuestionHolders = $(".question-holder");
 
-            if (shouldPublish && allQuestionHolders.length === 0) {
+            if (allQuestionHolders.length === 0) {
                 toastr.options.positionClass = "toast-top-center";
-                toastr.error("Cannot publish a test with no questions!");
+                const action = shouldPublish ? "publish" : "save";
+                toastr.error(`Cannot ${action} a test with no questions!`);
                 return;
             }
 
