@@ -89,20 +89,6 @@
     <script>
         var mTime = @Model.TimeLeft.TotalSeconds;
         takeTest(mTime);
-
-        $(':radio').change(function () {
-            var names = {};
-            $(':radio').each(function () {
-                names[$(this).attr('myatribute')] = true;
-            });
-            var count = 0;
-            $.each(names, function () {
-                count++;
-            });
-            if ($(':radio:checked').length === count) {
-                $('#submit-test-button').prop("disabled", false);
-            }
-        }).change();
     </script>
 
 

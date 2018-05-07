@@ -1,4 +1,18 @@
 ﻿$(function () {
+    $(':radio').change(function () {
+        var names = {};
+        $(':radio').each(function () {
+            names[$(this).attr('myatribute')] = true;
+        });
+        var count = 0;
+        $.each(names, function () {
+            count++;
+        });
+        if ($(':radio:checked').length === count) {
+            $('#submit-test-button').prop("disabled", false);
+        }
+    }).change();
+
     var takeTest = function (modelTime) {
         var timer = new Timer();
 
