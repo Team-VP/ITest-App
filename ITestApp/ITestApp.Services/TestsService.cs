@@ -46,9 +46,9 @@ namespace ITestApp.Services
             var testToDelete = tests.All.Include(q => q.Questions).ThenInclude(a => a.Answers)
                 .FirstOrDefault(t => t.Id == id) ?? throw new TestNotFoundException($"No test with id {id} found!");
 
-            var tetsUser = userTests.All;
+            var testsUser = userTests.All;
 
-            if (testToDelete != null && !(tetsUser.Any(ut => ut.TestId == testToDelete.Id)))
+            if (testToDelete != null && !(testsUser.Any(ut => ut.TestId == testToDelete.Id)))
             {
                 tests.Delete(testToDelete);
 
