@@ -45,7 +45,16 @@ namespace ITestApp.Web.Areas.Private.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int id)
         {
-            var test = this.tests.GetById(id);
+            string key = string.Format("TestId {0}", id);
+            if (!cache.TryGetValue(key, out TestDto test))
+            {
+                test = this.tests.GetById(id);
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                cache.Set(key, test, cacheEntryOptions);
+            }
+           // var test = this.tests.GetById(id);
 
             var user = await this.userManager.GetUserAsync(HttpContext.User);
             var userId = user.Id;
@@ -99,6 +108,9 @@ namespace ITestApp.Web.Areas.Private.Controllers
         {
             if (this.ModelState.IsValid)
             {
+                string key = string.Format("TestId {0}", model.TestId);
+                this.cache.Remove(key);
+
                 model.SubmitedOn = DateTime.Now;
                 var testDuration = model.SubmitedOn.Subtract(model.StartedOn);
 

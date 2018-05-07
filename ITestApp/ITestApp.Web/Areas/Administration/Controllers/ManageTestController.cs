@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Routing;
 using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
 using ITestApp.Common.Constants;
 using Microsoft.Extensions.Caching.Memory;
+using ITestApp.Common.Exceptions;
 
 namespace ITestApp.Web.Controllers
 {
@@ -141,27 +142,30 @@ namespace ITestApp.Web.Controllers
 
             try
             {
-                testToEdit = this.tests.GetById(id);
+                string key = string.Format("TestId {0}", id);
+                if (!cache.TryGetValue(key, out testToEdit))
+                {
+                    testToEdit = this.tests.GetById(id);
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                    cache.Set(key, testToEdit, cacheEntryOptions);
+                }
             }
-            catch (ArgumentNullException)
+            catch (InvalidTestException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);
-
-            // Look for cache key.
+            
             if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
                     .SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
-                // Save data in cache.
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
 
@@ -174,6 +178,8 @@ namespace ITestApp.Web.Controllers
         [Authorize]
         public IActionResult Edit([FromBody]CreateTestViewModel model, int id)
         {
+            string key = string.Format("TestId {0}", id);
+            this.cache.Remove(key);
             model.Id = id;
 
             bool isValid = ValidateTestModel(model);
@@ -190,19 +196,14 @@ namespace ITestApp.Web.Controllers
 
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
-
-            // Look for cache key.
+            
             if (!cache.TryGetValue("Categories", out IEnumerable<CreateCategoryViewModel> allCategories))
             {
-                // Key not in cache, so get data.
                 var allCategoriesDto = categories.GetAllCategories();
                 allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
-                // Set cache options.
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
                     .SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
-                // Save data in cache.
+                
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
             
