@@ -51,28 +51,22 @@
         </div>
     </nav>
     <div class="container body-content">
-        <div class="hidden-container hide">
-            <img src="~/images/loading.gif" alt="loading" class="img-responsive center-block" />
-        </div>
-        <div class="hidden-container">
-            @if (((string)(TempData["Success-Message"] ?? "")).Any())
-            {
-                <br />
-                <div class="alert alert-success">
-                    <strong>Success!</strong> @TempData["Success-Message"]
-                </div>
-            }
+        @if (((string)(TempData["Success-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-success">
+                <strong>Success!</strong> @TempData["Success-Message"]
+            </div>
+        }
 
-            @if (((string)(TempData["Error-Message"] ?? "")).Any())
-            {
-                <br />
-                <div class="alert alert-danger">
-                    <strong>Error!</strong> @TempData["Error-Message"]
-                </div>
-            }
-            @RenderBody()
-        </div>
-
+        @if (((string)(TempData["Error-Message"] ?? "")).Any())
+        {
+            <br />
+            <div class="alert alert-danger">
+                <strong>Error!</strong> @TempData["Error-Message"]
+            </div>
+        }
+        @RenderBody()
         <hr />
         <footer>
             <p>&copy; 2018 - TeamVP - ITestApp - Telerik Academy Alpha .NET</p>
