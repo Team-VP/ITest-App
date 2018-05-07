@@ -73,16 +73,11 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test dto cannot be null!");
+                throw new InvalidTestException("Test dto cannot be null!");
             }
 
             var test = GetTestWithoutDeletedQuestionsAndAnswers(testDto.Id);
             
-            if (test == null)
-            {
-                throw new ArgumentNullException("Test not found!");
-            }
-
             test.Title = testDto.Title;
             test.CategoryId = testDto.CategoryId;
             test.RequiredTime = testDto.RequiredTime;
@@ -344,7 +339,7 @@ namespace ITestApp.Services
 
             if (test == null)
             {
-                throw new ArgumentNullException($"Test with id {id} not found!");
+                throw new InvalidTestException($"Test with id {id} not found!");
             }
 
             var testQuestions = this.questions.All.Where(q => q.TestId == test.Id).ToList();

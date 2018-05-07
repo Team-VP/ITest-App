@@ -65,32 +65,4 @@
             }
         });
     });
-
-    //$('a[name=edit]').on('click', function (data) {
-    //    data.preventDefault();
-    //    let url = $(this).attr('href');
-
-    //    $(".hidden-container").toggleClass("hide");
-    //    window.location.href = url
-    //    //Promise.resolve(
-    //    //    $.ajax({
-    //    //        url: url,
-    //    //        type: "GET"
-    //    //    })).then((result) => {
-    //    //        $(".hidden-container").toggleClass("hide");
-    //    //        console.log(result);
-    //    //        $("body").html(result);
-    //    //        //window.location.href = url;
-    //    //    }).catch((err) => {
-    //    //        console.log(err)
-    //    //    })
-
-    //    //Promise.resolve()
-    //    //    .then((result) => {
-    //    //        console.log(result);
-    //    //        //$(".hidden-container").toggleClass("hide");
-    //    //    }).catch((err) => {
-    //    //        console.log(err)
-    //    //    })
-    //});
 });

@@ -244,7 +244,6 @@
 
     // Add and delete questions
 
-
     $('#add-question-btn').on("click", () => {
         $.ajax({
             url: '/Administration/ManageTest/AddQuestion/',
