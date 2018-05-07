@@ -164,7 +164,7 @@ namespace ITestApp.Services
         {
             if (testDto == null)
             {
-                throw new ArgumentNullException("Test dto cannot be null!");
+                throw new InvalidTestException("Test dto cannot be null!");
             }
 
             var test = mapper.MapTo<Test>(testDto);
