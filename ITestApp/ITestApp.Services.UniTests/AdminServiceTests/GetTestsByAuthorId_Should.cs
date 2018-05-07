@@ -9,7 +9,7 @@ using ITestApp.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ITestApp.Services.UniTests.AdminServiceTests
+namespace ITestApp.Services.UnitTests.AdminServiceTests
 {
     [TestClass]
     public class GetTestsByAuthorId_Should

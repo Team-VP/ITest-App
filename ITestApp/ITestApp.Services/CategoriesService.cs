@@ -1,4 +1,5 @@
-﻿using ITestApp.Common.Providers;
+﻿using Bytes2you.Validation;
+using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.Data.Repository;
 using ITestApp.Data.Saver;
@@ -44,20 +45,25 @@ namespace ITestApp.Services
             return mapper.ProjectTo<CategoryDto>(allCategories);
         }
 
-        public IEnumerable<TestDto> GetCategoryTests(int categoryId)
-        {
-            var testsInCategory = categories.All
-                .Where(c => c.Id == categoryId)
-                .Include(c => c.Tests) ?? throw new ArgumentNullException("Collection of tests in category is null");
+        //public IEnumerable<TestDto> GetCategoryTests(int categoryId)
+        //{
+        //    var testsInCategory = categories.All
+        //        .Where(c => c.Id == categoryId)
+        //        .Include(c => c.Tests) ?? throw new ArgumentNullException("Collection of tests in category is null");
 
-            return mapper.ProjectTo<TestDto>(testsInCategory);
-        }
+        //    return mapper.ProjectTo<TestDto>(testsInCategory);
+        //}
 
         public CategoryDto GetCategoryByName(string name)
         {
+            Guard.WhenArgument(name, "Category Name").IsNullOrEmpty().Throw();
+
             var category = categories.All.Where(c => c.Name == name).FirstOrDefault() ?? throw new ArgumentNullException("Category not found!");
 
-            return mapper.MapTo<CategoryDto>(category);
+            var dto = mapper.MapTo<CategoryDto>(category)
+                ?? throw new ArgumentNullException("CategoryDto can not be null.");
+
+            return dto;
         }
 
        

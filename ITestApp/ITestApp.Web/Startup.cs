@@ -47,7 +47,6 @@ namespace ITestApp.Web
             {
                 var connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
-                //options.EnableSensitiveDataLogging();
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
@@ -83,7 +82,6 @@ namespace ITestApp.Web
         {
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IAnswersService, AnswersService>();
-            services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<ITestsService, TestsService>();
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IStatusesService, StatusesService>();
@@ -97,6 +95,7 @@ namespace ITestApp.Web
             services.AddAutoMapper();
             services.AddScoped<IMappingProvider, MappingProvider>();
             services.AddAntiforgery(options => options.HeaderName = "__RequestVerificationToken");
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,7 +120,7 @@ namespace ITestApp.Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                   name: "adminArea",
+                   name: "areaRoute",
                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute(
@@ -151,7 +150,7 @@ namespace ITestApp.Web
             //Assign Admin role to the main User here we have given our newly loregistered login id for Admin management  
             //User user = await UserManager.FindByEmailAsync("w@w.com");
             User user = await UserManager.FindByEmailAsync("w@w.com");
-           
+
             var User = new User();
             await UserManager.AddToRoleAsync(user, "Admin");
         }

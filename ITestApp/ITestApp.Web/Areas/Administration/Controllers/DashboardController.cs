@@ -22,7 +22,6 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         private readonly ITestsService tests;
         private readonly IResultService resultService;
         private readonly IAdminService adminService;
-
         private readonly UserManager<User> userManager;
 
         public DashboardController(IAdminService adminService, IMappingProvider mapper, ITestsService tests, IResultService resultService, UserManager<User> userManager)
@@ -43,10 +42,11 @@ namespace ITestApp.Web.Areas.Administration.Controllers
 
             var userResults = adminService.GetUserResults();
             var authorTests = adminService.GetTestsByAuthor(adminId);
-            //Model creating
+            // Model creating
             var userResultsList = new List<UserTestViewModel>();
             var authorTestsList = new List<TestViewModel>();
-            //UserTestViewModels creating
+
+            // UserTestViewModels creating
             foreach (var userResult in userResults)
             {
                 var currentModel = new UserTestViewModel()
@@ -58,12 +58,14 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                     ExecutionTime = (int)userResult.ExecutionTime.TotalMinutes,
                     Result = (userResult.IsPassed) ? "Passed" : "Failed"
                 };
+
                 userResultsList.Add(currentModel);
             }
-            //TestViewModels creating
+
+            // TestViewModels creating
             foreach (var authorTest in authorTests)
             {
-                var cur = new TestViewModel()
+                var currentModel = new TestViewModel()
                 {
                     Id = authorTest.Id.ToString(),
                     TestName = authorTest.Title,
@@ -71,9 +73,11 @@ namespace ITestApp.Web.Areas.Administration.Controllers
                     Status = tests.GetStatusNameByTestId(authorTest.Id),
                     CreatedOn = authorTest.CreatedOn
                 };
-                authorTestsList.Add(cur);
+
+                authorTestsList.Add(currentModel);
             }
-            //IndexViewModel creating
+
+            // IndexViewModel creating
             var model = new IndexViewModel()
             {
                 AdminName = admin.UserName,
@@ -95,11 +99,9 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             }
             catch (InvalidTestException ex)
             {
-
                 TempData["Error-Message"] = string.Format("Disable test failed! {0}", ex.Message);
             }
-
-
+            
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
 
@@ -132,12 +134,9 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             }
             catch (InvalidTestException ex)
             {
-
                 TempData["Error-Message"] = string.Format("Deliting test failed! {0}", ex.Message);
-
             }
-
-
+            
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
         }
     }

@@ -12,7 +12,6 @@ namespace ITestApp.Web.Controllers
     {
         public IActionResult Index()
         {
-            
             if (User.Identity.IsAuthenticated)
             {
                 if (User.IsInRole("Admin"))
@@ -20,7 +19,8 @@ namespace ITestApp.Web.Controllers
                     return RedirectToAction("Index", "Dashboard", new { area = "Administration" });
 
                 }
-                return RedirectToAction("All", "Dashboard");
+
+                return RedirectToAction("All", "Dashboard", new { area = "Private" });
             }
             else
             {

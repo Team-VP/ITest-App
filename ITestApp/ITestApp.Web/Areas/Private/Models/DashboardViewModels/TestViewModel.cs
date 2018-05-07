@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITestApp.Web.Models.DashboardViewModels
+namespace ITestApp.Web.Areas.Private.Models.DashboardViewModels
 {
     public class TestViewModel
     {

@@ -1,33 +1,37 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ITestApp.Common.Providers;
+﻿using ITestApp.Common.Providers;
 using ITestApp.Data.Models;
 using ITestApp.DTO;
 using ITestApp.Services.Contracts;
-using ITestApp.Web.Models.TakeTestViewModels;
+using ITestApp.Web.Areas.Private.Models.TakeTestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ITestApp.Web.Controllers
+namespace ITestApp.Web.Areas.Private.Controllers
 {
+    [Area("Private")]
     public class TakeTestController : Controller
     {
         private readonly IMappingProvider mapper;
         private readonly ITestsService tests;
-        private readonly IQuestionsService questions;
         private readonly IAnswersService answers;
         private readonly IResultService resultService;
         private readonly UserManager<User> userManager;
 
-        public TakeTestController(IResultService resultService, IMappingProvider mapper, ITestsService tests, IQuestionsService questions, IAnswersService answers, UserManager<User> userManager)
+        public TakeTestController
+            (
+            IResultService resultService, 
+            IMappingProvider mapper, 
+            ITestsService tests, 
+            IAnswersService answers, 
+            UserManager<User> userManager)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
-            this.questions = questions ?? throw new ArgumentNullException("Questions service cannot be null");
             this.answers = answers ?? throw new ArgumentNullException("Answers service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
             this.resultService = resultService ?? throw new ArgumentNullException("Result service cannot be null");
@@ -84,8 +88,8 @@ namespace ITestApp.Web.Controllers
             return View(model);
         }
         //TODO: Refactor make some extra methods 
-        [Authorize]
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public IActionResult Index(IndexViewModel model)
         {

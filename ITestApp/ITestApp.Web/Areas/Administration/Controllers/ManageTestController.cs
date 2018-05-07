@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using ITestApp.Web.Areas.Administration.Models.MangeTestsViewModels;
 using ITestApp.Common.Constants;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ITestApp.Web.Controllers
 {
@@ -24,18 +25,21 @@ namespace ITestApp.Web.Controllers
         private readonly ICategoryService categories;
         private readonly IStatusesService statuses;
         private readonly UserManager<User> userManager;
+        private readonly IMemoryCache cache;
 
         public ManageTestController(IMappingProvider mapper,
             ITestsService tests,
             ICategoryService categories,
             IStatusesService statuses,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IMemoryCache memoryCache)
         {
             this.mapper = mapper ?? throw new ArgumentNullException("Mapper can not be null");
             this.tests = tests ?? throw new ArgumentNullException("Tests service cannot be null");
             this.categories = categories ?? throw new ArgumentNullException("Categories service cannot be null");
             this.statuses = statuses ?? throw new ArgumentNullException("Statuses service cannot be null");
             this.userManager = userManager ?? throw new ArgumentNullException("User manager cannot be null");
+            this.cache = memoryCache ?? throw new ArgumentNullException("Cache cannot be null!");
         }
 
         [HttpGet]
@@ -44,8 +48,23 @@ namespace ITestApp.Web.Controllers
         [Route("administration/create")]
         public IActionResult New()
         {
-            var allCategories = categories.GetAllCategories();
-            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            // Look for cache key.
+            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            {
+                // Key not in cache, so get data.
+                var allCategoriesDto = categories.GetAllCategories();
+                allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
+                // Set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Keep in cache for this time, reset time if accessed.
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(300)); //5 mins
+
+                // Save data in cache.
+                cache.Set("Categories", allCategories, cacheEntryOptions);
+            }
+
+            //var allCategories = categories.GetAllCategories();
+            ViewData["Categories"] = allCategories;
             return View();
         }
 
@@ -79,8 +98,21 @@ namespace ITestApp.Web.Controllers
                 return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
             }
 
-            var allCategories = categories.GetAllCategories();
-            ViewData["Categories"] = mapper.ProjectTo<CreateCategoryViewModel>(allCategories).ToList();
+            if (!cache.TryGetValue("categories", out IEnumerable<CreateCategoryViewModel> allCategories))
+            {
+                // Key not in cache, so get data.
+                var allCategoriesDto = categories.GetAllCategories();
+                allCategories = mapper.ProjectTo<CreateCategoryViewModel>(allCategoriesDto).ToList();
+                // Set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Keep in cache for this time, reset time if accessed.
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(300)); //5 mins
+
+                // Save data in cache.
+                cache.Set("Categories", allCategories, cacheEntryOptions);
+            }
+            
+            ViewData["Categories"] = allCategories;
             TempData["Error-Message"] = "Test creation failed!";
 
             return Json(Url.Action("Index", "Dashboard", new { area = "Administration" }));
