@@ -49,27 +49,30 @@ namespace ITestApp.Web.Areas.Administration.Controllers
             var admin = await this.userManager.GetUserAsync(HttpContext.User);
             var adminId = admin.Id;
 
-            if (!cache.TryGetValue(adminId, out IEnumerable<TestDto> authorTests))
-            {
-                authorTests = adminService.GetTestsByAuthor(adminId).ToList();
-               
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); 
-                
-                cache.Set(adminId, authorTests, cacheEntryOptions);
-            }
+            //if (!cache.TryGetValue(adminId, out IEnumerable<TestDto> authorTests))
+            //{
+            //    authorTests = adminService.GetTestsByAuthor(adminId).ToList();
 
-            if (!cache.TryGetValue("TestResults", out IEnumerable<UserTestDto> userResults))
-            {
-                userResults = adminService.GetUserResults().ToList();
-                
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); ;
+            //    var cacheEntryOptions = new MemoryCacheEntryOptions()
+            //        .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+            //        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20));
 
-                cache.Set("TestResults", userResults, cacheEntryOptions);
-            }
+            //    cache.Set(adminId, authorTests, cacheEntryOptions);
+            //}
+
+            //if (!cache.TryGetValue("TestResults", out IEnumerable<UserTestDto> userResults))
+            //{
+            //    userResults = adminService.GetUserResults().ToList();
+
+            //    var cacheEntryOptions = new MemoryCacheEntryOptions()
+            //        .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+            //        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20)); ;
+
+            //    cache.Set("TestResults", userResults, cacheEntryOptions);
+            //}
+
+            var userResults = adminService.GetUserResults().ToList();
+            var authorTests = adminService.GetTestsByAuthor(adminId).ToList();
 
             // Model creating
             var userResultsList = new List<UserTestViewModel>();
@@ -123,6 +126,9 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         {
             try
             {
+                //string key = string.Format("TestId {0}", id);
+                //cache.Remove(key);
+
                 tests.DisableTest(id);
                 TempData["Success-Message"] = "You successfully set the test status as Draft!";
             }
@@ -140,6 +146,9 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         {
             try
             {
+                //string key = string.Format("TestId {0}", id);
+                //cache.Remove(key);
+
                 tests.PublishExistingTest(id);
                 TempData["Success-Message"] = "You successfully published a test!";
             }
@@ -157,6 +166,9 @@ namespace ITestApp.Web.Areas.Administration.Controllers
         {
             try
             {
+                //string key = string.Format("TestId {0}", id);
+                //cache.Remove(key);
+
                 tests.Delete(id);
                 TempData["Success-Message"] = "You successfully deleted a test!";
 
