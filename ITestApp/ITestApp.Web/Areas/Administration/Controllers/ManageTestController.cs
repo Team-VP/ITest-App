@@ -59,8 +59,7 @@ namespace ITestApp.Web.Controllers
                 
                 cache.Set("Categories", allCategories, cacheEntryOptions);
             }
-
-            //var allCategories = categories.GetAllCategories();
+            
             ViewData["Categories"] = allCategories;
             return View();
         }
@@ -80,19 +79,19 @@ namespace ITestApp.Web.Controllers
                 dto.AuthorId = this.userManager.GetUserId(this.HttpContext.User);
                 dto.CategoryId = this.categories.GetCategoryByName(model.Category).Id;
                 //dto.StatusId = this.statuses.GetStatusByName(model.Status).Id;
-                //var adminIdKey = this.userManager.GetUserId(HttpContext.User);
+
+                //cache
+                var adminIdKey = this.userManager.GetUserId(HttpContext.User);
+                this.cache.Remove(adminIdKey);
+                this.cache.Remove("UserResults");
 
                 if (model.Status == "Published")
                 {
-                    //this.cache.Remove(adminIdKey);
-                    //this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully published a new test!";
                     this.tests.Publish(dto);
                 }
                 else if (model.Status == "Draft")
                 {
-                    //this.cache.Remove("AuthorTests");
-                    //this.cache.Remove("UserResults");
                     TempData["Success-Message"] = "You successfully created a new test!";
                     this.tests.SaveAsDraft(dto);
                 }
@@ -138,16 +137,17 @@ namespace ITestApp.Web.Controllers
 
             try
             {
-                testToEdit = this.tests.GetById(id);
-                //string key = string.Format("TestId {0}", id);
-                //if (!cache.TryGetValue(key, out testToEdit))
-                //{
-                //    testToEdit = this.tests.GetById(id);
-                //    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                //        .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                //testToEdit = this.tests.GetById(id);
+                //cache
+                string key = string.Format("TestId {0}", id);
+                if (!cache.TryGetValue(key, out testToEdit))
+                {
+                    testToEdit = this.tests.GetById(id);
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromMinutes(5));
 
-                //    cache.Set(key, testToEdit, cacheEntryOptions);
-                //}
+                    cache.Set(key, testToEdit, cacheEntryOptions);
+                }
             }
             catch (InvalidTestException ex)
             {
@@ -175,8 +175,12 @@ namespace ITestApp.Web.Controllers
         [Authorize]
         public IActionResult Edit([FromBody]CreateTestViewModel model, int id)
         {
+            //cache
             string key = string.Format("TestId {0}", id);
-            //this.cache.Remove(key);
+            this.cache.Remove(key);
+            var adminIdKey = this.userManager.GetUserId(HttpContext.User);
+            cache.Remove(adminIdKey);
+
             model.Id = id;
 
             bool isValid = ValidateTestModel(model);

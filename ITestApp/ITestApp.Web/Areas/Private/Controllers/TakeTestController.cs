@@ -108,6 +108,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
         {
             if (this.ModelState.IsValid)
             {
+                //cache
                 string key = string.Format("TestId {0}", model.TestId);
                 this.cache.Remove(key);
 
@@ -133,6 +134,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
                 currentTestEntity.IsPassed = (currentTestEntity.Points > 80) ? true : false;
 
                 resultService.Submit(currentTestEntity);
+                //cache
                 this.cache.Remove("TestResults");
                 TempData["Success-Message"] = "Test submited!";
             }
