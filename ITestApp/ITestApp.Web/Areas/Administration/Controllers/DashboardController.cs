@@ -70,8 +70,7 @@ namespace ITestApp.Web.Areas.Administration.Controllers
 
                 cache.Set("TestResults", userResults, cacheEntryOptions);
             }
-
-            //cache
+            
             //var userResults = adminService.GetUserResults().ToList();
             //var authorTests = adminService.GetTestsByAuthor(adminId).ToList();
 

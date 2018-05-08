@@ -149,9 +149,9 @@ namespace ITestApp.Web.Controllers
                     cache.Set(key, testToEdit, cacheEntryOptions);
                 }
             }
-            catch (InvalidTestException ex)
+            catch (InvalidTestException)
             {
-                return NotFound(ex.Message);
+                return NotFound();
             }
 
             var testVm = this.mapper.MapTo<CreateTestViewModel>(testToEdit);

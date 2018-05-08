@@ -45,6 +45,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int id)
         {
+            //Cache
             string key = string.Format("TestId {0}", id);
             if (!cache.TryGetValue(key, out TestDto test))
             {
@@ -134,6 +135,7 @@ namespace ITestApp.Web.Areas.Private.Controllers
                 currentTestEntity.IsPassed = (currentTestEntity.Points > 80) ? true : false;
 
                 resultService.Submit(currentTestEntity);
+
                 //cache
                 this.cache.Remove("TestResults");
                 TempData["Success-Message"] = "Test submited!";

@@ -2,7 +2,7 @@
     $('#results-tabse').DataTable();
     $('#admins-tests').DataTable();
 
-    $('a[name=disable]').on('click', function (data) {
+    $('#admins-tests').on('click', '.dashboard-disable', function (data) {
         data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
@@ -13,7 +13,11 @@
                     $.ajax({
                         url: url,
                         success: function (r) {
+                            console.log(r);
                             window.location.href = r;
+                        },
+                        error: function (err) {
+                            console.log(err);
                         }
                     });
                 },
@@ -23,7 +27,7 @@
         });
     });
 
-    $('a[name=publish]').on('click', function (data) {
+    $('#admins-tests').on('click', '.dashboard-publish', function (data) {
         data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
@@ -44,7 +48,7 @@
         });
     });
 
-    $('a[name=delete]').on('click', function (data) {
+    $('#admins-tests').on('click','.dashboard-delete', function (data) {
         data.preventDefault();
         let url = $(this).attr('href');
         $.confirm({
